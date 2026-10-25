@@ -69,7 +69,8 @@ export class Gmail {
 
   constructor(
     private env: GmailEnv,
-    private doFetch: typeof fetch = fetch,
+    // Arrow wrapper: Workers throws "Illegal invocation" if bare `fetch` is called as a method.
+    private doFetch: typeof fetch = (input, init) => fetch(input, init),
     private now: () => number = Date.now,
   ) {}
 
