@@ -1,0 +1,16 @@
+name = "tpw-worker"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+compatibility_flags = ["nodejs_compat"]
+
+# TODO(human): replace database_id values with the ids printed by
+# `wrangler d1 create tpw_analytics` and `wrangler d1 create tpw_vault`.
+[[d1_databases]]
+binding = "DB"
+database_name = "tpw_analytics"
+database_id = "REPLACE_ME"
+
+[[d1_databases]]
+binding = "VAULT"
+database_name = "tpw_vault"
+database_id = "REPLACE_ME"
