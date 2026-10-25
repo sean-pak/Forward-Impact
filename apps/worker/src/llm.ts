@@ -46,7 +46,11 @@ export class OpenRouterLlm implements Llm {
             provider: { require_parameters: true },
           }),
         });
-        if (!res.ok) throw new Error(`OpenRouter returned ${res.status}`);
+        if (!res.ok) {
+          // OpenRouter's error body describes the problem (bad model id, no provider for a parameter); it never echoes the prompt.
+          const detail = ((await res.json().catch(() => null)) as { error?: { message?: unknown } } | null)?.error?.message;
+          throw new Error(`OpenRouter returned ${res.status}${typeof detail === "string" ? `: ${detail.slice(0, 160)}` : ""}`);
+        }
         const content = ResponseSchema.parse(await res.json()).choices[0]!.message.content;
         if (!content) throw new Error("empty model response");
         const parsed = req.schema.safeParse(JSON.parse(content));
@@ -54,7 +58,7 @@ export class OpenRouterLlm implements Llm {
         return parsed.data;
       } catch (e) {
         outcome = "failed";
-        lastError = e instanceof Error ? e.message.slice(0, 120) : "unknown";
+        lastError = e instanceof Error ? e.message.slice(0, 220) : "unknown";
       } finally {
         console.log(JSON.stringify({ llm: req.name, model, attempt, ms: Date.now() - started, outcome }));
       }
