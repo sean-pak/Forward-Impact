@@ -30,3 +30,9 @@
 - Notes: `person_ref` forms accepted: `SYN#####` or `org_id:internal_id` (either form resolves to the same person). Blank enum cells that default to `unknown` in the schema load as `unknown`. Wrangler needs Node 22+ (`/opt/homebrew/bin` had it here). `org_ids` stores `""` when an org gave no internal id.
 - Dependencies: none new (zod already in scripts).
 
+
+## Phase 3: Metrics and suppression (code shipped, deployed check pending)
+- Shipped: `packages/shared/src/suppress.ts` (rate denominator < 30, counts 1 to 10, facility < 3 orgs) and `metrics.ts` (`Metric = { value, numerator?, denominator?, isEstimate, suppressed }`, `byFacility()`, `buildDashboard()`); replaced the old `summarize`/`AdminSummary`. Worker `GET /api/admin/summary?view=staff|public` suppresses server-side (suppressed metrics carry no numbers; public drops per-cycle detail and org counts). `/admin` has a Staff/Public toggle (`?view=public`), a by-facility table, and a program-deserts count. Worker deployed; typecheck and 66 tests pass.
+- Gaps: not yet walked against the deployed URLs (the deployed `API_SECRET` is not in `.dev.vars`, so Claude could not call the Worker; web is behind Vercel Authentication). Mean attendance, est. credit days and est. cost avoided (PRD 10) are not built: no attendance rows in the fixtures and cost is `todo_confirm`. Hours in public view follow the participant count rule. Facility `Prisons covered` is not a person count and is not suppressed. No complementary suppression: with one suppressed facility row, totals minus other rows could reveal it.
+- Notes for next phase: the one-pager should call `buildDashboard(..., "public")` via the same endpoint. Fixture data is small, so most public cells will read `suppressed`, which is the expected demo of the rule until Muse data is loaded.
+- Dependencies: none new.

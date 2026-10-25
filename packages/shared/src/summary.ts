@@ -39,27 +39,6 @@ export type Hours = {
   cyclesUnknown: number;
 };
 
-export const AdminSummarySchema = z.object({
-  participants: z.object({ value: z.number(), isEstimate: z.boolean() }),
-  completion: z.object({
-    value: z.number().nullable(),
-    numerator: z.number(),
-    denominator: z.number(),
-    isEstimate: z.boolean(),
-    cyclesExcluded: z.number(),
-  }),
-  hours: z.object({
-    value: z.number(),
-    isEstimate: z.boolean(),
-    cyclesDelivered: z.number(),
-    cyclesPlanned: z.number(),
-    cyclesUnknown: z.number(),
-  }),
-  prisons: z.object({ covered: z.number(), total: z.number() }),
-  cycles: z.array(CycleRowSchema),
-});
-export type AdminSummary = z.infer<typeof AdminSummarySchema>;
-
 const isStated = (rule: string) => rule.trim() !== "" && rule.trim().toLowerCase() !== "unstated";
 
 /** Participants: sum of known enrollments. Missing counts are skipped, never guessed. */
@@ -121,21 +100,4 @@ export function totalHours(cycles: CycleRow[]): Hours {
     }
   }
   return out;
-}
-
-export function prisonsCovered(cycles: CycleRow[], total: number): { covered: number; total: number } {
-  const codes = new Set<string>();
-  for (const c of cycles) if (c.facility_code) codes.add(c.facility_code);
-  return { covered: codes.size, total };
-}
-
-/** Dashboard v0 numbers from confirmed cycles only. Callers must pass confirmed cycles. */
-export function summarize(cycles: CycleRow[], totalFacilities: number): AdminSummary {
-  return {
-    participants: sumParticipants(cycles),
-    completion: completionRate(cycles),
-    hours: totalHours(cycles),
-    prisons: prisonsCovered(cycles, totalFacilities),
-    cycles,
-  };
 }

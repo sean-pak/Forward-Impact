@@ -46,10 +46,12 @@ describe("worker", () => {
     const db = {
       prepare: (sql: string) => ({
         all: async () => {
+          if (sql.includes("FROM facilities")) {
+            return { results: [{ facility_code: "SQ", facility_name: "San Quentin" }, { facility_code: "SATF", facility_name: "SATF" }] };
+          }
           expect(sql).toContain("status = 'confirmed'");
           return { results: [row] };
         },
-        first: async () => ({ n: 31 }),
       }),
     } as unknown as D1Database;
     const e = { ...env(true, true), DB: db };
@@ -57,6 +59,11 @@ describe("worker", () => {
     const res = await app.request("/api/admin/summary", { headers: { Authorization: "Bearer secret" } }, e);
     const body = (await res.json()) as { participants: { value: number }; prisons: { covered: number; total: number } };
     expect(body.participants.value).toBe(10);
-    expect(body.prisons).toEqual({ covered: 1, total: 31 });
+    expect(body.prisons).toEqual({ covered: 1, total: 2 });
+    // Public view suppresses server-side: 10 participants is a small count, and no cycle detail is sent.
+    const pub = await app.request("/api/admin/summary?view=public", { headers: { Authorization: "Bearer secret" } }, e);
+    const pubBody = (await pub.json()) as { participants: { value: number | null; suppressed: boolean }; cycles: unknown[] };
+    expect(pubBody.participants).toMatchObject({ value: null, suppressed: true });
+    expect(pubBody.cycles).toEqual([]);
   });
 });

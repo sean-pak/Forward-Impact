@@ -1,5 +1,5 @@
-import type { Count, Hours, Rate } from "@tpw/shared";
-import { fetchAdminSummary } from "../../lib/worker";
+import type { Metric, View } from "@tpw/shared";
+import { fetchDashboard } from "../../lib/worker";
 
 export const dynamic = "force-dynamic";
 
@@ -16,27 +16,36 @@ function Stat({ label, value, note }: { label: string; value: string; note?: str
   );
 }
 
-function completionText(r: Rate): { value: string; note: string } {
-  if (r.value === null) return { value: "n/a", note: "No cycle has a stated completion rule and both counts." };
-  const excluded = r.cyclesExcluded ? `; ${r.cyclesExcluded} cycle(s) left out (rule unstated or count missing)` : "";
-  return {
-    value: `${Math.round(r.value * 100)}%${approx(r.isEstimate)}`,
-    note: `${fmt.format(r.numerator)} of ${fmt.format(r.denominator)} completed${excluded}`,
-  };
+const SUPPRESSED = "suppressed";
+
+/** One place that turns a Metric into text, so a suppressed cell can never print a number. */
+function show(m: Metric, kind: "count" | "rate" | "hours"): string {
+  if (m.suppressed) return SUPPRESSED;
+  if (m.value === null) return "n/a";
+  const text = kind === "rate" ? `${Math.round(m.value * 100)}%` : fmt.format(Math.round(m.value));
+  return `${text}${approx(m.isEstimate)}`;
 }
 
-function hoursNote(h: Hours): string {
+function rateNote(m: Metric, excluded: number): string {
+  if (m.suppressed) return "Fewer than 30 in the denominator.";
+  if (m.value === null) return "No cycle has a stated completion rule and both counts.";
+  const left = excluded ? `; ${excluded} cycle(s) left out (rule unstated or count missing)` : "";
+  return `${fmt.format(m.numerator ?? 0)} of ${fmt.format(m.denominator ?? 0)} completed${left}`;
+}
+
+function hoursNote(n: { delivered: number; planned: number; unknown: number }): string {
   const parts = [];
-  if (h.cyclesDelivered) parts.push(`${h.cyclesDelivered} delivered`);
-  if (h.cyclesPlanned) parts.push(`${h.cyclesPlanned} planned (hours per participant × enrolled)`);
-  if (h.cyclesUnknown) parts.push(`${h.cyclesUnknown} unknown`);
+  if (n.delivered) parts.push(`${n.delivered} delivered`);
+  if (n.planned) parts.push(`${n.planned} planned (hours per participant × enrolled)`);
+  if (n.unknown) parts.push(`${n.unknown} unknown`);
   return parts.join(", ");
 }
 
-export default async function AdminPage() {
+export default async function AdminPage({ searchParams }: { searchParams: Promise<{ view?: string }> }) {
+  const view: View = (await searchParams).view === "public" ? "public" : "staff";
   let summary;
   try {
-    summary = await fetchAdminSummary();
+    summary = await fetchDashboard(view);
   } catch (e) {
     return (
       <main>
@@ -45,23 +54,55 @@ export default async function AdminPage() {
       </main>
     );
   }
-  const completion = completionText(summary.completion);
-  const p: Count = summary.participants;
   const cell = { border: "1px solid #ddd", padding: "0.35rem 0.6rem", textAlign: "left" as const };
   return (
     <main>
       <h1>Dashboard</h1>
-      <p style={{ color: "#555" }}>Confirmed cycles only. Staff view, not suppressed.</p>
+      <p style={{ color: "#555" }}>
+        Confirmed cycles only. {view === "public" ? "Public view: small cells are suppressed." : "Staff view, not suppressed."}{" "}
+        <a href="/admin">Staff view</a> | <a href="/admin?view=public">Public view</a>
+      </p>
       <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-        <Stat label="Participants" value={`${fmt.format(p.value)}${approx(p.isEstimate)}`} />
-        <Stat label="Completion rate" value={completion.value} note={completion.note} />
+        <Stat label="Participants" value={show(summary.participants, "count")} />
+        <Stat label="Completion rate" value={show(summary.completion, "rate")} note={rateNote(summary.completion, summary.cyclesExcludedFromCompletion)} />
         <Stat
           label="Participant-hours"
-          value={`${fmt.format(Math.round(summary.hours.value))}${approx(summary.hours.isEstimate)}`}
-          note={hoursNote(summary.hours)}
+          value={show(summary.hours, "hours")}
+          note={hoursNote(summary.hoursNote)}
         />
         <Stat label="Prisons covered" value={`${summary.prisons.covered} of ${summary.prisons.total}`} />
       </div>
+      <h2>By facility</h2>
+      <table style={{ borderCollapse: "collapse" }}>
+        <thead>
+          <tr>
+            {["Facility", "Participants", "Completion", "Hours", ...(view === "staff" ? ["Orgs"] : [])].map((h) => (
+              <th key={h} style={cell}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {summary.facilities.map((f) => (
+            <tr key={f.facility_code}>
+              <td style={cell}>{f.facility_name}</td>
+              <td style={cell}>{show(f.participants, "count")}</td>
+              <td style={cell}>
+                {show(f.completion, "rate")}
+                {!f.completion.suppressed && f.completion.denominator
+                  ? ` (${f.completion.numerator} of ${f.completion.denominator})`
+                  : ""}
+              </td>
+              <td style={cell}>{show(f.hours, "hours")}</td>
+              {view === "staff" ? <td style={cell}>{f.orgs}</td> : null}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p style={{ color: "#555" }}>
+        Program deserts (no confirmed cycle): {summary.deserts.length} of {summary.prisons.total} facilities.
+      </p>
+      {view === "staff" ? (
+        <>
       <h2>Cycles</h2>
       <table style={{ borderCollapse: "collapse" }}>
         <thead>
@@ -86,6 +127,8 @@ export default async function AdminPage() {
           ))}
         </tbody>
       </table>
+        </>
+      ) : null}
     </main>
   );
 }

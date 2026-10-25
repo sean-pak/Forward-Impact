@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { completionRate, prisonsCovered, sumParticipants, summarize, totalHours, type CycleRow } from "./summary";
+import { completionRate, sumParticipants, totalHours, type CycleRow } from "./summary";
 
 function cycle(over: Partial<CycleRow> = {}): CycleRow {
   return {
@@ -66,21 +66,5 @@ describe("totalHours", () => {
   it("counts cycles with no hours info as unknown, not zero", () => {
     const h = totalHours([cycle({ course_hours_planned_per_participant: null })]);
     expect(h).toMatchObject({ value: 0, cyclesUnknown: 1, isEstimate: false });
-  });
-});
-
-describe("prisonsCovered", () => {
-  it("counts distinct non-null facilities", () => {
-    const cs = [cycle(), cycle({ facility_code: "SQ" }), cycle({ facility_code: "CMC" }), cycle({ facility_code: null })];
-    expect(prisonsCovered(cs, 31)).toEqual({ covered: 2, total: 31 });
-  });
-});
-
-describe("summarize", () => {
-  it("bundles every figure with the cycle list", () => {
-    const s = summarize([cycle()], 31);
-    expect(s.participants.value).toBe(10);
-    expect(s.cycles).toHaveLength(1);
-    expect(s.prisons.total).toBe(31);
   });
 });

@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { makeHealth } from "@tpw/shared";
-import { loadAdminSummary } from "./summary";
+import { loadDashboard } from "./summary";
 import { createVault, pingVault } from "./vault";
 
 export type Env = {
@@ -41,6 +41,9 @@ app.get("/api/admin/vault/status", async (c) => {
     return c.json({ error: e instanceof Error ? e.message : "vault unavailable" }, 500);
   }
 });
-app.get("/api/admin/summary", async (c) => c.json(await loadAdminSummary(c.env.DB)));
+// Suppression happens here, so a public response never contains the hidden numbers.
+app.get("/api/admin/summary", async (c) =>
+  c.json(await loadDashboard(c.env.DB, c.req.query("view") === "public" ? "public" : "staff")),
+);
 
 export default app;

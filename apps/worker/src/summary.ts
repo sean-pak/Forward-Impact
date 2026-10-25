@@ -1,4 +1,4 @@
-import { CycleRowSchema, summarize, type AdminSummary } from "@tpw/shared";
+import { buildDashboard, CycleRowSchema, type Dashboard, type View } from "@tpw/shared";
 
 // Confirmed cycles only: data counts once the CBO confirms it. Superseded and draft rows never appear.
 const CONFIRMED_CYCLES_SQL = `
@@ -14,13 +14,17 @@ const CONFIRMED_CYCLES_SQL = `
   WHERE c.status = 'confirmed'
   ORDER BY c.start_date DESC, c.cycle_id`;
 
-export async function loadAdminSummary(db: D1Database): Promise<AdminSummary> {
+export async function loadDashboard(db: D1Database, view: View): Promise<Dashboard> {
   const [cycles, facilities] = await Promise.all([
     db.prepare(CONFIRMED_CYCLES_SQL).all(),
-    db.prepare("SELECT COUNT(*) AS n FROM facilities").first<{ n: number }>(),
+    db.prepare("SELECT facility_code, facility_name FROM facilities ORDER BY facility_name").all<{
+      facility_code: string;
+      facility_name: string;
+    }>(),
   ]);
-  return summarize(
+  return buildDashboard(
     cycles.results.map((r) => CycleRowSchema.parse(r)),
-    facilities?.n ?? 0,
+    facilities.results,
+    view,
   );
 }
