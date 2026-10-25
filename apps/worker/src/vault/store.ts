@@ -1,5 +1,5 @@
 // The only file that talks to the VAULT binding (with index.ts re-exporting it).
-import { decryptField, importVaultKeys, type VaultKeys } from "./crypto";
+import { decryptField, encryptField, importVaultKeys, type VaultKeys } from "./crypto";
 import { buildIdentityRow, identityParams, UPSERT_IDENTITIES_JSON_SQL, UPSERT_IDENTITY_SQL, type IdentityInput } from "./identity";
 import type { PersonKeyBasis } from "./personKey";
 
@@ -105,6 +105,18 @@ export class Vault {
       }
     }
     return out;
+  }
+
+  /**
+   * The raw locator query and response, encrypted (they hold names and CDCR numbers). `custody_checks.raw_response_ref`
+   * points here by check id. Nothing reads it back except a future audited view.
+   */
+  async recordLocatorRaw(checkId: string, query: unknown, response: unknown): Promise<void> {
+    const [q, r] = await Promise.all([
+      encryptField(this.keys, JSON.stringify(query), `${checkId}:query`),
+      encryptField(this.keys, JSON.stringify(response), `${checkId}:response`),
+    ]);
+    await this.db.prepare("INSERT OR REPLACE INTO locator_raw (check_id, query_enc, response_enc) VALUES (?, ?, ?)").bind(checkId, q, r).run();
   }
 
   /** Counts plus proof the keys can decrypt a stored row. Never returns plaintext. */

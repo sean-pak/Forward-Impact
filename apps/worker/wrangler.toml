@@ -25,3 +25,5 @@ MAILBOX_ADDRESS = "hello@seanpak.com"
 ADMIN_EMAILS = "sean.mk.pak@gmail.com"
 WORKER_PUBLIC_URL = "https://tpw-worker.sean-mk-pak.workers.dev"
 WEB_URL = "https://forward-impact-seanpaks-projects.vercel.app"
+# The real EIT locator holds real CDCR data and its client is not built. Never set this to "true" without TPW authorization.
+REAL_LOCATOR_ENABLED = "false"

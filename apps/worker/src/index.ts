@@ -1,11 +1,13 @@
 import { Hono } from "hono";
+import { createMiddleware } from "hono/factory";
 import { z } from "zod";
-import { makeHealth } from "@tpw/shared";
+import { makeHealth, searchMock } from "@tpw/shared";
 import { sendTest, syncGmail } from "./gmail";
 import { PIXEL_GIF, importContacts, listOrgs, listOutreach, recordOpen, sendAsks, setPrimary } from "./outreach";
 import { FormBodySchema, adminSubmission, confirmSubmission, getSubmission, listSubmissions, loadForm, submitForm, type OrgRow } from "./form";
 import { ingest, type IngestInput } from "./ingest";
 import { OpenRouterLlm } from "./llm";
+import { MAX_PER_CALL, listLookups, pickCohort, revealPerson, runChecks, verifyCheck, mockData, type Deps as LookupDeps } from "./locator";
 import { loadOrgReport } from "./report";
 import { loadDashboard } from "./summary";
 import { createVault, pingVault, vaultFactory } from "./vault";
@@ -25,6 +27,8 @@ export type Env = {
   WEB_URL: string;
   OPENROUTER_API_KEY?: string;
   LLM_MODEL?: string;
+  /** Must be exactly "true" to even consider the real locator, which is not built. Leave it "false". */
+  REAL_LOCATOR_ENABLED?: string;
 };
 
 export const app = new Hono<{ Bindings: Env }>();
@@ -50,12 +54,18 @@ app.get("/p/:file", async (c) => {
   return new Response(PIXEL_GIF, { headers: { "Content-Type": "image/gif", "Cache-Control": "no-store, max-age=0" } });
 });
 
-app.use("/api/*", async (c, next) => {
+const requireBearer = createMiddleware<{ Bindings: Env }>(async (c, next) => {
   if (c.req.header("Authorization") !== `Bearer ${c.env.API_SECRET}`) {
     return c.json({ error: "unauthorized" }, 401);
   }
   await next();
 });
+app.use("/api/*", requireBearer);
+// Muse's synthetic locator data, served like the real tool would answer. Behind the same bearer as /api/*.
+app.use("/mock-locator/*", requireBearer);
+app.get("/mock-locator/search", (c) =>
+  c.json(searchMock(mockData(), { cdcr: c.req.query("cdcr"), first: c.req.query("first"), last: c.req.query("last") })),
+);
 app.get("/api/ping", (c) => c.json({ ok: true }));
 app.get("/api/admin/vault/status", async (c) => {
   try {
@@ -186,6 +196,46 @@ app.get("/api/org/:token/report", async (c) => {
   c.header("Cache-Control", "no-store");
   const report = await loadOrgReport(c.env.DB, c.req.param("token"), vaultFactory(c.env));
   return report ? c.json(report) : c.json({ error: "unknown report link" }, 404);
+});
+
+// Custody lookups (PRD 9). Mock locator only for synthetic people; the real adapter is guarded and not built.
+const lookupDeps = (env: Env): LookupDeps => ({ db: env.DB, openVault: vaultFactory(env), realEnabled: env.REAL_LOCATOR_ENABLED === "true" });
+app.get("/api/lookups", async (c) => {
+  const deps = lookupDeps(c.env);
+  return c.json({ rows: await listLookups(deps), max_per_click: MAX_PER_CALL, real_locator_enabled: deps.realEnabled });
+});
+app.post("/api/lookups/check", async (c) => {
+  const body = z.object({ person_keys: z.array(z.string().min(1)).min(1).max(200) }).safeParse(await c.req.json().catch(() => null));
+  if (!body.success) return c.json({ error: "person_keys is required" }, 400);
+  try {
+    return c.json({ results: await runChecks(lookupDeps(c.env), body.data.person_keys) });
+  } catch (e) {
+    return c.json({ error: e instanceof Error ? e.message : "lookup failed" }, 500);
+  }
+});
+app.post("/api/lookups/check-cohort", async (c) => {
+  const deps = lookupDeps(c.env);
+  try {
+    const keys = pickCohort(await listLookups(deps), (deps.now?.() ?? new Date()).toISOString().slice(0, 10));
+    return c.json({ results: keys.length ? await runChecks(deps, keys) : [] });
+  } catch (e) {
+    return c.json({ error: e instanceof Error ? e.message : "lookup failed" }, 500);
+  }
+});
+app.post("/api/lookups/checks/:id/verify", async (c) => {
+  const r = await verifyCheck(lookupDeps(c.env), c.req.param("id"));
+  return r.ok ? c.json(r) : c.json({ error: r.error }, r.status);
+});
+app.post("/api/lookups/reveal", async (c) => {
+  const body = z.object({ person_key: z.string().min(1) }).safeParse(await c.req.json().catch(() => null));
+  if (!body.success) return c.json({ error: "person_key is required" }, 400);
+  c.header("Cache-Control", "no-store");
+  try {
+    const who = await revealPerson(lookupDeps(c.env), body.data.person_key);
+    return who ? c.json(who) : c.json({ error: "not on the lookup list" }, 404);
+  } catch (e) {
+    return c.json({ error: e instanceof Error ? e.message : "vault unavailable" }, 500);
+  }
 });
 
 export default {
