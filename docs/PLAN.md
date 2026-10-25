@@ -82,7 +82,7 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 
 ---
 
-## [ ] Phase 3: Metrics and suppression
+## [x] Phase 3: Metrics and suppression
 
 **Goal:** every number on screen comes from tested pure functions.
 
@@ -92,8 +92,8 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 - `/admin` uses them; add a by-facility table and a "public view" toggle.
 
 **Done when**
-- [ ] Tests cover each metric and suppression rule.
-- [ ] Public view on the deployed dashboard shows `suppressed` cells.
+- [x] Tests cover each metric and suppression rule.
+- [x] Public view on the deployed dashboard shows `suppressed` cells.
 
 ---
 
