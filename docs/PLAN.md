@@ -140,14 +140,14 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 
 ---
 
-## [ ] Phase 7: Structured form
+## [x] Phase 7: Structured form
 
 **Build**
 - `/submit/[token]`: org's programs, facility picker (31 + alias search), dates, sessions, hours, enrolled, completed, completion rule, active registry fields. Pre-filled from last confirmed cycle.
 - Writes `submission` (`channel = form`) + draft cycles + issues; shows a confirm screen; confirm marks it confirmed.
 
 **Done when**
-- [ ] Submitting the form updates the deployed dashboard after confirm.
+- [x] Submitting the form updates the deployed dashboard after confirm.
 
 ---
 
