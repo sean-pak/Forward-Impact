@@ -1,5 +1,7 @@
 import { Hono } from "hono";
+import { z } from "zod";
 import { makeHealth } from "@tpw/shared";
+import { sendTest, syncGmail } from "./gmail";
 import { loadDashboard } from "./summary";
 import { createVault, pingVault } from "./vault";
 
@@ -9,9 +11,13 @@ export type Env = {
   VAULT_HMAC_KEY: string;
   VAULT_ENC_KEY: string;
   API_SECRET: string;
+  GOOGLE_CLIENT_ID: string;
+  GOOGLE_CLIENT_SECRET: string;
+  GOOGLE_REFRESH_TOKEN: string;
+  MAILBOX_ADDRESS: string;
 };
 
-const app = new Hono<{ Bindings: Env }>();
+export const app = new Hono<{ Bindings: Env }>();
 
 async function ping(d1: D1Database): Promise<boolean> {
   try {
@@ -46,4 +52,40 @@ app.get("/api/admin/summary", async (c) =>
   c.json(await loadDashboard(c.env.DB, c.req.query("view") === "public" ? "public" : "staff")),
 );
 
-export default app;
+app.post("/api/gmail/sync", async (c) => {
+  try {
+    return c.json(await syncGmail(c.env));
+  } catch (e) {
+    return c.json({ error: e instanceof Error ? e.message : "sync failed" }, 500);
+  }
+});
+app.post("/api/gmail/test", async (c) => {
+  const body = z.object({ to: z.string().email() }).safeParse(await c.req.json().catch(() => null));
+  if (!body.success) return c.json({ error: "a valid 'to' address is required" }, 400);
+  try {
+    const sent = await sendTest(c.env, body.data.to);
+    return c.json({ ok: true, threadId: sent.threadId });
+  } catch (e) {
+    return c.json({ error: e instanceof Error ? e.message : "send failed" }, 500);
+  }
+});
+// Metadata only: inbound subjects and bodies are never stored.
+app.get("/api/gmail/messages", async (c) => {
+  const { results } = await c.env.DB
+    .prepare(
+      `SELECT message_id, direction, kind, org_id, from_email, to_email, subject, occurred_at
+       FROM messages ORDER BY occurred_at DESC LIMIT 50`,
+    )
+    .all();
+  return c.json({ messages: results });
+});
+
+export default {
+  fetch: app.fetch,
+  // Cron Trigger (every minute): same sync as the admin button.
+  async scheduled(_event: ScheduledController, env: Env, ctx: ExecutionContext) {
+    ctx.waitUntil(
+      syncGmail(env).catch((e) => console.error("gmail sync failed:", e instanceof Error ? e.message : "unknown")),
+    );
+  },
+};

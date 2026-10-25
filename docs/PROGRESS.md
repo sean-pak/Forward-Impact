@@ -45,3 +45,10 @@
 - Gaps: Assumption footnotes are fixed text; est. cost / credit days still not built (see phase 3).
 - Notes: `next.config.ts` sets `serverExternalPackages: ["@react-pdf/renderer"]`. Filename date is UTC.
 - Dependencies: `@react-pdf/renderer` (in the stack list; renders the PDF server-side).
+
+## Phase 5: Gmail connection (built, awaiting human "Done when" checks)
+- Shipped: `apps/worker/src/gmail/` (`Gmail` client: refreshed access token cached in memory and shared across concurrent callers, `listUnprocessed`, `getRaw`, `send` via `mimetext`, `label`, `archive`, `ensureLabel` creates `sam/processed` and `sam/ignored`; `syncGmail`, `sendTest`). Worker routes `POST /api/gmail/sync`, `POST /api/gmail/test`, `GET /api/gmail/messages`; Cron Trigger `* * * * *` runs the same sync. Web `/admin/email`: send-test form, Sync now button, messages list (linked from `/admin`). `MAILBOX_ADDRESS` is a `[vars]` entry in `wrangler.toml`. Worker deployed; typecheck and all tests pass (Gmail covered with a faked Gmail API and D1).
+- Sync rules: sender in `contacts` or thread in `messages` -> logged as metadata (no subject, no body), labeled `sam/processed`, archived. Unknown sender -> `sam/ignored` only, nothing stored. Mail from the mailbox itself is skipped. No LLM.
+- Gaps / HUMAN: the three "Done when" checks have not been run against real Gmail. Push to main so Vercel deploys `/admin/email`, then: (1) send a test email to the CBO account from `/admin/email`; (2) reply from that account and click Sync now (or wait ~60 s), expect an inbound row and the `sam/processed` label in Gmail; (3) mail from a third address should get `sam/ignored` and no row. Then tick the Phase 5 box in PLAN.md and tag `phase-5`.
+- Notes: the CBO test account is matched by thread, so it does not need to be in `contacts`. Real mailbox rows are `is_synthetic = 0`. Outbound test subject is stored; inbound subjects never are.
+- Dependencies: `postal-mime` and `mimetext` (parse and build MIME, both in the stack list), `zod` added to the Worker (validate Gmail responses and the test-send body).

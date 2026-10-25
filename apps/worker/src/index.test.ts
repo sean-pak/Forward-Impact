@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import app, { type Env } from "./index";
+import { app, type Env } from "./index";
 
 function fakeD1(up: boolean): D1Database {
   return {
@@ -18,6 +18,10 @@ const env = (db: boolean, vault: boolean): Env => ({
   VAULT_HMAC_KEY: "",
   VAULT_ENC_KEY: "",
   API_SECRET: "secret",
+  GOOGLE_CLIENT_ID: "",
+  GOOGLE_CLIENT_SECRET: "",
+  GOOGLE_REFRESH_TOKEN: "",
+  MAILBOX_ADDRESS: "hello@example.org",
 });
 
 describe("worker", () => {
