@@ -32,4 +32,29 @@ describe("worker", () => {
     const ok = await app.request("/api/ping", { headers: { Authorization: "Bearer secret" } }, e);
     expect(ok.status).toBe(200);
   });
+
+  it("/api/admin/summary is bearer-protected and computes from confirmed cycles", async () => {
+    const row = {
+      cycle_id: "c1", org_id: "o1", org_name: "Org", program_name: "Prog",
+      completion_rule: "attendance >= 80%", facility_code: "SQ", facility_name: "San Quentin",
+      start_date: "2025-01-01", end_date: null, course_hours_planned_per_participant: 20,
+      n_enrolled: 10, n_completed: 8, total_course_hours_delivered: null,
+      n_enrolled_approx: 0, n_completed_approx: 0, total_course_hours_delivered_approx: 0,
+    };
+    const db = {
+      prepare: (sql: string) => ({
+        all: async () => {
+          expect(sql).toContain("status = 'confirmed'");
+          return { results: [row] };
+        },
+        first: async () => ({ n: 31 }),
+      }),
+    } as unknown as D1Database;
+    const e = { ...env(true, true), DB: db };
+    expect((await app.request("/api/admin/summary", {}, e)).status).toBe(401);
+    const res = await app.request("/api/admin/summary", { headers: { Authorization: "Bearer secret" } }, e);
+    const body = (await res.json()) as { participants: { value: number }; prisons: { covered: number; total: number } };
+    expect(body.participants.value).toBe(10);
+    expect(body.prisons).toEqual({ covered: 1, total: 31 });
+  });
 });

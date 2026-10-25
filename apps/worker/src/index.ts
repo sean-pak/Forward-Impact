@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { makeHealth } from "@tpw/shared";
+import { loadAdminSummary } from "./summary";
 
 export type Env = {
   DB: D1Database;
@@ -32,5 +33,6 @@ app.use("/api/*", async (c, next) => {
   await next();
 });
 app.get("/api/ping", (c) => c.json({ ok: true }));
+app.get("/api/admin/summary", async (c) => c.json(await loadAdminSummary(c.env.DB)));
 
 export default app;
