@@ -6,6 +6,8 @@ export type GmailEnv = {
   GOOGLE_CLIENT_SECRET: string;
   GOOGLE_REFRESH_TOKEN: string;
   MAILBOX_ADDRESS: string;
+  /** Comma-separated TPW staff addresses; their mail is always accepted. */
+  ADMIN_EMAILS?: string;
 };
 
 const API = "https://gmail.googleapis.com/gmail/v1/users/me";

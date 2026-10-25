@@ -22,3 +22,4 @@ crons = ["* * * * *"]
 
 [vars]
 MAILBOX_ADDRESS = "hello@seanpak.com"
+ADMIN_EMAILS = "sean.mk.pak@gmail.com"

@@ -15,6 +15,7 @@ export type Env = {
   GOOGLE_CLIENT_SECRET: string;
   GOOGLE_REFRESH_TOKEN: string;
   MAILBOX_ADDRESS: string;
+  ADMIN_EMAILS?: string;
 };
 
 export const app = new Hono<{ Bindings: Env }>();

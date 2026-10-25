@@ -3,8 +3,14 @@ import { Gmail, LABEL_IGNORED, LABEL_PROCESSED, type GmailEnv } from "./client";
 
 export type SyncResult = { logged: number; ignored: number; skipped: number };
 
-/** Known sender (contacts) or known thread (messages). Returns the org when we have one. */
-async function match(db: D1Database, from: string, threadId: string): Promise<{ known: boolean; orgId: string | null }> {
+/** Admin (staff) address, known sender (contacts) or known thread (messages). Returns the org when we have one. */
+async function match(
+  db: D1Database,
+  from: string,
+  threadId: string,
+  admins: string[],
+): Promise<{ known: boolean; orgId: string | null }> {
+  if (admins.includes(from)) return { known: true, orgId: null };
   const contact = await db
     .prepare("SELECT org_id FROM contacts WHERE lower(email) = ? LIMIT 1")
     .bind(from)
@@ -22,6 +28,7 @@ async function match(db: D1Database, from: string, threadId: string): Promise<{ 
  * Bodies and subjects of inbound mail are never stored and nothing here calls an LLM.
  */
 export async function syncGmail(env: GmailEnv & { DB: D1Database }, gmail = new Gmail(env)): Promise<SyncResult> {
+  const admins = (env.ADMIN_EMAILS ?? "").split(",").map((e) => e.trim().toLowerCase()).filter(Boolean);
   const result: SyncResult = { logged: 0, ignored: 0, skipped: 0 };
   for (const { id } of await gmail.listUnprocessed()) {
     const msg = await gmail.getRaw(id);
@@ -32,7 +39,7 @@ export async function syncGmail(env: GmailEnv & { DB: D1Database }, gmail = new 
       result.skipped++;
       continue;
     }
-    const m = from ? await match(env.DB, from, msg.threadId) : { known: false, orgId: null };
+    const m = from ? await match(env.DB, from, msg.threadId, admins) : { known: false, orgId: null };
     if (!from || !m.known) {
       await gmail.label(id, [LABEL_IGNORED]);
       result.ignored++;

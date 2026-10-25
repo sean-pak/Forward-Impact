@@ -87,6 +87,15 @@ describe("gmail", () => {
     expect(calls.modify.some((c) => c.id === "m4")).toBe(false);
   });
 
+  it("accepts mail from an admin address with no org", async () => {
+    const { gmail, calls } = fakeGmail({ a1: { threadId: "ta", from: "Admin@Example.org" } });
+    const { db, inserted } = fakeDb([], []);
+    const r = await syncGmail({ ...env, ADMIN_EMAILS: "x@example.org, admin@example.org", DB: db }, gmail);
+    expect(r).toEqual({ logged: 1, ignored: 0, skipped: 0 });
+    expect(inserted[0]?.[2]).toBeNull();
+    expect(calls.modify[0]?.body.addLabelIds).toEqual(["L1"]);
+  });
+
   it("caches the access token", async () => {
     const { gmail, calls } = fakeGmail({});
     await gmail.listUnprocessed();
