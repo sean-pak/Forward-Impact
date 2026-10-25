@@ -37,3 +37,10 @@
 - Gaps: Mean attendance, est. credit days and est. cost avoided (PRD 10) are not built: no attendance rows in the fixtures and cost is `todo_confirm`. Hours in public view follow the participant count rule. Facility `Prisons covered` is not a person count and is not suppressed. No complementary suppression: with one suppressed facility row, totals minus other rows could reveal it.
 - Notes for next phase: the one-pager should call `buildDashboard(..., "public")` via the same endpoint. Fixture data is small, so most public cells will read `suppressed`, which is the expected demo of the rule until Muse data is loaded.
 - Dependencies: none new.
+
+## Phase 4: One-pager PDF (code done, deployed check pending)
+- Shipped: `GET /api/report` (web, Node runtime, behind the admin session; 401 without it) renders a one-page Letter PDF with `@react-pdf/renderer` from the **public** dashboard only. Content: participants, completion (n/N), hours, prisons x of 31, program deserts, footnotes (suppression rules, stated completion rule, hours basis, "association, not cause"), and a "Recidivism context: pending TPW confirmation" placeholder. `lib/report.ts` builds the text (refuses a staff dashboard); `lib/format.ts` is now the single `show()` used by `/admin` and the PDF; `/admin` links "Download one-pager (PDF)". `proxy.ts` matcher now includes `/api/report`.
+- Verified locally: built app against a stub Worker returns a 1-page PDF (suppressed cells print `suppressed`, 80% shows 40 of 50), and 401 with no cookie. Typecheck and tests pass.
+- Gaps / HUMAN: walk "Done when" on the deployed Vercel URL (log in, click the link on `/admin`). PLAN box left unticked and `phase-4` not tagged until then. Assumption footnotes are fixed text; est. cost / credit days still not built (see phase 3).
+- Notes: `next.config.ts` sets `serverExternalPackages: ["@react-pdf/renderer"]`. Filename date is UTC.
+- Dependencies: `@react-pdf/renderer` (in the stack list; renders the PDF server-side).

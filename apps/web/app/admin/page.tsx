@@ -1,10 +1,8 @@
-import type { Metric, View } from "@tpw/shared";
+import type { View } from "@tpw/shared";
+import { hoursNote, rateNote, show } from "../../lib/format";
 import { fetchDashboard } from "../../lib/worker";
 
 export const dynamic = "force-dynamic";
-
-const fmt = new Intl.NumberFormat("en-US");
-const approx = (isEstimate: boolean) => (isEstimate ? " (approx.)" : "");
 
 function Stat({ label, value, note }: { label: string; value: string; note?: string }) {
   return (
@@ -14,31 +12,6 @@ function Stat({ label, value, note }: { label: string; value: string; note?: str
       {note ? <div style={{ fontSize: "0.8rem", color: "#555" }}>{note}</div> : null}
     </div>
   );
-}
-
-const SUPPRESSED = "suppressed";
-
-/** One place that turns a Metric into text, so a suppressed cell can never print a number. */
-function show(m: Metric, kind: "count" | "rate" | "hours"): string {
-  if (m.suppressed) return SUPPRESSED;
-  if (m.value === null) return "n/a";
-  const text = kind === "rate" ? `${Math.round(m.value * 100)}%` : fmt.format(Math.round(m.value));
-  return `${text}${approx(m.isEstimate)}`;
-}
-
-function rateNote(m: Metric, excluded: number): string {
-  if (m.suppressed) return "Fewer than 30 in the denominator.";
-  if (m.value === null) return "No cycle has a stated completion rule and both counts.";
-  const left = excluded ? `; ${excluded} cycle(s) left out (rule unstated or count missing)` : "";
-  return `${fmt.format(m.numerator ?? 0)} of ${fmt.format(m.denominator ?? 0)} completed${left}`;
-}
-
-function hoursNote(n: { delivered: number; planned: number; unknown: number }): string {
-  const parts = [];
-  if (n.delivered) parts.push(`${n.delivered} delivered`);
-  if (n.planned) parts.push(`${n.planned} planned (hours per participant × enrolled)`);
-  if (n.unknown) parts.push(`${n.unknown} unknown`);
-  return parts.join(", ");
 }
 
 export default async function AdminPage({ searchParams }: { searchParams: Promise<{ view?: string }> }) {
@@ -60,7 +33,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       <h1>Dashboard</h1>
       <p style={{ color: "#555" }}>
         Confirmed cycles only. {view === "public" ? "Public view: small cells are suppressed." : "Staff view, not suppressed."}{" "}
-        <a href="/admin">Staff view</a> | <a href="/admin?view=public">Public view</a>
+        <a href="/admin">Staff view</a> | <a href="/admin?view=public">Public view</a> | <a href="/api/report">Download one-pager (PDF)</a>
       </p>
       <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
         <Stat label="Participants" value={show(summary.participants, "count")} />
