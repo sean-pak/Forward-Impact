@@ -151,7 +151,7 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 
 ---
 
-## [ ] Phase 8: Aggregate ingest (email + admin upload)
+## [x] Phase 8: Aggregate ingest (email + admin upload)
 
 **Goal:** program-level replies become draft cycles with issues.
 
@@ -166,9 +166,9 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 **Not in this phase:** replies to the CBO, person-level files.
 
 **Done when**
-- [ ] Persona 2 email: "about 30" flagged approximate, missing completion rule flagged, "Men's Colony" -> CMC.
-- [ ] Persona 1 CSV produces expected cycles.
-- [ ] Same results whether sent by email or uploaded.
+- [x] Persona 2 email: "about 30" flagged approximate, missing completion rule flagged, "Men's Colony" -> CMC.
+- [x] Persona 1 CSV produces expected cycles.
+- [x] Same results whether sent by email or uploaded.
 
 ---
 
