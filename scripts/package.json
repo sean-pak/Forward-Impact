@@ -8,7 +8,8 @@
     "test": "vitest run --passWithNoTests",
     "db:reset": "tsx src/dbReset.ts",
     "seed:muse": "tsx src/seedMuse.ts",
-    "keys:generate": "tsx src/keysGenerate.ts"
+    "keys:generate": "tsx src/keysGenerate.ts",
+    "google:auth": "tsx src/googleAuth.ts"
   },
   "dependencies": {
     "@tpw/shared": "workspace:^",

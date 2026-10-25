@@ -8,7 +8,8 @@
     "test": "pnpm -r test",
     "db:reset": "pnpm --filter @tpw/scripts run db:reset --",
     "seed:muse": "pnpm --filter @tpw/scripts run seed:muse --",
-    "keys:generate": "pnpm --filter @tpw/scripts run keys:generate --"
+    "keys:generate": "pnpm --filter @tpw/scripts run keys:generate --",
+    "google:auth": "pnpm --filter @tpw/scripts run google:auth --"
   },
   "devDependencies": {
     "typescript": "^7.0.2",
