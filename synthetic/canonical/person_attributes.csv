@@ -1,0 +1,1390 @@
+person_ref,birth_year,age_band_at_release,age_band_raw,risk_band,commitment_offense_category,sentence_type,prior_cdcr_stays_band,county_of_release
+SYN26344,1998,20_24,,high,persons,unknown,2,Contra Costa
+SYN27512,1993,25_29,,moderate,other,determinate,1,Alameda
+SYN20823,1976,45_49,,low,property,determinate,2,Orange
+SYN30586,1961,60_plus,,low,other,indeterminate,3,Sacramento
+SYN16481,1995,25_29,,low,drug,determinate,2,San Diego
+SYN38351,,unknown,30-39,,,,,
+SYN24834,1995,unknown,,moderate,persons,determinate,1,
+SYN30892,1955,unknown,,moderate,persons,determinate,3,
+SYN16819,1972,45_49,,low,other,determinate_2nd_strike,3,San Diego
+SYN26855,2001,unknown,,unknown,property,determinate,2,
+SYN16289,1993,unknown,,unknown,persons,indeterminate,10_plus,
+SYN34642,1986,35_39,,moderate,other,determinate_2nd_strike,10_plus,Fresno
+SYN28909,,unknown,30-39,,,,,Kern
+SYN15987,,unknown,30-39,,,,,
+SYN34655,1969,50_54,,high,property,determinate,2,San Bernardino
+SYN15787,2001,20_24,,moderate,other,determinate,3,Solano
+SYN23040,1985,35_39,,high,drug,indeterminate,2,San Joaquin
+SYN22819,2001,20_24,,moderate,persons,determinate,2,Fresno
+SYN31681,1979,40_44,,high,other,determinate,1,San Diego
+SYN21221,1971,50_54,,high,persons,determinate,3,Orange
+SYN25775,1969,50_54,,unknown,property,determinate,2,Alameda
+SYN20171,1977,unknown,,low,persons,determinate_2nd_strike,2,
+SYN38392,2001,20_24,,moderate,other,determinate,1,San Bernardino
+SYN26553,1994,25_29,,moderate,other,determinate,2,Los Angeles
+SYN34791,1968,50_54,,low,property,determinate,1,Sacramento
+SYN19530,1996,25_29,,low,property,determinate,3,Solano
+SYN35481,,unknown,30-39,,,,,Los Angeles
+SYN18757,1983,35_39,,unknown,drug,third_strike,2,Butte
+SYN12720,,unknown,50-59,,,,,
+SYN21620,1986,35_39,,low,persons,indeterminate,3,Monterey
+SYN16411,1989,unknown,,unknown,property,indeterminate,1,
+SYN31846,1993,25_29,,moderate,other,determinate,1,Butte
+SYN22308,,unknown,30-39,,,,,
+SYN32024,,unknown,18-29,,,,,Riverside
+SYN34218,1991,unknown,,high,persons,determinate,1,
+SYN39139,1971,50_54,,high,drug,indeterminate,2,Orange
+SYN28034,1986,35_39,,low,other,determinate,3,Orange
+SYN17388,1993,unknown,,unknown,persons,unknown,2,
+SYN13625,1994,25_29,,moderate,property,determinate,2,Orange
+SYN20669,1985,unknown,,low,persons,indeterminate,1,
+SYN27525,1973,unknown,,low,property,determinate,1,
+SYN35628,1983,unknown,,moderate,other,determinate,3,
+SYN30051,,unknown,18-29,,,,,
+SYN11990,1990,30_34,,moderate,other,indeterminate,10_plus,Monterey
+SYN24884,1994,unknown,,high,drug,indeterminate,2,
+SYN16035,1992,30_34,,high,persons,indeterminate,1,Stanislaus
+SYN28807,,unknown,50-59,,,,,Sacramento
+SYN29894,1989,unknown,,moderate,persons,indeterminate,2,
+SYN21102,1985,unknown,,low,persons,determinate,3,
+SYN16541,1976,45_49,,low,drug,indeterminate,4,Sacramento
+SYN21837,1989,unknown,,moderate,persons,determinate,1,
+SYN16280,1989,30_34,,moderate,persons,indeterminate,3,Santa Clara
+SYN30151,1983,35_39,,moderate,persons,determinate,1,Alameda
+SYN18292,1979,unknown,,low,drug,third_strike,3,
+SYN24011,1992,unknown,,high,other,determinate,2,
+SYN25637,1975,45_49,,low,drug,determinate,1,Kern
+SYN17335,,unknown,18-29,,,,,
+SYN39824,1985,35_39,,high,persons,determinate_2nd_strike,1,Contra Costa
+SYN36683,1996,25_29,,unknown,property,determinate,1,Monterey
+SYN10958,1980,40_44,,high,property,determinate,1,Tulare
+SYN37881,1972,45_49,,moderate,persons,third_strike,1,Tulare
+SYN15222,1973,unknown,,moderate,property,determinate,1,
+SYN35583,1992,30_34,,high,property,determinate,1,Stanislaus
+SYN18394,1981,40_44,,unknown,persons,determinate,5_9,San Joaquin
+SYN16910,1983,35_39,,high,persons,determinate_2nd_strike,2,Contra Costa
+SYN15624,1979,40_44,,high,persons,determinate,2,Stanislaus
+SYN26105,1986,unknown,,low,other,determinate,1,
+SYN39842,1999,20_24,,low,persons,indeterminate,1,Los Angeles
+SYN30810,1982,unknown,,low,property,determinate_2nd_strike,1,
+SYN12509,2000,unknown,,moderate,persons,determinate,1,
+SYN37314,,unknown,40-49,,,,,San Diego
+SYN11720,1987,unknown,,low,property,indeterminate,5_9,
+SYN23712,1963,55_59,,high,drug,determinate_2nd_strike,1,Butte
+SYN24847,1984,35_39,,moderate,property,determinate_2nd_strike,2,Orange
+SYN27368,1980,unknown,,low,property,indeterminate,3,
+SYN26260,1991,30_34,,moderate,persons,determinate,3,Stanislaus
+SYN31988,2001,20_24,,low,property,determinate,1,Sacramento
+SYN38516,,unknown,50-59,,,,,Riverside
+SYN13297,1993,25_29,,low,drug,determinate,1,Sacramento
+SYN39476,2002,20_24,,unknown,property,determinate,1,San Diego
+SYN13170,1985,unknown,,high,property,determinate,1,
+SYN12172,1974,unknown,,moderate,persons,determinate,4,
+SYN21557,1983,35_39,,moderate,property,determinate,1,Monterey
+SYN13277,,unknown,50-59,,,,,
+SYN34623,1988,30_34,,moderate,persons,indeterminate,1,Sacramento
+SYN30131,1972,50_54,,low,other,determinate_2nd_strike,3,Kern
+SYN36588,,unknown,50-59,,,,,Santa Clara
+SYN13447,1992,30_34,,low,persons,determinate_2nd_strike,5_9,Sonoma
+SYN27669,2000,unknown,,high,property,determinate_2nd_strike,2,
+SYN27970,1996,unknown,,low,other,determinate,1,
+SYN11092,2001,unknown,,low,persons,unknown,2,
+SYN11048,1974,45_49,,moderate,persons,determinate,1,Contra Costa
+SYN37077,1993,25_29,,moderate,persons,determinate,1,Orange
+SYN26071,2000,20_24,,low,persons,determinate_2nd_strike,5_9,San Diego
+SYN12525,2001,20_24,,low,persons,indeterminate,2,Santa Clara
+SYN34481,1975,45_49,,moderate,persons,determinate,1,San Diego
+SYN21383,1962,55_59,,moderate,persons,determinate,3,Monterey
+SYN23184,,unknown,50-59,,,,,San Bernardino
+SYN24402,1991,30_34,,high,other,unknown,1,Butte
+SYN21699,1999,20_24,,moderate,persons,determinate,3,Los Angeles
+SYN18855,1994,unknown,,low,other,indeterminate,3,
+SYN17209,1988,30_34,,moderate,drug,indeterminate,3,Los Angeles
+SYN18705,1987,30_34,,moderate,other,determinate,1,Stanislaus
+SYN29435,1979,40_44,,moderate,drug,determinate_2nd_strike,1,San Diego
+SYN23446,1984,35_39,,high,other,determinate,2,Riverside
+SYN11431,1987,unknown,,low,persons,determinate,5_9,
+SYN34646,2002,unknown,,moderate,persons,indeterminate,5_9,
+SYN21947,1996,25_29,,high,property,determinate,2,Alameda
+SYN32561,1978,40_44,,low,persons,indeterminate,1,Solano
+SYN25115,1980,40_44,,moderate,persons,indeterminate,2,Solano
+SYN38610,1998,20_24,,high,other,determinate,4,Alameda
+SYN38318,1989,unknown,,moderate,property,determinate,1,
+SYN12309,1963,55_59,,high,persons,determinate,1,Alameda
+SYN13513,1986,35_39,,high,other,determinate_2nd_strike,1,Stanislaus
+SYN22639,1977,40_44,,moderate,other,determinate_2nd_strike,2,Santa Clara
+SYN30075,,unknown,40-49,,,,,Butte
+SYN29208,1999,20_24,,moderate,property,indeterminate,1,San Bernardino
+SYN26722,1993,30_34,,moderate,persons,determinate,3,Santa Clara
+SYN11375,1995,25_29,,low,persons,determinate,4,Monterey
+SYN11545,,unknown,30-39,,,,,Contra Costa
+SYN39408,1954,60_plus,,unknown,drug,determinate,1,Butte
+SYN30903,,unknown,30-39,,,,,San Bernardino
+SYN36715,1976,unknown,,low,persons,determinate,2,
+SYN18112,1986,unknown,,moderate,persons,determinate,2,
+SYN15375,,unknown,18-29,,,,,
+SYN30474,1989,30_34,,high,property,determinate_2nd_strike,2,Santa Clara
+SYN32337,1997,25_29,,low,drug,determinate,1,San Diego
+SYN19957,1998,20_24,,low,drug,determinate_2nd_strike,1,Contra Costa
+SYN32041,1993,25_29,,moderate,other,determinate_2nd_strike,5_9,Butte
+SYN31492,1976,45_49,,low,other,determinate,1,San Bernardino
+SYN33751,,unknown,50-59,,,,,Orange
+SYN28634,2001,20_24,,low,property,third_strike,5_9,San Bernardino
+SYN32258,1982,unknown,,low,drug,determinate,1,
+SYN13362,1990,unknown,,low,property,determinate,3,
+SYN29354,,unknown,18-29,,,,,Sacramento
+SYN38998,1998,unknown,,low,persons,unknown,1,
+SYN16875,1984,35_39,,moderate,persons,determinate,3,Sacramento
+SYN37293,1990,30_34,,low,property,determinate,1,Butte
+SYN21870,1987,unknown,,low,persons,determinate_2nd_strike,1,
+SYN26377,1969,50_54,,moderate,property,determinate,2,Los Angeles
+SYN32261,1975,45_49,,high,other,indeterminate,1,Monterey
+SYN18403,2002,unknown,,low,other,determinate,1,
+SYN16477,,unknown,40-49,,,,,
+SYN20279,1965,55_59,,moderate,persons,determinate,1,Sonoma
+SYN39487,,unknown,18-29,,,,,Orange
+SYN13455,1972,50_54,,high,property,determinate,1,Riverside
+SYN12718,1990,30_34,,unknown,property,determinate,3,Los Angeles
+SYN19954,1957,unknown,,unknown,persons,determinate,1,
+SYN38860,1986,35_39,,moderate,persons,determinate,2,Tulare
+SYN35721,1971,50_54,,low,property,determinate_2nd_strike,2,Stanislaus
+SYN31323,1984,35_39,,high,property,indeterminate,2,Sonoma
+SYN10857,1997,25_29,,low,other,determinate,2,Butte
+SYN13421,1999,20_24,,unknown,drug,indeterminate,1,Orange
+SYN34725,1985,35_39,,high,persons,determinate_2nd_strike,4,Orange
+SYN24674,1985,35_39,,high,drug,unknown,1,Alameda
+SYN10471,1996,unknown,,high,persons,determinate,5_9,
+SYN24227,1974,45_49,,low,drug,determinate_2nd_strike,1,San Bernardino
+SYN34242,1990,unknown,,high,persons,unknown,1,
+SYN39377,1991,unknown,,high,persons,determinate_2nd_strike,1,
+SYN16728,1997,25_29,,low,persons,indeterminate,2,Solano
+SYN27979,1987,35_39,,low,persons,determinate,5_9,Sonoma
+SYN35896,,unknown,18-29,,,,,Sonoma
+SYN22563,1995,25_29,,moderate,drug,determinate,2,Contra Costa
+SYN31278,1981,unknown,,high,drug,determinate,1,
+SYN27168,,unknown,40-49,,,,,Alameda
+SYN21593,1996,25_29,,low,other,determinate_2nd_strike,4,Sonoma
+SYN14382,1973,45_49,,moderate,persons,determinate_2nd_strike,5_9,Monterey
+SYN14332,,unknown,60+,,,,,Butte
+SYN11883,1994,25_29,,low,other,determinate,1,Sacramento
+SYN18489,1997,25_29,,moderate,persons,determinate,5_9,Solano
+SYN11861,1965,unknown,,high,other,determinate,1,
+SYN11564,1968,50_54,,unknown,persons,determinate,1,Solano
+SYN18351,1987,unknown,,high,property,indeterminate,1,
+SYN39449,1991,30_34,,low,other,determinate,2,Sonoma
+SYN19901,1984,35_39,,low,persons,indeterminate,1,Solano
+SYN30889,,unknown,50-59,,,,,Orange
+SYN23812,1981,40_44,,high,drug,indeterminate,1,Sacramento
+SYN32492,1982,40_44,,low,drug,determinate_2nd_strike,1,Alameda
+SYN10022,2002,20_24,,high,property,determinate,2,Sacramento
+SYN30201,1972,50_54,,low,persons,determinate,2,Los Angeles
+SYN14189,1993,25_29,,moderate,persons,determinate,1,Los Angeles
+SYN34774,1970,unknown,,unknown,other,determinate,5_9,
+SYN39046,1964,55_59,,unknown,persons,indeterminate,1,Kern
+SYN12843,1991,unknown,,low,other,determinate,1,
+SYN37954,1969,unknown,,moderate,persons,determinate,2,
+SYN19371,1990,30_34,,unknown,persons,determinate,1,San Bernardino
+SYN15113,2000,unknown,,moderate,persons,determinate,2,
+SYN37708,1974,unknown,,moderate,drug,determinate,1,
+SYN33881,1975,45_49,,low,persons,determinate,1,San Bernardino
+SYN25519,1977,45_49,,moderate,persons,determinate,1,Sacramento
+SYN32319,1998,20_24,,high,drug,indeterminate,1,Alameda
+SYN17821,1978,40_44,,high,drug,determinate,1,Alameda
+SYN31856,1975,45_49,,unknown,persons,determinate,2,Fresno
+SYN34376,1978,40_44,,low,other,determinate,1,Butte
+SYN13881,1987,35_39,,unknown,persons,third_strike,1,Solano
+SYN13212,2000,20_24,,low,other,unknown,2,Santa Clara
+SYN28377,1982,40_44,,high,persons,determinate_2nd_strike,3,Solano
+SYN34049,1970,50_54,,high,property,determinate,1,Alameda
+SYN26064,1986,35_39,,high,drug,determinate,1,Orange
+SYN26991,1998,25_29,,low,persons,indeterminate,2,Los Angeles
+SYN24168,1976,45_49,,unknown,property,determinate,1,Contra Costa
+SYN19833,1985,35_39,,low,other,determinate_2nd_strike,1,Los Angeles
+SYN37587,1991,30_34,,high,persons,determinate_2nd_strike,2,Alameda
+SYN21423,1995,25_29,,moderate,other,determinate,2,Alameda
+SYN17964,,unknown,40-49,,,,,Sonoma
+SYN25475,1973,unknown,,low,drug,indeterminate,1,
+SYN16023,1957,60_plus,,low,property,determinate_2nd_strike,1,Los Angeles
+SYN29673,1968,50_54,,moderate,persons,third_strike,2,Orange
+SYN30574,1991,30_34,,low,persons,determinate,1,Alameda
+SYN37195,,unknown,40-49,,,,,Alameda
+SYN16669,,unknown,18-29,,,,,Solano
+SYN29550,1979,40_44,,low,persons,indeterminate,5_9,Los Angeles
+SYN17288,1999,20_24,,high,property,determinate,2,Tulare
+SYN25049,2002,20_24,,low,persons,unknown,2,Riverside
+SYN39104,1990,30_34,,moderate,persons,indeterminate,2,Sonoma
+SYN12154,1963,unknown,,low,persons,indeterminate,3,
+SYN25755,1990,30_34,,moderate,drug,determinate,2,Stanislaus
+SYN18440,1965,55_59,,low,drug,determinate_2nd_strike,3,Alameda
+SYN34287,1994,25_29,,high,persons,unknown,1,Fresno
+SYN13110,1972,50_54,,moderate,persons,determinate,3,San Bernardino
+SYN13470,1994,unknown,,low,property,determinate,10_plus,
+SYN25306,1967,55_59,,moderate,property,third_strike,2,Contra Costa
+SYN17538,1992,unknown,,low,drug,indeterminate,4,
+SYN27270,1991,30_34,,low,property,determinate,2,Monterey
+SYN26244,1988,30_34,,high,persons,determinate,2,Alameda
+SYN14411,2002,unknown,,high,persons,third_strike,1,
+SYN11376,1974,unknown,,high,other,indeterminate,2,
+SYN28404,1995,25_29,,low,other,determinate,1,Contra Costa
+SYN22644,1988,30_34,,moderate,property,third_strike,1,Tulare
+SYN16663,1995,25_29,,moderate,persons,determinate,3,Riverside
+SYN33155,1969,50_54,,low,drug,third_strike,1,Tulare
+SYN28836,1995,unknown,,low,persons,determinate,4,
+SYN25358,1970,50_54,,moderate,persons,indeterminate,4,Riverside
+SYN36343,1992,unknown,,low,persons,determinate,1,
+SYN39695,1989,30_34,,high,persons,determinate,10_plus,Fresno
+SYN19383,1998,20_24,,high,persons,determinate_2nd_strike,1,Riverside
+SYN29478,,unknown,30-39,,,,,
+SYN20827,1969,50_54,,low,persons,indeterminate,1,Santa Clara
+SYN21055,1993,25_29,,moderate,drug,determinate_2nd_strike,1,Monterey
+SYN13398,1978,40_44,,low,drug,indeterminate,1,Santa Clara
+SYN31818,,unknown,50-59,,,,,
+SYN34464,1996,25_29,,low,drug,determinate,1,Alameda
+SYN24710,1987,30_34,,moderate,property,indeterminate,3,Tulare
+SYN13565,1987,unknown,,unknown,property,determinate_2nd_strike,1,
+SYN38519,,unknown,18-29,,,,,
+SYN29044,1975,unknown,,high,persons,indeterminate,1,
+SYN17170,1979,40_44,,moderate,property,determinate_2nd_strike,4,Solano
+SYN18514,,unknown,18-29,,,,,Butte
+SYN33206,1997,unknown,,moderate,property,determinate,2,
+SYN14817,1997,25_29,,low,persons,determinate,1,Fresno
+SYN27840,1984,35_39,,low,property,determinate,2,Butte
+SYN16222,1997,25_29,,moderate,property,determinate,1,Contra Costa
+SYN35732,1996,25_29,,low,property,determinate,2,Kern
+SYN24663,,unknown,18-29,,,,,Butte
+SYN37074,1982,unknown,,high,drug,indeterminate,1,
+SYN29928,1971,unknown,,high,persons,indeterminate,2,
+SYN28079,1967,unknown,,low,persons,determinate_2nd_strike,1,
+SYN23923,1983,35_39,,moderate,drug,determinate,2,San Bernardino
+SYN37675,1980,unknown,,high,property,determinate,3,
+SYN13959,1981,40_44,,high,drug,indeterminate,2,Kern
+SYN25772,2000,20_24,,low,persons,determinate_2nd_strike,2,Sonoma
+SYN13218,1977,45_49,,low,property,determinate,3,Monterey
+SYN16270,2002,20_24,,low,other,determinate_2nd_strike,1,Monterey
+SYN14456,1979,unknown,,unknown,drug,determinate,1,
+SYN35178,1992,unknown,,moderate,drug,determinate_2nd_strike,1,
+SYN11095,,unknown,50-59,,,,,
+SYN13057,1999,20_24,,low,property,determinate,1,San Joaquin
+SYN37300,1995,25_29,,low,other,determinate,1,Los Angeles
+SYN14659,1994,25_29,,high,other,determinate,2,San Diego
+SYN15697,1983,40_44,,unknown,other,determinate,2,San Joaquin
+SYN25867,1993,unknown,,moderate,property,determinate_2nd_strike,4,
+SYN38683,,unknown,18-29,,,,,San Diego
+SYN23272,1990,30_34,,low,drug,determinate,3,Monterey
+SYN17110,1980,40_44,,moderate,other,determinate,3,Santa Clara
+SYN33818,1998,unknown,,low,other,determinate,1,
+SYN22345,2002,20_24,,low,persons,determinate,3,San Joaquin
+SYN14416,,unknown,40-49,,,,,
+SYN27911,1963,55_59,,high,persons,determinate,2,Monterey
+SYN12212,1986,unknown,,low,persons,indeterminate,2,
+SYN20374,,unknown,40-49,,,,,Los Angeles
+SYN12064,,unknown,40-49,,,,,
+SYN22378,1978,45_49,,moderate,other,third_strike,1,Santa Clara
+SYN23148,1980,40_44,,unknown,persons,indeterminate,2,Los Angeles
+SYN25112,,unknown,30-39,,,,,Los Angeles
+SYN18498,2000,20_24,,high,other,determinate,1,Los Angeles
+SYN28786,1986,35_39,,moderate,drug,third_strike,5_9,Sonoma
+SYN35771,1987,unknown,,low,property,determinate,4,
+SYN21652,,unknown,18-29,,,,,Los Angeles
+SYN36591,2003,20_24,,moderate,persons,determinate_2nd_strike,1,Alameda
+SYN37909,1967,unknown,,unknown,persons,unknown,5_9,
+SYN30432,1968,55_59,,moderate,other,determinate,1,Monterey
+SYN36786,1981,40_44,,high,drug,determinate,4,Orange
+SYN26551,2002,20_24,,low,persons,determinate,1,Solano
+SYN18930,1975,45_49,,moderate,property,third_strike,1,Sonoma
+SYN39399,2002,20_24,,moderate,other,determinate,5_9,Fresno
+SYN26904,,unknown,30-39,,,,,Monterey
+SYN13799,2002,unknown,,high,persons,determinate,2,
+SYN30402,1991,30_34,,low,property,determinate,2,Riverside
+SYN13679,1982,unknown,,high,other,determinate,1,
+SYN27392,2000,unknown,,high,persons,determinate_2nd_strike,1,
+SYN13072,1969,50_54,,low,drug,indeterminate,2,Solano
+SYN34947,1994,25_29,,high,property,determinate,3,Alameda
+SYN36050,1987,35_39,,low,persons,determinate,10_plus,Los Angeles
+SYN14737,1976,45_49,,unknown,persons,determinate,2,Contra Costa
+SYN27780,1976,45_49,,low,property,determinate,2,Butte
+SYN38958,1993,30_34,,moderate,property,determinate_2nd_strike,1,San Bernardino
+SYN17086,1977,unknown,,moderate,persons,indeterminate,4,
+SYN23307,1994,30_34,,moderate,property,determinate,1,Solano
+SYN15895,,unknown,18-29,,,,,Stanislaus
+SYN26282,1976,45_49,,moderate,drug,determinate,1,Butte
+SYN24484,1991,30_34,,high,other,determinate,1,Contra Costa
+SYN17518,1984,unknown,,low,property,determinate,3,
+SYN24332,1973,50_54,,low,property,determinate,2,Fresno
+SYN31800,1981,40_44,,low,persons,determinate_2nd_strike,1,Riverside
+SYN27430,1969,unknown,,high,persons,determinate,2,
+SYN34299,2003,unknown,,high,drug,determinate,2,
+SYN15053,1995,unknown,,low,persons,determinate,1,
+SYN31018,1996,25_29,,high,persons,determinate_2nd_strike,1,Santa Clara
+SYN19078,1994,25_29,,moderate,property,determinate_2nd_strike,2,Sacramento
+SYN11232,1997,unknown,,low,property,indeterminate,1,
+SYN18197,1992,30_34,,unknown,other,determinate,4,Butte
+SYN37013,,unknown,50-59,,,,,Sonoma
+SYN20018,1992,30_34,,high,other,determinate,2,Stanislaus
+SYN25851,1990,30_34,,moderate,persons,determinate_2nd_strike,2,San Diego
+SYN16617,1988,35_39,,high,drug,third_strike,3,Sonoma
+SYN15783,1995,25_29,,low,persons,determinate,1,Solano
+SYN21618,1995,25_29,,high,property,determinate,5_9,San Bernardino
+SYN37540,,unknown,30-39,,,,,
+SYN22259,1981,unknown,,moderate,persons,determinate,3,
+SYN19783,1964,unknown,,high,other,determinate_2nd_strike,1,
+SYN23871,1973,50_54,,low,other,determinate,2,Kern
+SYN25017,,unknown,50-59,,,,,San Bernardino
+SYN37203,2002,20_24,,high,persons,determinate,1,Monterey
+SYN27699,1969,unknown,,moderate,persons,determinate,1,
+SYN21700,,unknown,30-39,,,,,Solano
+SYN10898,2002,unknown,,moderate,drug,unknown,2,
+SYN35616,1990,30_34,,moderate,other,indeterminate,1,Contra Costa
+SYN23616,1989,unknown,,low,persons,determinate,4,
+SYN14446,,unknown,30-39,,,,,
+SYN16646,1998,25_29,,low,persons,indeterminate,1,Stanislaus
+SYN18302,1991,unknown,,high,persons,unknown,4,
+SYN31829,,unknown,50-59,,,,,Stanislaus
+SYN34799,1995,unknown,,moderate,other,determinate,1,
+SYN32610,,unknown,40-49,,,,,Santa Clara
+SYN19120,,unknown,50-59,,,,,
+SYN26735,1981,40_44,,high,other,determinate,2,Riverside
+SYN27865,1981,unknown,,moderate,property,unknown,1,
+SYN21230,1994,unknown,,unknown,other,determinate,3,
+SYN14122,,unknown,40-49,,,,,Sacramento
+SYN30981,,unknown,50-59,,,,,Sacramento
+SYN12824,1970,50_54,,high,persons,determinate,4,Stanislaus
+SYN12596,1988,35_39,,moderate,drug,determinate_2nd_strike,3,San Joaquin
+SYN31361,,unknown,30-39,,,,,Sacramento
+SYN13923,,unknown,60+,,,,,
+SYN10407,1986,unknown,,moderate,drug,determinate,1,
+SYN34232,1983,40_44,,low,property,determinate,1,Santa Clara
+SYN34559,1989,30_34,,moderate,drug,determinate,1,Stanislaus
+SYN12979,1974,50_54,,high,other,determinate,2,Tulare
+SYN38721,1961,60_plus,,low,persons,determinate,1,Contra Costa
+SYN32668,1991,30_34,,low,drug,indeterminate,2,Sacramento
+SYN26570,,unknown,18-29,,,,,
+SYN33607,1978,45_49,,high,persons,indeterminate,1,Orange
+SYN33959,,unknown,30-39,,,,,
+SYN36883,2000,20_24,,moderate,property,indeterminate,2,San Diego
+SYN39010,1982,40_44,,low,persons,determinate_2nd_strike,1,Sacramento
+SYN27649,1988,35_39,,moderate,drug,determinate_2nd_strike,1,Stanislaus
+SYN30885,1964,55_59,,low,other,determinate,4,Butte
+SYN25832,1987,35_39,,unknown,other,determinate,10_plus,Tulare
+SYN34234,1992,30_34,,low,persons,determinate,5_9,Stanislaus
+SYN18162,2001,20_24,,moderate,persons,determinate,1,Monterey
+SYN35030,,unknown,40-49,,,,,Solano
+SYN29865,1982,unknown,,low,property,determinate_2nd_strike,1,
+SYN13736,1985,35_39,,low,property,determinate,5_9,Orange
+SYN12418,1987,35_39,,low,persons,indeterminate,5_9,Kern
+SYN25488,,unknown,30-39,,,,,San Bernardino
+SYN28538,1995,25_29,,moderate,persons,determinate_2nd_strike,1,Santa Clara
+SYN10488,1975,45_49,,moderate,drug,determinate,1,Santa Clara
+SYN26360,1990,unknown,,low,persons,indeterminate,1,
+SYN27452,1978,45_49,,moderate,drug,indeterminate,1,San Diego
+SYN16787,1977,45_49,,moderate,persons,indeterminate,3,Alameda
+SYN32754,,unknown,18-29,,,,,San Diego
+SYN13668,,unknown,18-29,,,,,Solano
+SYN10314,1980,40_44,,unknown,drug,indeterminate,2,Los Angeles
+SYN18798,1979,40_44,,moderate,drug,indeterminate,2,Monterey
+SYN29180,,unknown,40-49,,,,,Alameda
+SYN29755,1987,35_39,,low,drug,indeterminate,2,Fresno
+SYN25107,2001,20_24,,unknown,drug,third_strike,1,Sacramento
+SYN11570,1999,20_24,,low,persons,determinate,1,Butte
+SYN37525,1982,40_44,,moderate,drug,determinate,3,Stanislaus
+SYN15336,1969,50_54,,high,drug,determinate,5_9,Alameda
+SYN34477,1986,35_39,,high,property,determinate_2nd_strike,3,Sonoma
+SYN30702,1955,60_plus,,moderate,persons,determinate,3,Orange
+SYN34162,1996,unknown,,unknown,other,determinate,2,
+SYN10478,1993,unknown,,low,property,indeterminate,2,
+SYN30908,1987,unknown,,high,property,determinate_2nd_strike,3,
+SYN17088,1986,35_39,,moderate,property,determinate_2nd_strike,1,Los Angeles
+SYN29780,1967,55_59,,low,property,determinate,1,Fresno
+SYN11966,,unknown,40-49,,,,,Sonoma
+SYN22713,1981,40_44,,high,other,third_strike,5_9,Los Angeles
+SYN13741,,unknown,60+,,,,,Monterey
+SYN16988,1994,25_29,,moderate,persons,determinate,2,Sacramento
+SYN14486,1991,30_34,,high,persons,determinate_2nd_strike,3,San Joaquin
+SYN18187,1989,30_34,,low,other,determinate,1,Alameda
+SYN30327,,unknown,40-49,,,,,Santa Clara
+SYN13014,,unknown,18-29,,,,,Stanislaus
+SYN27506,,unknown,18-29,,,,,
+SYN33823,1990,unknown,,low,property,third_strike,1,
+SYN24022,1984,35_39,,low,property,third_strike,1,Tulare
+SYN14940,,unknown,40-49,,,,,
+SYN14767,,unknown,18-29,,,,,Sacramento
+SYN32999,2002,unknown,,high,persons,determinate_2nd_strike,1,
+SYN13382,,unknown,30-39,,,,,
+SYN32331,1967,unknown,,low,drug,unknown,2,
+SYN34869,1981,unknown,,high,drug,determinate,3,
+SYN30328,1998,unknown,,low,drug,determinate,4,
+SYN12090,1982,40_44,,high,persons,indeterminate,3,Riverside
+SYN35751,1982,40_44,,high,persons,determinate,2,Contra Costa
+SYN14988,1999,unknown,,moderate,persons,determinate_2nd_strike,3,
+SYN35293,1997,25_29,,high,other,determinate,1,Kern
+SYN12301,1991,30_34,,low,persons,determinate_2nd_strike,2,Tulare
+SYN39605,2001,20_24,,low,persons,determinate_2nd_strike,10_plus,Sonoma
+SYN31208,,unknown,30-39,,,,,San Bernardino
+SYN14590,1985,35_39,,moderate,other,indeterminate,3,San Diego
+SYN22391,1966,unknown,,low,persons,determinate,3,
+SYN15837,1984,35_39,,low,persons,determinate,4,Los Angeles
+SYN27982,1988,unknown,,moderate,persons,determinate,2,
+SYN12470,1986,35_39,,high,persons,determinate,2,Contra Costa
+SYN34789,1992,30_34,,high,other,third_strike,2,Monterey
+SYN17204,1983,unknown,,low,other,determinate,4,
+SYN32193,1972,50_54,,low,persons,determinate,3,Alameda
+SYN15609,1996,25_29,,low,drug,determinate,5_9,Orange
+SYN27220,1986,35_39,,high,persons,determinate,1,San Joaquin
+SYN38959,1980,unknown,,unknown,persons,indeterminate,4,
+SYN14769,2003,unknown,,moderate,persons,determinate,3,
+SYN38971,1999,20_24,,moderate,persons,unknown,3,Alameda
+SYN24398,1992,unknown,,low,other,unknown,2,
+SYN36138,1992,30_34,,moderate,persons,determinate,2,Solano
+SYN38849,1996,25_29,,low,persons,determinate,4,Contra Costa
+SYN18803,2002,20_24,,high,drug,determinate,1,Tulare
+SYN13994,1989,30_34,,moderate,property,determinate,2,Los Angeles
+SYN26911,1997,25_29,,low,other,unknown,1,Kern
+SYN20196,1981,40_44,,low,property,determinate,1,Santa Clara
+SYN23644,1999,20_24,,moderate,persons,indeterminate,2,Fresno
+SYN35789,1997,25_29,,unknown,property,indeterminate,2,Los Angeles
+SYN34080,,unknown,30-39,,,,,
+SYN13259,1993,unknown,,moderate,drug,indeterminate,1,
+SYN33642,1992,30_34,,unknown,persons,indeterminate,1,Fresno
+SYN37595,1995,25_29,,low,other,indeterminate,3,Sonoma
+SYN18181,1989,30_34,,low,property,determinate,1,Orange
+SYN25823,,unknown,30-39,,,,,
+SYN39265,,unknown,30-39,,,,,
+SYN26035,1984,35_39,,low,property,determinate,2,San Bernardino
+SYN23664,1988,unknown,,low,persons,determinate_2nd_strike,1,
+SYN39855,1995,25_29,,low,property,indeterminate,1,Contra Costa
+SYN27749,1982,40_44,,high,drug,determinate,2,Santa Clara
+SYN32054,1995,25_29,,low,other,determinate,1,Contra Costa
+SYN35048,,unknown,18-29,,,,,San Diego
+SYN38590,1991,unknown,,unknown,persons,determinate,2,
+SYN36218,2003,20_24,,high,drug,indeterminate,1,Monterey
+SYN29840,1968,unknown,,moderate,persons,determinate,1,
+SYN11320,1987,35_39,,low,persons,determinate,1,Sacramento
+SYN35181,,unknown,30-39,,,,,Kern
+SYN34411,,unknown,60+,,,,,Riverside
+SYN23286,1996,unknown,,low,property,determinate,1,
+SYN17441,1969,50_54,,high,property,unknown,2,San Joaquin
+SYN18163,,unknown,30-39,,,,,Orange
+SYN17378,1987,unknown,,moderate,other,determinate,1,
+SYN32576,1986,35_39,,high,persons,determinate,1,Riverside
+SYN27798,1986,35_39,,low,property,determinate,1,Solano
+SYN19890,1996,25_29,,low,persons,determinate,2,Alameda
+SYN32756,1979,40_44,,moderate,other,determinate,1,Contra Costa
+SYN31285,1984,35_39,,unknown,persons,determinate,4,Riverside
+SYN22600,1968,55_59,,low,other,determinate,2,Fresno
+SYN16097,1998,unknown,,low,persons,determinate,4,
+SYN37562,1990,30_34,,low,other,determinate_2nd_strike,1,Kern
+SYN38936,2000,20_24,,low,persons,determinate,5_9,Tulare
+SYN11513,1988,unknown,,moderate,property,determinate,1,
+SYN11511,1987,35_39,,high,persons,determinate_2nd_strike,3,San Bernardino
+SYN25398,1996,25_29,,moderate,property,determinate,2,San Joaquin
+SYN30093,1990,30_34,,moderate,persons,determinate_2nd_strike,3,Riverside
+SYN23947,,unknown,18-29,,,,,
+SYN14484,,unknown,40-49,,,,,Contra Costa
+SYN21734,1981,40_44,,moderate,other,determinate,4,Stanislaus
+SYN35585,2002,unknown,,low,persons,determinate,5_9,
+SYN30471,2000,unknown,,low,property,determinate,1,
+SYN21965,1985,35_39,,low,other,indeterminate,2,Orange
+SYN31480,1987,35_39,,moderate,persons,determinate,1,Contra Costa
+SYN37252,1992,30_34,,low,persons,determinate_2nd_strike,1,Sonoma
+SYN23215,,unknown,40-49,,,,,Monterey
+SYN30423,2002,20_24,,moderate,drug,indeterminate,2,Sonoma
+SYN24887,1988,35_39,,moderate,persons,indeterminate,1,Los Angeles
+SYN10195,1993,30_34,,unknown,other,third_strike,3,Solano
+SYN22603,1989,35_39,,high,persons,determinate_2nd_strike,5_9,Butte
+SYN31222,1984,unknown,,low,other,determinate,1,
+SYN38965,1980,unknown,,unknown,persons,determinate,4,
+SYN31898,1990,35_39,,low,property,indeterminate,1,Kern
+SYN26018,,unknown,50-59,,,,,
+SYN16108,,unknown,18-29,,,,,San Joaquin
+SYN10408,,unknown,40-49,,,,,Santa Clara
+SYN14236,1993,30_34,,moderate,property,determinate,10_plus,Solano
+SYN17651,2003,unknown,,moderate,persons,indeterminate,1,
+SYN37067,1988,35_39,,moderate,property,determinate,1,Kern
+SYN11697,1975,45_49,,low,other,determinate,1,Riverside
+SYN13511,1977,unknown,,moderate,other,determinate,5_9,
+SYN19871,1996,unknown,,low,drug,unknown,2,
+SYN10227,1997,25_29,,low,property,third_strike,3,Butte
+SYN11929,1993,30_34,,moderate,property,determinate,2,Orange
+SYN15296,,unknown,50-59,,,,,Los Angeles
+SYN20454,2002,unknown,,moderate,persons,determinate,2,
+SYN14218,1977,45_49,,unknown,property,determinate,3,Butte
+SYN10279,1994,25_29,,moderate,other,determinate,3,Sonoma
+SYN15151,1984,40_44,,low,other,determinate,2,Alameda
+SYN25616,1970,50_54,,low,drug,determinate,2,Kern
+SYN30244,1970,50_54,,high,other,third_strike,2,Santa Clara
+SYN21420,1972,50_54,,moderate,drug,determinate_2nd_strike,3,San Bernardino
+SYN12143,1998,25_29,,high,drug,determinate_2nd_strike,1,Santa Clara
+SYN37879,1993,unknown,,high,persons,determinate,1,
+SYN19531,1996,unknown,,high,property,third_strike,2,
+SYN22866,1992,unknown,,low,drug,determinate,1,
+SYN23336,1964,60_plus,,moderate,persons,unknown,3,San Diego
+SYN35452,1995,25_29,,high,persons,determinate,1,Fresno
+SYN39288,1984,40_44,,moderate,other,determinate,2,Contra Costa
+SYN23440,,unknown,40-49,,,,,
+SYN28138,1996,25_29,,low,property,indeterminate,5_9,San Joaquin
+SYN12631,2003,20_24,,low,persons,third_strike,2,Orange
+SYN23416,,unknown,18-29,,,,,Butte
+SYN25453,1967,55_59,,high,property,determinate,1,Contra Costa
+SYN37503,1990,30_34,,unknown,persons,determinate,1,Solano
+SYN20487,,unknown,30-39,,,,,
+SYN38029,,unknown,40-49,,,,,Butte
+SYN31748,1980,unknown,,low,other,determinate,4,
+SYN17514,1969,unknown,,low,other,determinate,1,
+SYN16305,1971,unknown,,high,other,determinate,5_9,
+SYN12386,1961,unknown,,low,other,determinate,1,
+SYN20676,2000,unknown,,moderate,persons,determinate,1,
+SYN21469,1981,40_44,,high,other,determinate,1,Fresno
+SYN28746,1988,35_39,,high,other,determinate,1,Alameda
+SYN18273,1976,45_49,,moderate,other,determinate,2,Kern
+SYN29690,1987,35_39,,moderate,persons,determinate_2nd_strike,2,Fresno
+SYN21813,1987,35_39,,moderate,property,determinate,3,Solano
+SYN11588,,unknown,18-29,,,,,Alameda
+SYN33372,1996,25_29,,low,drug,determinate_2nd_strike,2,Sonoma
+SYN29953,2003,unknown,,moderate,persons,determinate,1,
+SYN23940,1968,55_59,,low,property,determinate,1,Sacramento
+SYN35690,1996,25_29,,low,persons,determinate_2nd_strike,4,Kern
+SYN33336,,unknown,30-39,,,,,Los Angeles
+SYN26931,1970,50_54,,high,property,determinate_2nd_strike,5_9,Alameda
+SYN33910,1990,30_34,,low,drug,determinate,1,Sonoma
+SYN27851,1972,50_54,,low,persons,unknown,3,Kern
+SYN25662,1985,unknown,,low,other,determinate,3,
+SYN38717,1984,40_44,,moderate,drug,third_strike,1,Sacramento
+SYN32985,1989,unknown,,high,property,determinate,1,
+SYN25254,1984,40_44,,moderate,property,determinate_2nd_strike,1,San Joaquin
+SYN19202,1984,40_44,,high,drug,determinate,4,Tulare
+SYN21719,1985,35_39,,high,persons,third_strike,1,San Joaquin
+SYN26924,,unknown,50-59,,,,,
+SYN30424,,unknown,60+,,,,,Butte
+SYN10515,1981,40_44,,unknown,other,third_strike,2,Tulare
+SYN34653,1987,35_39,,high,property,indeterminate,1,Sacramento
+SYN20986,1986,35_39,,unknown,property,determinate,3,San Joaquin
+SYN19795,1985,unknown,,high,persons,determinate,1,
+SYN37557,,unknown,18-29,,,,,
+SYN25405,1996,25_29,,high,persons,determinate,2,San Joaquin
+SYN28804,,unknown,60+,,,,,Solano
+SYN36817,,unknown,18-29,,,,,Stanislaus
+SYN18638,1972,50_54,,high,persons,determinate,3,San Bernardino
+SYN17353,1992,30_34,,unknown,other,determinate,1,Contra Costa
+SYN15556,1991,unknown,,high,drug,determinate,1,
+SYN30568,1968,unknown,,low,persons,determinate,5_9,
+SYN10215,1983,40_44,,unknown,property,determinate,3,Butte
+SYN26606,1975,45_49,,high,persons,indeterminate,1,Solano
+SYN10058,,unknown,40-49,,,,,Butte
+SYN13161,1979,45_49,,moderate,persons,determinate,1,Contra Costa
+SYN36765,1991,unknown,,low,other,third_strike,1,
+SYN15267,1983,40_44,,high,property,determinate,1,San Diego
+SYN26398,1982,40_44,,low,drug,determinate,1,Sonoma
+SYN37090,1990,30_34,,low,drug,indeterminate,1,Santa Clara
+SYN29754,1983,40_44,,low,property,determinate,4,Alameda
+SYN17298,1968,55_59,,moderate,property,determinate_2nd_strike,1,Fresno
+SYN28345,1983,40_44,,low,persons,determinate,1,Fresno
+SYN27870,1995,25_29,,low,drug,determinate,1,Los Angeles
+SYN35716,2002,unknown,,low,other,determinate_2nd_strike,4,
+SYN22279,2000,20_24,,unknown,drug,determinate_2nd_strike,1,Riverside
+SYN15268,1999,unknown,,high,drug,indeterminate,1,
+SYN24152,1995,unknown,,high,persons,indeterminate,3,
+SYN26675,1984,40_44,,high,other,determinate,2,Fresno
+SYN23103,1989,35_39,,moderate,property,determinate,2,Alameda
+SYN10352,1983,40_44,,moderate,persons,determinate_2nd_strike,1,Contra Costa
+SYN13551,1994,25_29,,moderate,property,determinate_2nd_strike,4,Sacramento
+SYN33658,1998,25_29,,unknown,persons,third_strike,5_9,Los Angeles
+SYN22110,,unknown,18-29,,,,,Contra Costa
+SYN25685,1977,45_49,,low,other,determinate,4,Los Angeles
+SYN20281,1985,35_39,,high,property,determinate,2,Riverside
+SYN14164,1997,25_29,,low,property,determinate,1,Kern
+SYN13445,2002,20_24,,moderate,other,determinate,1,Tulare
+SYN22205,1965,55_59,,low,persons,determinate,10_plus,Solano
+SYN21894,1981,40_44,,low,property,determinate,10_plus,Los Angeles
+SYN20757,,unknown,18-29,,,,,Stanislaus
+SYN11020,1997,unknown,,high,property,determinate,2,
+SYN21186,1988,35_39,,low,persons,determinate,1,Stanislaus
+SYN15502,1981,40_44,,low,persons,determinate,1,Stanislaus
+SYN32483,1996,25_29,,moderate,persons,indeterminate,1,Kern
+SYN10132,1993,unknown,,low,persons,unknown,1,
+SYN18889,1989,unknown,,unknown,persons,unknown,2,
+SYN30954,1963,60_plus,,high,other,determinate_2nd_strike,3,Tulare
+SYN35775,1981,unknown,,low,persons,third_strike,1,
+SYN18734,1975,45_49,,low,other,unknown,2,Butte
+SYN38504,1987,35_39,,moderate,persons,determinate,5_9,Riverside
+SYN17801,1999,unknown,,low,property,determinate,1,
+SYN36508,1970,unknown,,moderate,drug,determinate,5_9,
+SYN10229,1995,unknown,,low,other,third_strike,4,
+SYN17256,,unknown,30-39,,,,,Santa Clara
+SYN18383,2000,20_24,,moderate,property,determinate,1,Fresno
+SYN34128,1989,unknown,,moderate,property,determinate,10_plus,
+SYN30735,2002,20_24,,high,other,determinate,1,Sacramento
+SYN33548,1993,unknown,,low,other,determinate,1,
+SYN31913,,unknown,30-39,,,,,Contra Costa
+SYN21817,1999,25_29,,low,drug,determinate,1,San Joaquin
+SYN16161,1966,unknown,,moderate,property,determinate,2,
+SYN31116,1998,unknown,,moderate,property,indeterminate,2,
+SYN14852,,unknown,18-29,,,,,Monterey
+SYN18989,1968,55_59,,low,property,determinate,1,Los Angeles
+SYN14981,2001,20_24,,moderate,other,determinate,2,Stanislaus
+SYN31449,1999,unknown,,moderate,property,indeterminate,1,
+SYN20737,2000,25_29,,low,property,determinate,1,Solano
+SYN32098,2003,unknown,,low,persons,determinate,1,
+SYN28533,1991,unknown,,high,drug,determinate_2nd_strike,3,
+SYN22728,1994,30_34,,low,property,determinate,2,Kern
+SYN30712,1980,40_44,,high,property,third_strike,2,Contra Costa
+SYN10662,1993,30_34,,moderate,other,determinate,3,Contra Costa
+SYN35642,1988,35_39,,low,persons,unknown,1,Los Angeles
+SYN18247,1992,unknown,,high,other,determinate,10_plus,
+SYN11007,,unknown,30-39,,,,,Fresno
+SYN39876,2003,20_24,,low,persons,determinate,1,Sonoma
+SYN31446,1978,unknown,,low,drug,determinate,1,
+SYN20011,2000,25_29,,low,property,determinate,1,Kern
+SYN35415,1990,unknown,,high,drug,determinate,1,
+SYN10065,1995,unknown,,moderate,persons,determinate,5_9,
+SYN39614,2004,unknown,,moderate,other,determinate_2nd_strike,5_9,
+SYN21924,,unknown,30-39,,,,,San Joaquin
+SYN39052,1980,45_49,,unknown,other,indeterminate,4,Stanislaus
+SYN28900,1998,25_29,,moderate,drug,determinate,4,San Diego
+SYN15196,1985,40_44,,moderate,other,determinate,4,Butte
+SYN36120,2004,unknown,,low,persons,determinate,5_9,
+SYN32859,1968,55_59,,high,property,indeterminate,1,Monterey
+SYN21537,1991,30_34,,moderate,property,determinate_2nd_strike,1,Santa Clara
+SYN19280,1966,55_59,,low,other,indeterminate,1,Butte
+SYN31308,2003,20_24,,low,other,determinate,2,Alameda
+SYN31377,,unknown,30-39,,,,,
+SYN13065,1989,35_39,,unknown,property,unknown,1,Stanislaus
+SYN35208,1995,30_34,,low,other,determinate,1,Fresno
+SYN19800,1966,55_59,,moderate,other,determinate_2nd_strike,1,Butte
+SYN11120,1991,30_34,,low,drug,determinate,1,Stanislaus
+SYN30904,1993,30_34,,moderate,other,determinate,2,Fresno
+SYN16569,1987,unknown,,low,property,determinate_2nd_strike,1,
+SYN37565,,unknown,30-39,,,,,Sacramento
+SYN28717,1999,25_29,,high,persons,determinate_2nd_strike,1,Sacramento
+SYN14201,1983,unknown,,moderate,other,indeterminate,5_9,
+SYN33743,1986,35_39,,low,persons,indeterminate,2,Fresno
+SYN13979,1995,30_34,,low,property,indeterminate,1,Sacramento
+SYN32334,2004,20_24,,moderate,other,determinate,1,Fresno
+SYN10989,1991,30_34,,low,persons,determinate,1,San Joaquin
+SYN10358,1980,unknown,,low,property,third_strike,4,
+org_gateway:G-0728,1974,unknown,,low,property,determinate,5_9,
+SYN22144,1994,unknown,,low,drug,determinate,2,
+SYN27453,1986,unknown,,high,drug,determinate_2nd_strike,1,
+SYN20082,1991,unknown,,moderate,other,determinate_2nd_strike,2,
+SYN37389,1985,unknown,,low,persons,determinate,4,
+org_gateway:G-0743,1991,unknown,,high,property,determinate,5_9,
+SYN20062,2000,unknown,,moderate,persons,determinate,3,
+SYN39787,1999,unknown,,low,property,determinate,1,
+SYN28503,1994,unknown,,moderate,persons,determinate_2nd_strike,3,
+SYN16346,1992,unknown,,low,persons,indeterminate,2,
+SYN37245,1971,unknown,,low,other,indeterminate,3,
+org_gateway:G-0761,2001,unknown,,moderate,drug,determinate_2nd_strike,3,
+org_gateway:G-0762,1993,unknown,,low,persons,indeterminate,1,
+SYN35500,1980,unknown,,high,property,determinate,1,
+SYN13996,1965,unknown,,high,persons,determinate,1,
+SYN34029,1986,unknown,,unknown,persons,indeterminate,1,
+SYN25184,1986,unknown,,low,property,determinate,1,
+SYN18279,1993,unknown,,low,persons,determinate_2nd_strike,5_9,
+SYN16486,1985,unknown,,low,persons,unknown,1,
+SYN10966,1993,unknown,,moderate,property,determinate_2nd_strike,1,
+SYN19975,1998,unknown,,unknown,persons,determinate_2nd_strike,4,
+SYN12878,1993,unknown,,unknown,property,determinate,1,
+SYN10075,1986,unknown,,moderate,other,determinate,5_9,
+SYN27872,1978,unknown,,low,drug,determinate_2nd_strike,1,
+SYN12483,1989,unknown,,low,persons,determinate_2nd_strike,5_9,
+SYN37527,1992,unknown,,moderate,other,third_strike,5_9,
+SYN16806,1991,unknown,,moderate,drug,determinate,3,
+SYN36641,1979,unknown,,low,property,determinate,1,
+SYN25338,1976,unknown,,moderate,persons,determinate_2nd_strike,4,
+SYN37094,1962,unknown,,low,persons,unknown,2,
+SYN12802,1964,unknown,,moderate,property,determinate,1,
+SYN20187,1983,unknown,,unknown,persons,determinate_2nd_strike,5_9,
+SYN39231,1985,unknown,,moderate,property,indeterminate,1,
+SYN24527,1997,unknown,,unknown,persons,indeterminate,1,
+SYN17823,1986,unknown,,low,property,unknown,2,
+SYN33605,1986,unknown,,moderate,property,indeterminate,2,
+SYN34829,1984,unknown,,high,other,determinate_2nd_strike,2,
+SYN24472,1990,unknown,,unknown,property,determinate,3,
+SYN28074,1969,unknown,,low,persons,determinate,1,
+SYN19394,1995,unknown,,high,drug,determinate,1,
+SYN36574,,unknown,40-49,,,,,
+SYN19252,,unknown,30-39,,,,,
+SYN12874,,unknown,40-49,,,,,
+SYN24579,,unknown,40-49,,,,,
+SYN23096,,unknown,40-49,,,,,
+SYN14256,,unknown,30-39,,,,,
+SYN39853,,unknown,18-29,,,,,
+SYN36308,,unknown,60+,,,,,
+SYN33391,1970,unknown,,unknown,property,indeterminate,4,
+SYN32528,1978,unknown,,low,drug,determinate,5_9,
+SYN27115,1996,unknown,,low,other,determinate_2nd_strike,1,
+SYN22696,1964,unknown,,high,property,determinate,5_9,
+SYN36243,1981,unknown,,low,property,determinate_2nd_strike,3,
+SYN26388,1988,unknown,,moderate,other,indeterminate,3,
+SYN10554,1971,unknown,,high,property,indeterminate,2,
+SYN24124,1978,unknown,,low,persons,determinate_2nd_strike,1,
+SYN16657,1968,unknown,,low,drug,determinate,3,
+SYN31459,1995,unknown,,moderate,property,determinate,1,
+SYN37553,1988,unknown,,low,persons,determinate,1,
+SYN26564,1976,unknown,,unknown,persons,determinate,10_plus,
+SYN19789,1971,unknown,,unknown,property,determinate,1,
+org_northstar:N-0686,2002,unknown,,unknown,persons,determinate,4,
+org_northstar:N-0689,1988,unknown,,high,persons,determinate,1,
+org_northstar:N-0690,1987,unknown,,low,persons,determinate,4,
+SYN10835,1977,unknown,,moderate,persons,determinate,1,
+SYN20522,1994,unknown,,high,other,determinate,1,
+SYN14058,1963,unknown,,unknown,property,indeterminate,2,
+SYN37651,1993,unknown,,low,other,determinate,1,
+SYN32881,,unknown,30-39,,,,,
+SYN21911,,unknown,40-49,,,,,
+SYN36648,,unknown,30-39,,,,,
+SYN34087,,unknown,50-59,,,,,
+SYN34077,,unknown,50-59,,,,,
+SYN12741,,unknown,30-39,,,,,
+SYN11816,,unknown,40-49,,,,,
+SYN12101,,unknown,40-49,,,,,
+SYN26695,,unknown,60+,,,,,
+SYN20477,,unknown,30-39,,,,,
+SYN20625,,unknown,30-39,,,,,
+SYN39421,,unknown,18-29,,,,,
+SYN32726,,unknown,40-49,,,,,
+SYN32349,,unknown,30-39,,,,,
+SYN33826,,unknown,30-39,,,,,
+SYN14029,,unknown,40-49,,,,,
+org_gateway:G-0787,1984,unknown,,low,property,unknown,1,
+SYN25774,1987,unknown,,low,persons,third_strike,5_9,
+SYN13936,1998,unknown,,high,drug,determinate,1,
+org_gateway:G-0797,1999,unknown,,low,other,determinate_2nd_strike,1,
+SYN28233,1965,unknown,,low,persons,determinate,2,
+SYN32716,1988,unknown,,moderate,other,determinate,5_9,
+SYN31019,1993,unknown,,moderate,persons,determinate,1,
+SYN12280,1988,unknown,,high,drug,determinate,1,
+SYN22223,1969,unknown,,high,persons,determinate,1,
+SYN28705,1960,unknown,,low,property,indeterminate,1,
+SYN26234,1989,unknown,,moderate,persons,determinate,2,
+org_gateway:G-0820,1987,unknown,,high,persons,determinate,3,
+SYN22683,1990,unknown,,high,drug,determinate,4,
+SYN10016,1978,unknown,,high,other,indeterminate,2,
+org_gateway:G-0828,2001,unknown,,high,persons,determinate,1,
+SYN10760,1974,unknown,,unknown,other,determinate,5_9,
+SYN18748,2002,unknown,,high,persons,determinate,1,
+org_gateway:G-0839,1971,unknown,,high,persons,determinate,1,
+SYN20203,1989,unknown,,unknown,drug,determinate,1,
+SYN35061,1978,unknown,,low,property,determinate,5_9,
+SYN39628,1990,unknown,,high,other,determinate,1,
+SYN39598,1999,unknown,,high,drug,third_strike,2,
+SYN29713,1980,unknown,,unknown,persons,determinate,1,
+SYN30401,1998,unknown,,moderate,persons,determinate,2,
+SYN37825,1973,unknown,,low,persons,determinate,2,
+SYN39179,1986,unknown,,low,drug,determinate,5_9,
+SYN21379,1996,unknown,,low,property,determinate,2,
+SYN16224,1986,unknown,,moderate,persons,indeterminate,3,
+SYN21091,1995,unknown,,moderate,property,determinate,1,
+SYN18306,1983,unknown,,high,other,determinate,10_plus,
+SYN33200,1994,unknown,,low,other,determinate,2,
+SYN36967,1986,unknown,,high,persons,determinate,4,
+SYN36701,1972,unknown,,low,persons,determinate,3,
+SYN10540,2002,unknown,,low,persons,determinate,2,
+SYN17582,1985,unknown,,low,persons,determinate,5_9,
+SYN32696,2003,unknown,,high,property,third_strike,1,
+SYN16054,1992,unknown,,high,property,third_strike,1,
+SYN37506,2000,unknown,,moderate,persons,indeterminate,3,
+SYN13300,1999,unknown,,moderate,persons,determinate,1,
+SYN34359,1976,unknown,,high,persons,determinate_2nd_strike,3,
+SYN33033,1990,unknown,,unknown,drug,indeterminate,5_9,
+org_keystone:K-0469,1991,unknown,,moderate,property,determinate,2,
+SYN14837,1988,unknown,,low,property,determinate,1,
+SYN33454,1968,unknown,,moderate,persons,determinate_2nd_strike,10_plus,
+SYN19432,1973,unknown,,high,drug,third_strike,3,
+SYN10959,1999,unknown,,unknown,persons,determinate,3,
+SYN11418,1954,unknown,,unknown,persons,determinate,2,
+SYN31420,1989,unknown,,low,persons,determinate,5_9,
+SYN32067,1998,unknown,,low,drug,indeterminate,1,
+SYN15135,1995,unknown,,low,drug,determinate_2nd_strike,2,
+SYN35007,1986,unknown,,low,property,determinate,3,
+SYN16986,1987,unknown,,moderate,persons,determinate,4,
+SYN31557,1991,unknown,,moderate,other,determinate,2,
+SYN23505,1980,unknown,,low,persons,determinate,3,
+SYN13500,1994,unknown,,unknown,property,indeterminate,2,
+org_northstar:N-0738,1954,unknown,,low,persons,determinate_2nd_strike,1,
+SYN34493,1956,unknown,,low,persons,determinate,2,
+SYN18586,2001,unknown,,moderate,drug,determinate,1,
+SYN36033,1982,unknown,,low,persons,unknown,1,
+SYN16742,2000,unknown,,moderate,other,indeterminate,2,
+SYN15412,1954,unknown,,high,persons,determinate,1,
+SYN28155,1985,unknown,,moderate,property,determinate,2,
+SYN22440,1987,unknown,,low,property,determinate,2,
+SYN38256,1985,unknown,,low,persons,indeterminate,3,
+SYN12243,1989,unknown,,unknown,persons,determinate,5_9,
+SYN23876,1990,unknown,,high,other,determinate,1,
+SYN25055,1984,unknown,,moderate,other,third_strike,1,
+SYN35362,1987,unknown,,low,property,determinate,1,
+SYN28401,1973,unknown,,high,other,determinate,1,
+SYN37892,1988,unknown,,low,property,determinate,1,
+SYN16020,1978,unknown,,high,drug,determinate,1,
+SYN35986,1964,unknown,,high,drug,determinate_2nd_strike,1,
+org_gateway:G-0867,1981,unknown,,low,property,determinate,1,
+SYN33714,1987,unknown,,low,persons,indeterminate,2,
+SYN19290,2003,unknown,,moderate,drug,determinate,2,
+org_gateway:G-0878,1994,unknown,,high,property,determinate_2nd_strike,5_9,
+SYN25962,1993,unknown,,moderate,persons,determinate,1,
+SYN18702,1990,unknown,,low,other,determinate_2nd_strike,1,
+SYN19835,1994,unknown,,low,property,determinate,3,
+SYN18239,1981,unknown,,low,other,indeterminate,1,
+SYN24948,1995,unknown,,low,other,determinate_2nd_strike,1,
+SYN18339,1996,unknown,,high,persons,indeterminate,3,
+SYN32814,1989,unknown,,low,drug,determinate_2nd_strike,1,
+SYN19941,1992,unknown,,moderate,other,third_strike,5_9,
+SYN29577,1997,unknown,,high,other,determinate,2,
+SYN37878,1978,unknown,,low,persons,determinate,2,
+SYN26706,1989,unknown,,low,persons,determinate_2nd_strike,3,
+SYN34130,1975,unknown,,moderate,persons,determinate,1,
+org_gateway:G-0917,1967,unknown,,moderate,persons,determinate,1,
+SYN16489,1983,unknown,,low,property,determinate,1,
+SYN30491,1979,unknown,,high,property,determinate,2,
+SYN27295,1982,unknown,,low,persons,determinate,1,
+SYN13986,1982,unknown,,high,persons,determinate_2nd_strike,3,
+SYN26637,1993,unknown,,high,property,determinate_2nd_strike,3,
+org_gateway:G-0933,1976,unknown,,low,persons,determinate_2nd_strike,5_9,
+SYN19770,1977,unknown,,unknown,persons,determinate,1,
+SYN14548,1978,unknown,,low,persons,determinate,1,
+SYN14025,2000,unknown,,unknown,persons,determinate,1,
+SYN14580,1988,unknown,,low,persons,determinate,1,
+SYN23418,1993,unknown,,moderate,drug,unknown,1,
+SYN22753,1990,unknown,,high,drug,determinate,1,
+SYN26863,1978,unknown,,low,persons,determinate,4,
+SYN18723,1990,unknown,,moderate,persons,indeterminate,2,
+SYN13510,1978,unknown,,high,other,determinate_2nd_strike,1,
+SYN32464,1972,unknown,,high,persons,determinate,2,
+SYN38708,1994,unknown,,low,other,determinate_2nd_strike,2,
+SYN35114,1989,unknown,,low,drug,determinate_2nd_strike,1,
+org_keystone:K-0515,1984,unknown,,moderate,property,determinate,1,
+SYN26967,1980,unknown,,unknown,persons,determinate,1,
+SYN30294,1976,unknown,,unknown,drug,determinate,4,
+SYN11595,1960,unknown,,low,other,determinate,3,
+SYN36554,2002,unknown,,moderate,property,determinate_2nd_strike,1,
+SYN32174,1978,unknown,,high,drug,determinate,1,
+SYN39126,1984,unknown,,moderate,property,determinate,3,
+SYN12708,2001,unknown,,low,property,determinate,2,
+SYN26495,1974,unknown,,moderate,property,indeterminate,1,
+SYN28630,1989,unknown,,low,persons,unknown,1,
+SYN28892,1988,unknown,,low,drug,indeterminate,1,
+SYN24057,1984,unknown,,unknown,drug,determinate,1,
+SYN25992,1981,unknown,,low,other,determinate,5_9,
+SYN22837,1994,unknown,,low,property,indeterminate,5_9,
+SYN27765,1995,unknown,,low,other,determinate_2nd_strike,3,
+SYN35403,1974,unknown,,low,other,determinate_2nd_strike,2,
+SYN18654,1995,unknown,,high,other,determinate_2nd_strike,1,
+SYN34269,1971,unknown,,high,persons,determinate,5_9,
+SYN12949,1987,unknown,,low,persons,determinate_2nd_strike,1,
+SYN23701,1989,unknown,,high,property,third_strike,1,
+SYN11898,1986,unknown,,low,persons,indeterminate,3,
+SYN30345,1997,unknown,,low,persons,determinate,5_9,
+SYN22509,1988,unknown,,low,persons,determinate,2,
+SYN18831,1999,unknown,,unknown,property,determinate,2,
+SYN21690,1972,unknown,,high,other,determinate_2nd_strike,5_9,
+SYN34281,1982,unknown,,low,drug,determinate,1,
+SYN24692,1984,unknown,,low,property,determinate_2nd_strike,2,
+SYN38710,1989,unknown,,high,persons,determinate,3,
+SYN18298,1987,unknown,,moderate,other,indeterminate,1,
+SYN10373,1992,unknown,,moderate,persons,determinate,1,
+SYN23539,1990,unknown,,high,drug,indeterminate,3,
+SYN20576,1992,unknown,,low,property,determinate,1,
+SYN24895,1997,unknown,,moderate,property,determinate,2,
+SYN12801,1999,unknown,,unknown,drug,determinate,3,
+SYN24566,1980,unknown,,high,drug,determinate,2,
+SYN11215,2003,unknown,,low,other,determinate_2nd_strike,10_plus,
+SYN26506,1998,unknown,,low,property,indeterminate,3,
+SYN22594,1986,unknown,,low,drug,determinate,1,
+SYN18159,2002,unknown,,high,other,indeterminate,1,
+SYN13684,1984,unknown,,low,drug,determinate,5_9,
+SYN23579,1973,unknown,,moderate,persons,determinate,1,
+SYN37532,1984,unknown,,high,persons,indeterminate,5_9,
+SYN27999,1980,unknown,,low,drug,unknown,1,
+SYN16962,1983,unknown,,moderate,persons,determinate,2,
+SYN14713,1981,unknown,,low,persons,determinate_2nd_strike,1,
+SYN36920,1970,unknown,,moderate,drug,determinate,1,
+org_northstar:N-0816,1998,unknown,,moderate,other,determinate,2,
+SYN13842,1957,unknown,,moderate,other,unknown,1,
+org_northstar:N-0823,1994,unknown,,low,drug,unknown,2,
+SYN20408,1994,unknown,,low,property,determinate,10_plus,
+org_northstar:N-0829,1990,unknown,,moderate,other,determinate,1,
+SYN34611,1963,unknown,,high,other,determinate_2nd_strike,2,
+SYN34203,1985,unknown,,high,other,determinate,1,
+SYN10820,1972,unknown,,low,drug,determinate,1,
+SYN11108,1983,unknown,,low,persons,indeterminate,3,
+SYN24419,1992,unknown,,high,other,indeterminate,1,
+org_northstar:N-0846,1970,unknown,,moderate,drug,unknown,1,
+SYN12081,1995,unknown,,moderate,persons,unknown,2,
+SYN32600,1990,unknown,,moderate,drug,determinate_2nd_strike,3,
+SYN33271,1982,unknown,,moderate,other,indeterminate,2,
+SYN21399,1989,unknown,,high,persons,indeterminate,1,
+SYN33777,1988,unknown,,moderate,other,determinate,1,
+SYN29384,1971,unknown,,moderate,drug,determinate_2nd_strike,2,
+SYN28423,1994,unknown,,low,other,determinate,1,
+SYN39714,1965,unknown,,high,other,determinate_2nd_strike,2,
+SYN18225,1992,unknown,,high,other,determinate,2,
+SYN34081,1962,unknown,,high,other,determinate,2,
+SYN39711,1985,unknown,,low,other,determinate_2nd_strike,1,
+SYN32338,1980,unknown,,low,property,determinate,1,
+SYN14051,1999,unknown,,low,property,determinate,2,
+SYN25658,1955,unknown,,low,persons,determinate,2,
+SYN24190,1955,unknown,,moderate,other,indeterminate,2,
+SYN18357,1996,unknown,,moderate,property,determinate,1,
+SYN23051,1997,unknown,,moderate,drug,determinate,2,
+SYN16864,1990,unknown,,low,persons,determinate_2nd_strike,1,
+SYN15845,1997,unknown,,low,drug,determinate,2,
+SYN31198,1962,unknown,,low,persons,determinate,1,
+SYN27689,1972,unknown,,unknown,persons,determinate,1,
+SYN19231,1972,unknown,,high,property,indeterminate,1,
+SYN14302,1988,unknown,,unknown,persons,third_strike,5_9,
+SYN17338,1995,unknown,,low,drug,indeterminate,4,
+SYN24979,1995,unknown,,high,persons,determinate_2nd_strike,1,
+SYN10393,1994,unknown,,high,drug,determinate,1,
+SYN31519,1999,unknown,,unknown,property,determinate,1,
+SYN13188,1991,unknown,,moderate,persons,determinate,5_9,
+SYN27178,1965,unknown,,high,persons,determinate,1,
+SYN35020,,unknown,18-29,,,,,
+SYN27105,,unknown,30-39,,,,,
+SYN12229,,unknown,50-59,,,,,
+SYN31246,,unknown,40-49,,,,,
+SYN14260,,unknown,30-39,,,,,
+SYN12754,,unknown,30-39,,,,,
+SYN30567,,unknown,18-29,,,,,
+SYN33306,,unknown,40-49,,,,,
+SYN39576,,unknown,30-39,,,,,
+SYN31602,,unknown,40-49,,,,,
+SYN30513,,unknown,40-49,,,,,
+SYN33905,,unknown,50-59,,,,,
+SYN20642,,unknown,30-39,,,,,
+SYN21160,,unknown,60+,,,,,
+SYN33070,,unknown,30-39,,,,,
+SYN28263,,unknown,50-59,,,,,
+SYN10480,,unknown,18-29,,,,,
+SYN21097,,unknown,30-39,,,,,
+SYN34394,,unknown,50-59,,,,,
+SYN20218,,unknown,40-49,,,,,
+SYN25095,,unknown,40-49,,,,,
+SYN31550,,unknown,60+,,,,,
+SYN32624,,unknown,18-29,,,,,
+SYN35134,,unknown,50-59,,,,,
+SYN24351,,unknown,30-39,,,,,
+SYN14998,,unknown,30-39,,,,,
+SYN37076,,unknown,30-39,,,,,
+SYN32771,,unknown,30-39,,,,,
+SYN17253,,unknown,18-29,,,,,
+SYN27609,,unknown,30-39,,,,,
+SYN39797,,unknown,40-49,,,,,
+SYN36960,,unknown,30-39,,,,,
+SYN15868,,unknown,18-29,,,,,
+SYN13384,,unknown,18-29,,,,,
+SYN35344,,unknown,30-39,,,,,
+SYN29029,1991,unknown,,high,property,determinate,3,
+org_gateway:G-1090,1980,unknown,,moderate,persons,determinate,10_plus,
+SYN25988,1992,unknown,,low,drug,determinate_2nd_strike,10_plus,
+SYN11994,1984,unknown,,unknown,property,determinate,1,
+SYN16994,1959,unknown,,low,persons,determinate,2,
+SYN35932,1972,unknown,,low,other,determinate,1,
+org_gateway:G-1104,1994,unknown,,unknown,persons,indeterminate,2,
+SYN25213,1969,unknown,,moderate,other,indeterminate,2,
+SYN37239,1954,unknown,,moderate,other,determinate,1,
+SYN16997,1995,unknown,,moderate,property,determinate,5_9,
+SYN33440,1993,unknown,,unknown,drug,determinate,3,
+SYN11908,1967,unknown,,moderate,drug,determinate,4,
+SYN23758,1992,unknown,,high,persons,unknown,1,
+SYN19070,1980,unknown,,high,property,determinate,1,
+SYN11940,2002,unknown,,moderate,persons,indeterminate,1,
+SYN20592,1968,unknown,,low,property,determinate,1,
+SYN33718,1971,unknown,,high,drug,determinate,1,
+org_gateway:G-1137,1964,unknown,,moderate,persons,determinate_2nd_strike,1,
+SYN15877,1995,unknown,,low,other,unknown,1,
+SYN27804,1993,unknown,,low,property,determinate,1,
+SYN15971,1985,unknown,,moderate,drug,third_strike,2,
+SYN11466,1970,unknown,,unknown,other,indeterminate,3,
+SYN17912,1980,unknown,,low,other,determinate_2nd_strike,2,
+SYN20904,1997,unknown,,moderate,drug,determinate,1,
+SYN38112,1956,unknown,,unknown,property,determinate,2,
+SYN25583,1995,unknown,,moderate,other,determinate,1,
+SYN36764,1983,unknown,,low,persons,indeterminate,1,
+org_gateway:G-1167,1969,unknown,,high,persons,determinate,3,
+SYN38272,1986,unknown,,moderate,drug,determinate,1,
+SYN22790,1996,unknown,,high,other,determinate,3,
+SYN14701,1975,unknown,,low,persons,determinate_2nd_strike,3,
+org_northstar:N-0874,1984,unknown,,high,persons,determinate,1,
+SYN21431,1959,unknown,,low,other,determinate,2,
+SYN10390,1978,unknown,,low,other,indeterminate,2,
+SYN39671,1987,unknown,,high,persons,indeterminate,1,
+SYN12705,1978,unknown,,high,persons,indeterminate,1,
+SYN38175,2003,unknown,,low,persons,determinate,2,
+SYN38495,1993,unknown,,moderate,other,determinate_2nd_strike,1,
+SYN29779,2002,unknown,,high,drug,third_strike,1,
+SYN10249,1968,unknown,,low,drug,determinate,1,
+SYN13290,1965,unknown,,low,persons,determinate,1,
+SYN11509,1990,unknown,,moderate,property,determinate,1,
+SYN15923,2004,unknown,,high,persons,determinate,1,
+SYN31422,1983,unknown,,high,property,unknown,1,
+SYN21208,1974,unknown,,low,property,determinate,2,
+SYN19152,1997,unknown,,moderate,persons,determinate,3,
+SYN28543,2001,unknown,,low,other,indeterminate,5_9,
+SYN37816,1976,unknown,,unknown,drug,determinate,1,
+SYN28560,1985,unknown,,moderate,other,indeterminate,2,
+SYN30337,1982,unknown,,high,property,determinate,1,
+SYN15991,1985,unknown,,moderate,persons,determinate,1,
+SYN29448,1972,unknown,,moderate,persons,determinate_2nd_strike,1,
+org_northstar:N-0936,2003,unknown,,low,persons,determinate,3,
+SYN23066,1994,unknown,,high,drug,indeterminate,1,
+SYN12008,1976,unknown,,low,other,determinate,1,
+SYN39023,1979,unknown,,moderate,property,indeterminate,5_9,
+SYN13344,1995,unknown,,unknown,persons,determinate,5_9,
+SYN30016,1982,unknown,,low,drug,determinate,10_plus,
+SYN11455,1967,unknown,,low,persons,determinate,1,
+SYN37390,1958,unknown,,unknown,property,unknown,1,
+SYN29589,1970,unknown,,low,persons,determinate,4,
+org_northstar:N-0963,1998,unknown,,high,other,determinate,4,
+org_northstar:N-0967,1989,unknown,,unknown,persons,determinate_2nd_strike,1,
+SYN10201,1998,unknown,,low,property,determinate_2nd_strike,2,
+SYN38774,1996,unknown,,high,persons,third_strike,1,
+org_northstar:N-0975,2001,unknown,,moderate,persons,determinate,3,
+org_northstar:N-0978,1965,unknown,,high,other,determinate,5_9,
+SYN10306,1986,unknown,,low,property,determinate,2,
+SYN13405,1984,unknown,,high,other,determinate,1,
+org_northstar:N-0989,1992,unknown,,high,other,determinate,1,
+SYN39339,1974,unknown,,unknown,persons,determinate,2,
+SYN27223,1992,unknown,,moderate,drug,determinate_2nd_strike,1,
+SYN36270,1984,unknown,,low,drug,determinate,1,
+SYN38148,1981,unknown,,low,other,determinate_2nd_strike,1,
+SYN32172,2000,unknown,,low,persons,determinate_2nd_strike,1,
+SYN26790,1976,unknown,,low,persons,determinate_2nd_strike,1,
+SYN18206,2006,unknown,,high,drug,determinate,5_9,
+SYN18424,2005,unknown,,high,other,determinate,5_9,
+SYN33256,1967,unknown,,low,persons,determinate,2,
+SYN17629,1997,unknown,,moderate,other,determinate,1,
+SYN39985,1997,unknown,,moderate,persons,determinate,1,
+SYN12358,1977,unknown,,high,persons,indeterminate,1,
+SYN10525,1968,unknown,,moderate,other,determinate,2,
+SYN34388,1985,unknown,,low,persons,determinate_2nd_strike,1,
+SYN30293,1992,unknown,,unknown,drug,indeterminate,1,
+SYN35625,1976,unknown,,moderate,persons,unknown,3,
+SYN18066,1996,unknown,,moderate,drug,determinate,1,
+SYN39068,1987,unknown,,moderate,drug,determinate_2nd_strike,2,
+SYN21393,1965,unknown,,unknown,persons,determinate,1,
+SYN10059,1991,unknown,,moderate,persons,indeterminate,2,
+SYN12534,1995,unknown,,moderate,persons,determinate,1,
+SYN23401,1957,unknown,,high,persons,determinate,2,
+SYN19493,1986,unknown,,low,drug,determinate,1,
+SYN26976,1979,unknown,,moderate,persons,indeterminate,4,
+SYN35637,1978,unknown,,high,property,determinate,4,
+SYN23461,1991,unknown,,low,property,indeterminate,3,
+SYN25984,1996,unknown,,unknown,drug,determinate,1,
+SYN39434,1990,unknown,,high,persons,determinate,1,
+SYN39742,2000,unknown,,high,property,determinate,2,
+SYN16560,1996,unknown,,unknown,persons,determinate_2nd_strike,3,
+SYN30101,1995,unknown,,low,other,determinate,5_9,
+SYN28710,2003,unknown,,moderate,property,determinate,5_9,
+org_northstar:N-1088,1984,unknown,,high,drug,determinate,3,
+SYN31537,1976,unknown,,high,drug,determinate,5_9,
+SYN13338,1991,unknown,,high,other,determinate,1,
+SYN35259,1999,unknown,,unknown,drug,determinate,1,
+SYN32154,1995,unknown,,high,persons,determinate,4,
+SYN33921,2002,unknown,,high,persons,determinate,1,
+SYN23749,2002,unknown,,low,persons,determinate,2,
+org_northstar:N-1109,1984,unknown,,low,drug,indeterminate,3,
+SYN34913,1989,unknown,,low,drug,determinate,1,
+SYN25471,1992,unknown,,moderate,drug,determinate,2,
+SYN27702,1994,unknown,,low,property,third_strike,5_9,
+SYN32226,1969,unknown,,moderate,persons,unknown,1,
+SYN31435,1969,unknown,,high,property,determinate_2nd_strike,1,
+SYN37589,1989,unknown,,low,property,determinate,2,
+SYN25971,1978,unknown,,moderate,drug,indeterminate,2,
+SYN31933,1982,unknown,,moderate,persons,determinate,1,
+SYN34364,1979,unknown,,low,persons,determinate,1,
+SYN14010,1966,unknown,,low,property,determinate,2,
+SYN15344,1996,unknown,,unknown,property,determinate,2,
+SYN35128,1979,unknown,,high,other,determinate,5_9,
+SYN26915,1988,unknown,,low,property,determinate,2,
+SYN33896,1996,unknown,,moderate,persons,determinate_2nd_strike,1,
+SYN29113,1955,unknown,,low,persons,determinate,2,
+SYN20515,2000,unknown,,high,persons,indeterminate,1,
+SYN15197,1984,unknown,,unknown,persons,determinate,4,
+SYN24654,1971,unknown,,moderate,drug,indeterminate,1,
+SYN28284,1990,unknown,,moderate,other,determinate,5_9,
+SYN20990,1956,unknown,,unknown,persons,determinate,2,
+SYN27996,1999,unknown,,low,property,unknown,1,
+SYN22022,1996,unknown,,unknown,drug,determinate,2,
+SYN27357,2002,unknown,,low,property,determinate,2,
+org_northstar:N-1180,2002,unknown,,high,property,determinate,2,
+org_northstar:N-1184,2004,unknown,,moderate,persons,indeterminate,5_9,
+SYN39494,1977,unknown,,high,persons,determinate,10_plus,
+SYN11441,1989,unknown,,moderate,persons,determinate,10_plus,
+SYN18781,1980,unknown,,moderate,property,determinate,1,
+SYN32762,2001,unknown,,low,persons,determinate,2,
+SYN24867,1975,unknown,,moderate,persons,determinate_2nd_strike,2,
+SYN20965,1995,unknown,,low,property,determinate_2nd_strike,1,
+SYN30607,1998,unknown,,moderate,drug,determinate,1,
+SYN31372,1996,unknown,,low,persons,determinate_2nd_strike,1,
+SYN19211,,unknown,50-59,,,,,
+SYN22607,,unknown,40-49,,,,,
+SYN16474,,unknown,30-39,,,,,
+SYN15343,,unknown,30-39,,,,,
+SYN21145,,unknown,18-29,,,,,
+SYN10640,,unknown,18-29,,,,,
+SYN34440,,unknown,18-29,,,,,
+SYN22400,1994,unknown,,high,persons,determinate_2nd_strike,1,
+SYN13251,1987,unknown,,low,property,determinate,5_9,
+SYN18205,1976,unknown,,moderate,other,determinate,2,
+SYN13893,1987,unknown,,low,persons,determinate,3,
+SYN21269,1969,unknown,,low,other,determinate,1,
+SYN22704,1992,unknown,,moderate,property,determinate_2nd_strike,1,
+SYN39675,1994,unknown,,high,persons,third_strike,1,
+SYN23681,1990,unknown,,high,persons,third_strike,1,
+SYN27056,1972,unknown,,unknown,persons,determinate,2,
+SYN35121,1993,unknown,,moderate,other,third_strike,5_9,
+SYN32419,1995,unknown,,low,drug,indeterminate,3,
+SYN24193,1978,unknown,,low,drug,indeterminate,1,
+SYN26568,1957,unknown,,low,property,determinate,1,
+SYN31702,1973,unknown,,low,other,indeterminate,1,
+SYN39566,1975,unknown,,unknown,other,determinate,3,
+org_keystone:K-0582,1984,unknown,,high,persons,determinate,1,
+SYN24772,1972,unknown,,unknown,persons,determinate,5_9,
+SYN35200,1985,unknown,,low,drug,determinate,1,
+SYN17647,1992,unknown,,high,property,determinate,2,
+SYN34680,1993,unknown,,moderate,property,determinate_2nd_strike,4,
+SYN29349,1990,unknown,,low,drug,third_strike,1,
+SYN36220,1999,unknown,,moderate,other,indeterminate,1,
+SYN10594,1985,unknown,,moderate,property,determinate_2nd_strike,1,
+SYN32723,1981,unknown,,unknown,drug,determinate,1,
+SYN14876,1988,unknown,,moderate,property,determinate,2,
+SYN23056,2001,unknown,,unknown,property,determinate,1,
+SYN13320,1984,unknown,,moderate,drug,unknown,2,
+SYN10476,1978,unknown,,moderate,persons,determinate,1,
+SYN30150,1987,unknown,,moderate,property,determinate,4,
+SYN19201,1964,unknown,,high,drug,determinate,1,
+SYN37020,2000,unknown,,low,persons,determinate,4,
+SYN13837,1981,unknown,,low,persons,determinate,1,
+SYN11619,1999,unknown,,high,drug,determinate,1,
+SYN22547,1976,unknown,,high,other,determinate,2,
+SYN26312,,unknown,50-59,,,,,
+SYN30695,,unknown,18-29,,,,,
+SYN17523,,unknown,50-59,,,,,
+SYN12768,,unknown,40-49,,,,,
+SYN26339,,unknown,40-49,,,,,
+SYN19821,,unknown,40-49,,,,,
+SYN27208,,unknown,18-29,,,,,
+SYN38532,,unknown,30-39,,,,,
+SYN36028,,unknown,50-59,,,,,
+SYN18391,,unknown,30-39,,,,,
+SYN17704,,unknown,30-39,,,,,
+SYN26640,,unknown,60+,,,,,
+SYN31691,,unknown,18-29,,,,,
+SYN38523,1988,unknown,,high,drug,determinate,1,
+SYN11059,,unknown,18-29,,,,,
+SYN26986,,unknown,50-59,,,,,
+SYN24047,,unknown,40-49,,,,,
+SYN17287,,unknown,18-29,,,,,
+SYN35404,,unknown,30-39,,,,,
+SYN22221,,unknown,40-49,,,,,
+SYN29017,,unknown,18-29,,,,,
+SYN26633,,unknown,30-39,,,,,
+SYN20954,,unknown,30-39,,,,,
+SYN20545,,unknown,30-39,,,,,
+SYN34544,,unknown,18-29,,,,,
+SYN14775,,unknown,18-29,,,,,
+SYN36102,,unknown,18-29,,,,,
+SYN22174,,unknown,40-49,,,,,
+SYN23459,,unknown,18-29,,,,,
+SYN14993,,unknown,18-29,,,,,
+SYN36439,,unknown,30-39,,,,,
+SYN27772,,unknown,30-39,,,,,
+SYN28671,,unknown,30-39,,,,,
+SYN23607,,unknown,40-49,,,,,
+SYN37449,,unknown,18-29,,,,,
+SYN11172,,unknown,30-39,,,,,
+org_gateway:G-1173,2005,unknown,,high,persons,determinate,3,
+SYN32466,1976,unknown,,unknown,other,determinate_2nd_strike,3,
+SYN13323,1983,unknown,,low,other,determinate,1,
+SYN33331,1992,unknown,,moderate,property,determinate,1,
+SYN19812,1994,unknown,,low,other,determinate,5_9,
+SYN17736,1997,unknown,,low,property,determinate,1,
+SYN21096,1986,unknown,,moderate,property,third_strike,1,
+SYN35962,1996,unknown,,high,persons,determinate,2,
+SYN10809,1996,unknown,,high,persons,third_strike,2,
+SYN36165,1975,unknown,,high,other,third_strike,1,
+SYN22608,2002,unknown,,moderate,persons,determinate_2nd_strike,5_9,
+SYN13975,1993,unknown,,low,persons,determinate,1,
+SYN33943,1985,unknown,,high,persons,determinate,5_9,
+SYN29649,2003,unknown,,moderate,persons,determinate,5_9,
+SYN17769,1983,unknown,,moderate,other,determinate,3,
+org_gateway:G-1219,1985,unknown,,moderate,drug,determinate,3,
+SYN25657,1986,unknown,,unknown,persons,determinate,2,
+SYN13314,1975,unknown,,low,persons,determinate,2,
+SYN28563,1960,unknown,,unknown,other,determinate,3,
+SYN39193,2001,unknown,,moderate,other,unknown,2,
+SYN21442,1971,unknown,,moderate,persons,determinate,1,
+SYN11574,1972,unknown,,low,drug,determinate,10_plus,
+SYN19993,1987,unknown,,high,other,indeterminate,1,
+org_gateway:G-1243,1997,unknown,,unknown,persons,determinate,1,
+SYN11508,1998,unknown,,high,other,determinate_2nd_strike,1,
+SYN28536,1989,unknown,,moderate,persons,determinate,1,
+SYN18942,2000,unknown,,low,property,determinate,1,
+SYN14653,1998,unknown,,high,property,determinate_2nd_strike,1,
+SYN31363,1997,unknown,,high,other,third_strike,4,
+SYN31882,1999,unknown,,high,property,determinate,1,
+SYN25806,2000,unknown,,unknown,persons,determinate_2nd_strike,5_9,
+SYN24051,1994,unknown,,low,persons,determinate,1,
+SYN24026,1998,unknown,,high,other,determinate,5_9,
+SYN16920,1993,unknown,,high,property,determinate,1,
+SYN27330,2002,unknown,,moderate,persons,determinate_2nd_strike,3,
+SYN11767,1991,unknown,,low,persons,unknown,1,
+SYN11211,1997,unknown,,moderate,other,determinate,4,
+SYN17474,1987,unknown,,moderate,persons,determinate,3,
+SYN22212,1989,unknown,,moderate,persons,determinate,5_9,
+SYN29654,1995,unknown,,low,persons,determinate_2nd_strike,2,
+SYN14143,1999,unknown,,unknown,drug,determinate,1,
+SYN37474,2003,unknown,,low,persons,determinate,10_plus,
+SYN39976,,unknown,18-29,,,,,
+SYN38320,,unknown,30-39,,,,,
+SYN11628,,unknown,50-59,,,,,
+SYN32365,,unknown,40-49,,,,,
+SYN10133,,unknown,18-29,,,,,
+SYN15500,,unknown,30-39,,,,,
+SYN34343,,unknown,50-59,,,,,
+SYN32669,,unknown,50-59,,,,,
+SYN10530,,unknown,30-39,,,,,
+SYN34699,,unknown,40-49,,,,,
+SYN37499,,unknown,60+,,,,,
+SYN37539,,unknown,30-39,,,,,
+SYN30273,,unknown,50-59,,,,,
+SYN30429,,unknown,18-29,,,,,
+SYN32245,,unknown,50-59,,,,,
+SYN15031,,unknown,18-29,,,,,
+SYN10672,,unknown,30-39,,,,,
+SYN27848,,unknown,40-49,,,,,
+SYN21367,,unknown,30-39,,,,,
+SYN20774,,unknown,30-39,,,,,
+SYN34090,,unknown,40-49,,,,,
+SYN37999,1983,unknown,,unknown,persons,determinate,2,
+SYN38379,1997,unknown,,low,persons,determinate,1,
+SYN38440,1998,unknown,,low,drug,determinate,1,
+SYN30122,1997,unknown,,low,property,determinate,1,
+SYN14967,1995,unknown,,low,drug,determinate,5_9,
+SYN21374,1991,unknown,,unknown,persons,determinate,1,
+SYN38557,1989,unknown,,moderate,property,determinate_2nd_strike,5_9,
+SYN14677,1961,unknown,,low,other,third_strike,1,
+SYN29790,1984,unknown,,high,persons,determinate,5_9,
+SYN18577,1984,unknown,,moderate,other,determinate,1,
+SYN13229,1990,unknown,,moderate,other,indeterminate,1,
+org_northstar:N-1247,1994,unknown,,high,persons,determinate_2nd_strike,2,
+SYN36545,2004,unknown,,high,property,indeterminate,5_9,
+SYN26242,2006,unknown,,moderate,drug,determinate_2nd_strike,2,
+SYN34975,1985,unknown,,low,persons,determinate,1,
+SYN12258,1997,unknown,,unknown,persons,determinate,3,
+SYN24440,2007,unknown,,unknown,other,determinate,4,
+SYN33056,1977,unknown,,moderate,other,determinate_2nd_strike,2,
+org_northstar:N-1268,1999,unknown,,high,property,determinate,2,
+SYN34453,1973,unknown,,low,other,third_strike,5_9,
+SYN34659,1970,unknown,,moderate,drug,indeterminate,1,
+SYN22138,1990,unknown,,low,property,determinate_2nd_strike,1,
+SYN32872,1994,unknown,,low,property,determinate_2nd_strike,1,
+SYN26548,1995,unknown,,low,other,determinate,2,
+SYN14057,2005,unknown,,low,property,determinate,2,
+SYN27311,1988,unknown,,low,other,determinate,2,
+SYN21147,1991,unknown,,moderate,other,determinate,1,
+SYN23982,2004,unknown,,high,other,determinate,3,
+org_northstar:N-1298,2007,unknown,,low,persons,determinate,1,
+SYN26267,1992,unknown,,moderate,persons,determinate,10_plus,
+org_northstar:N-1304,1982,unknown,,moderate,other,determinate,2,
+SYN33993,1997,unknown,,unknown,drug,determinate,2,
+SYN38258,1981,unknown,,low,other,determinate,1,
+SYN24296,1994,unknown,,low,persons,determinate,1,
+SYN36052,1992,unknown,,high,other,indeterminate,1,
+SYN15310,1980,unknown,,moderate,property,determinate,3,
+SYN18270,1971,unknown,,high,property,determinate,1,
+SYN11669,1996,unknown,,low,persons,determinate,2,
+SYN37093,2000,unknown,,low,other,indeterminate,1,
+SYN19491,1978,unknown,,low,persons,determinate,1,
+SYN16607,1992,unknown,,low,property,determinate,4,
+SYN12658,2002,unknown,,moderate,property,determinate,5_9,
+org_northstar:N-1339,2001,unknown,,high,other,unknown,4,
+org_gateway:G-1301,1998,unknown,,high,other,determinate_2nd_strike,2,
+SYN24454,1995,unknown,,moderate,drug,determinate,10_plus,
+SYN10385,2004,unknown,,low,persons,determinate,5_9,
+SYN22243,2004,unknown,,low,drug,determinate,10_plus,
+SYN18217,1980,unknown,,low,other,indeterminate,3,
+SYN32449,1997,unknown,,moderate,persons,determinate,1,
+org_gateway:G-1319,1977,unknown,,moderate,persons,determinate,5_9,
+SYN31028,1988,unknown,,unknown,other,determinate,4,
+org_gateway:G-1324,1994,unknown,,moderate,property,determinate,1,
+org_gateway:G-1327,1968,unknown,,moderate,other,determinate_2nd_strike,1,
+SYN36812,1995,unknown,,moderate,persons,determinate,10_plus,
+SYN14953,2005,unknown,,high,property,third_strike,1,
+SYN11710,2000,unknown,,unknown,drug,indeterminate,2,
+SYN35909,1991,unknown,,unknown,other,unknown,1,
+SYN36997,1996,unknown,,low,other,determinate,4,
+SYN25023,1974,unknown,,high,property,determinate_2nd_strike,3,
+SYN16352,1972,unknown,,high,property,determinate,2,
+SYN38350,1996,unknown,,high,property,determinate,2,
+SYN36532,1995,unknown,,low,property,unknown,1,
+SYN28487,1974,unknown,,moderate,other,determinate,4,
+SYN34706,1997,unknown,,low,persons,determinate_2nd_strike,5_9,
+SYN20979,2002,unknown,,moderate,drug,determinate,1,
+SYN10037,1975,unknown,,low,drug,determinate,2,
+SYN13704,1973,unknown,,high,drug,determinate,4,
+SYN22857,1994,unknown,,moderate,persons,determinate,1,
+SYN28626,1993,unknown,,moderate,persons,indeterminate,2,
+SYN29001,1975,unknown,,moderate,other,indeterminate,1,
+SYN35612,1997,unknown,,high,property,determinate,1,
+org_gateway:G-1385,2001,unknown,,high,drug,indeterminate,2,
+SYN19283,1978,unknown,,low,property,determinate,4,
+SYN15819,1993,unknown,,low,other,determinate_2nd_strike,2,
+SYN12572,1994,unknown,,unknown,property,determinate_2nd_strike,1,
+SYN17966,1966,unknown,,low,persons,determinate_2nd_strike,1,
+org_gateway:G-1400,1996,unknown,,low,drug,determinate_2nd_strike,1,
+SYN25640,1991,unknown,,moderate,persons,determinate,3,
+SYN18209,1997,unknown,,moderate,persons,determinate,2,
+SYN38823,1995,unknown,,high,other,determinate_2nd_strike,10_plus,
+SYN35582,1962,unknown,,low,drug,determinate,2,
+org_gateway:G-1413,1969,unknown,,moderate,other,determinate,2,
+SYN16656,1994,unknown,,moderate,persons,indeterminate,1,
+SYN28593,1985,unknown,,unknown,drug,determinate,1,
+SYN22216,1995,unknown,,low,persons,determinate,10_plus,
+SYN30964,1991,unknown,,low,other,determinate,5_9,
+SYN31122,1997,unknown,,moderate,persons,determinate_2nd_strike,4,
+SYN16386,1973,unknown,,unknown,persons,indeterminate,5_9,
+SYN20971,2000,unknown,,low,persons,determinate,2,
+SYN30385,1977,unknown,,unknown,drug,determinate,2,
+SYN28136,1993,unknown,,high,persons,determinate_2nd_strike,3,
+SYN13136,1969,unknown,,low,persons,determinate,1,
+org_northstar:N-1356,1992,unknown,,high,persons,indeterminate,1,
+SYN24049,1986,unknown,,moderate,persons,determinate,3,
+SYN29414,1996,unknown,,low,property,determinate_2nd_strike,2,
+SYN19126,1983,unknown,,unknown,other,determinate,3,
+SYN13283,1985,unknown,,high,persons,determinate,4,
+SYN37829,1996,unknown,,low,other,determinate_2nd_strike,4,
+SYN17581,1994,unknown,,high,other,determinate_2nd_strike,1,
+SYN22854,1996,unknown,,low,property,determinate_2nd_strike,1,
+SYN24927,2000,unknown,,moderate,other,third_strike,4,
+SYN26601,1991,unknown,,moderate,other,determinate,2,
+SYN14054,1989,unknown,,low,persons,determinate,3,
+SYN34539,1995,unknown,,low,persons,unknown,4,
+SYN33691,1987,unknown,,high,other,determinate_2nd_strike,2,
+SYN37799,2000,unknown,,high,drug,indeterminate,3,
+SYN31395,1992,unknown,,moderate,other,indeterminate,1,
+SYN18312,2002,unknown,,high,drug,indeterminate,1,
+SYN27917,2000,unknown,,low,property,determinate_2nd_strike,1,
+SYN38304,1981,unknown,,low,property,determinate,1,
+SYN35046,1994,unknown,,low,other,determinate_2nd_strike,2,
+SYN11785,1999,unknown,,moderate,property,determinate,1,
+SYN30961,1993,unknown,,high,property,indeterminate,1,
+org_northstar:N-1420,2005,unknown,,low,drug,determinate,10_plus,
+SYN39306,1995,unknown,,moderate,persons,determinate,4,
+SYN30797,1993,unknown,,high,property,determinate,1,
+SYN33800,2000,unknown,,moderate,persons,third_strike,1,
+SYN17941,1976,unknown,,moderate,persons,third_strike,5_9,
+SYN28154,1977,unknown,,moderate,persons,determinate,1,
+SYN31517,1987,unknown,,high,other,determinate_2nd_strike,1,
+SYN17999,1972,unknown,,unknown,property,determinate,1,
+SYN14178,2001,unknown,,low,persons,determinate_2nd_strike,2,
+SYN22359,2001,unknown,,low,persons,determinate,5_9,
+SYN32987,1999,unknown,,high,other,determinate,2,
+org_northstar:N-1454,1990,unknown,,low,persons,indeterminate,1,
+SYN21099,1976,unknown,,high,persons,unknown,3,
+SYN23926,1970,unknown,,moderate,other,determinate,3,
+SYN30422,1973,unknown,,high,property,determinate,1,
+org_northstar:N-1464,1979,unknown,,low,property,determinate,2,
+SYN16872,1975,unknown,,unknown,property,indeterminate,3,
+SYN38432,1996,unknown,,high,persons,indeterminate,2,

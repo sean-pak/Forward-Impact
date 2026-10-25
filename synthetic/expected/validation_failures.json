@@ -1,0 +1,362 @@
+[
+  {
+    "file": "outcome_event.csv",
+    "row": 139,
+    "check": "Events after day 1095 are excluded from 3-year rates and flagged",
+    "reason": "The first return is after day 1,095, so it stays out of the 1, 2 and 3 year counts."
+  },
+  {
+    "file": "outcome_event.csv",
+    "row": 310,
+    "check": "Events after day 1095 are excluded from 3-year rates and flagged",
+    "reason": "The first return is after day 1,095, so it stays out of the 1, 2 and 3 year counts."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 4,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 13,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 24,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 65,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 102,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 110,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 115,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 138,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 172,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 191,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 196,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 204,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 214,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 266,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 291,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 321,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 346,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 347,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 376,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 395,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 430,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 452,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 454,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "release_event.csv",
+    "row": 470,
+    "check": "A release before program participation is excluded from that program's outcome cohort",
+    "reason": "Released before the person's first program started, so it is not a program outcome."
+  },
+  {
+    "file": "program_cycle.csv",
+    "row": 9,
+    "check": "Approximate numbers (\"about 30\") are flagged, never silently rounded",
+    "reason": "The CBO wrote about 30 enrolled; the count is round and must be confirmed."
+  },
+  {
+    "file": "consent.csv",
+    "row": 5,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 66,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 76,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 102,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 103,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 107,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 125,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 133,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 162,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 170,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 196,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 202,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 267,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 268,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 272,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 275,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 278,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 315,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 330,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 410,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 435,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 450,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 453,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 458,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 464,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 492,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 524,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 551,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 596,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 601,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 616,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 667,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  },
+  {
+    "file": "consent.csv",
+    "row": 678,
+    "check": "No custody check without active consent",
+    "reason": "Consent was revoked. Lookups stop, already counted outcomes stay."
+  }
+]

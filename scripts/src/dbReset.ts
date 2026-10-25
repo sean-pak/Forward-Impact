@@ -13,7 +13,7 @@ import { staticSeedSql } from "./seedSql";
 const argv = process.argv.slice(2);
 const args = new Set(argv);
 const dataFlag = argv.indexOf("--data");
-const dataDir = dataFlag >= 0 ? resolve(argv[dataFlag + 1] ?? "") : join(root, "fixtures/seed");
+const dataDir = dataFlag >= 0 ? resolve(process.env.INIT_CWD ?? process.cwd(), argv[dataFlag + 1] ?? "") : join(root, "fixtures/seed");
 
 const target = parseTarget(args, "drops every table in tpw_analytics AND tpw_vault (identities included)");
 

@@ -7,6 +7,10 @@ import { TEST_ENC_B64, TEST_HMAC_B64, testKeys } from "../vault/testKeys";
 import { makeD1, sqlite } from "../testing/sqlite";
 import { LocatorRefused, eitLocator, mockLocator, runChecks, type Deps } from ".";
 
+// These tests are written against fixture people (SYN90001 to SYN90007). The Worker bundles the demo dataset's mock,
+// so swap in the small fixture file here.
+vi.mock("./mock_locator.json", async () => ({ default: (await import("./mock_locator.fixture.json")).default }));
+
 const SECRET = "test-secret";
 
 async function world() {

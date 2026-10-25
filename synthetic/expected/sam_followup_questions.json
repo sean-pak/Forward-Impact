@@ -1,0 +1,69 @@
+{
+  "org_harbor_light_submission": [
+    {
+      "field": "n_completed",
+      "issue_type": "missing_required",
+      "question": "How many people completed Resume and Interview Skills (MCSP, 2022-03-28)?"
+    }
+  ],
+  "org_second_chapter_submission": [
+    {
+      "field": "n_completed",
+      "issue_type": "missing_required",
+      "question": "How many people completed Record Clearing Clinic (SQ, 2022-04-06)?"
+    },
+    {
+      "field": "end_date",
+      "issue_type": "missing_required",
+      "question": "What date did Know Your Rights Series (PVSP, 2022-04-23) end?"
+    },
+    {
+      "field": "n_enrolled",
+      "issue_type": "invalid_value",
+      "question": "You wrote about 30 people enrolled in Know Your Rights Series (PVSP, 2022-04-23). What was the exact number?"
+    },
+    {
+      "field": "end_date",
+      "issue_type": "missing_required",
+      "question": "What date did Record Clearing Clinic (CRC, 2023-03-09) end?"
+    }
+  ],
+  "org_riverbend_submission": [
+    {
+      "field": "end_date",
+      "issue_type": "missing_required",
+      "question": "What date did Housing Navigation Class (SOL, 2022-09-29) end?"
+    },
+    {
+      "field": "completion_rule",
+      "issue_type": "missing_required",
+      "question": "What counts as completing Release Readiness Workshop? For example, attending 80% of sessions."
+    },
+    {
+      "field": "end_date",
+      "issue_type": "missing_required",
+      "question": "What date did Release Readiness Workshop (SCC, 2025-10-02) end?"
+    }
+  ],
+  "org_gateway_individuals": [
+    {
+      "field": "cdcr_number",
+      "issue_type": "missing_required",
+      "question": "27 people in your file have no CDCR number. Can you send their numbers? Without one we cannot check custody."
+    }
+  ],
+  "org_northstar_individuals": [
+    {
+      "field": "cdcr_number",
+      "issue_type": "missing_required",
+      "question": "28 people in your file have no CDCR number. Can you send their numbers? Without one we cannot check custody."
+    }
+  ],
+  "org_keystone_individuals": [
+    {
+      "field": "cdcr_number",
+      "issue_type": "missing_required",
+      "question": "3 people in your file have no CDCR number. Can you send their numbers? Without one we cannot check custody."
+    }
+  ]
+}

@@ -15,7 +15,7 @@ if (!dir) {
 }
 const target = parseTarget(new Set(argv), "writes to the deployed tpw_analytics and tpw_vault");
 
-const data = await loadDataset(resolve(dir), await loadScriptKeys());
+const data = await loadDataset(resolve(process.env.INIT_CWD ?? process.cwd(), dir), await loadScriptKeys());
 console.log(`Validated ${dir}: ${JSON.stringify(data.counts)}`);
 if (!data.vaultSql) console.warn("No person_identity.csv rows: nothing goes to the vault.");
 else execFile("VAULT", target, "seed_vault.sql", data.vaultSql);

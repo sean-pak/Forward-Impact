@@ -1,0 +1,16 @@
+contact_id,org_id,name,email,title,is_primary,rank
+ct_lan_1,org_lantern_row,Avery Lindqvist,avery.lindqvist@example.org,Program Director,true,1
+ct_lan_2,org_lantern_row,Sana Whitcombe,sana.whitcombe@example.org,Volunteer Coordinator,false,2
+ct_ced_1,org_cedar_field,Marisol Okafor,marisol.okafor@example.org,Executive Director,true,1
+ct_oph_1,org_open_hands,Theodore Brandvold,theodore.brandvold@example.org,Chaplain Coordinator,true,1
+ct_riv_1,org_riverbend,Delphine Arroyo-Nash,delphine.arroyonash@example.org,Reentry Manager,true,1
+ct_scl_1,org_second_chapter,Priya Halvorsen,priya.halvorsen@example.org,Managing Attorney,true,1
+ct_scl_2,org_second_chapter,Gideon Tamura,gideon.tamura@example.org,Paralegal,false,2
+ct_hrb_1,org_harbor_light,Beatrix Kowalczyk,beatrix.kowalczyk@example.org,Program Lead,true,1
+ct_stw_1,org_still_water,Imani Castellanos,imani.castellanos@example.org,Facilitator Lead,true,1
+ct_cmg_1,org_common_ground,Lorenzo Fitzgerald,lorenzo.fitzgerald@example.org,Circle Keeper,true,1
+ct_brg_1,org_bridgeway,Noor Abernathy,noor.abernathy@example.org,Lab Coordinator,true,1
+ct_gwy_1,org_gateway,Raquel Thorsen,raquel.thorsen@example.org,Data Manager,true,1
+ct_gwy_2,org_gateway,Dominic Oyelaran,dominic.oyelaran@example.org,Executive Director,false,2
+ct_nst_1,org_northstar,Winifred Achterberg,winifred.achterberg@example.org,Program Director,true,1
+ct_key_1,org_keystone,Tobias Nakagawa,tobias.nakagawa@example.org,Operations Director,true,1

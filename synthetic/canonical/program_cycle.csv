@@ -1,0 +1,67 @@
+cycle_id,program_id,facility_code,yard,start_date,end_date,sessions_planned,course_hours_planned_per_participant,n_enrolled,n_completed,total_course_hours_delivered,source_grain,status
+cy_gwy_t4c_sq_2201,prog_gwy_t4c,SQ,,2022-01-10,2022-03-28,12,24,,,,derived_from_individuals,confirmed
+cy_key_trades_sol_2201,prog_key_trades,SOL,,2022-01-24,2022-05-09,16,48,,,,derived_from_individuals,confirmed
+cy_stw_healing_sq_2202,prog_stw_healing,SQ,B,2022-02-01,2022-05-03,14,28,,,,derived_from_individuals,confirmed
+cy_nst_abe_ctf_2202,prog_nst_abe,CTF,,2022-02-07,2022-07-11,23,46,,,,derived_from_individuals,confirmed
+cy_hrb_resume_mcsp_2203,prog_hrb_resume,MCSP,,2022-03-28,2022-06-20,13,,17,,,aggregate,confirmed
+cy_cmg_peace_cmc_2204,prog_cmg_peace,CMC,A,2022-04-05,2022-07-19,16,32,,,,derived_from_individuals,confirmed
+cy_scl_clearing_sq_2204,prog_scl_clearing,SQ,,2022-04-06,2022-08-24,,,22,,,aggregate,confirmed
+cy_scl_rights_pvsp_2204,prog_scl_rights,PVSP,,2022-04-23,,,,30,22,,aggregate,confirmed
+cy_cmg_peace_sq_2207,prog_cmg_peace,SQ,Facility B,2022-07-09,2022-10-01,13,26,,,,derived_from_individuals,confirmed
+cy_riv_housing_fsp_2207,prog_riv_housing,FSP,,2022-07-09,2022-09-10,,,40,36,,aggregate,confirmed
+cy_riv_housing_fsp_2207_v1,prog_riv_housing,FSP,,2022-07-09,2022-09-10,,,46,36,,aggregate,superseded
+cy_gwy_recovery_mcsp_2207,prog_gwy_recovery,MCSP,,2022-07-10,2022-10-23,16,32,,,,derived_from_individuals,confirmed
+cy_key_trades_cim_2208,prog_key_trades,CIM,C,2022-08-03,2022-11-23,17,51,,,,derived_from_individuals,confirmed
+cy_nst_abe_lac_2208,prog_nst_abe,LAC,,2022-08-03,2022-11-09,15,30,,,,derived_from_individuals,confirmed
+cy_gwy_planning_sol_2208,prog_gwy_planning,SOL,Chapel,2022-08-10,2022-11-16,15,30,,,,derived_from_individuals,confirmed
+cy_hrb_digital_pvsp_2208,prog_hrb_digital,PVSP,,2022-08-15,2022-11-21,,,20,13,,aggregate,confirmed
+cy_key_culinary_rjd_2208,prog_key_culinary,RJD,Chapel,2022-08-16,2022-10-25,11,22,,,,derived_from_individuals,confirmed
+cy_ced_ged_cmc_2208,prog_ced_ged,CMC,A,2022-08-26,2022-12-02,15,30,19,12,484,aggregate,confirmed
+cy_ced_math_crc_2208,prog_ced_math,CRC,D,2022-08-28,2023-01-15,21,42,28,17,815,aggregate,confirmed
+cy_gwy_planning_cmc_2209,prog_gwy_planning,CMC,,2022-09-05,2022-11-14,11,22,,,,derived_from_individuals,confirmed
+cy_riv_housing_sol_2209,prog_riv_housing,SOL,,2022-09-29,,,,31,24,,aggregate,confirmed
+cy_nst_prep_lac_2210,prog_nst_prep,LAC,Chapel,2022-10-17,2023-01-16,14,42,,,,derived_from_individuals,confirmed
+cy_gwy_recovery_cmc_2210,prog_gwy_recovery,CMC,Facility B,2022-10-19,2023-02-01,16,32,,,,derived_from_individuals,confirmed
+cy_cmg_peace_sol_2211,prog_cmg_peace,SOL,Chapel,2022-11-19,2023-03-18,18,36,,,,derived_from_individuals,confirmed
+cy_brg_finlit_fsp_2212,prog_brg_finlit,FSP,Facility B,2022-12-04,2023-03-26,17,34,,,,derived_from_individuals,confirmed
+cy_oph_circle_lac_2212,prog_oph_circle,LAC,,2022-12-08,2023-05-18,24,36,30,19,882,aggregate,confirmed
+cy_oph_mentor_sac_2212,prog_oph_mentor,SAC,,2022-12-18,2023-02-19,10,15,18,15,222,aggregate,confirmed
+cy_brg_smallbiz_cim_2301,prog_brg_smallbiz,CIM,,2023-01-27,2023-05-05,15,30,,,,derived_from_individuals,confirmed
+cy_lan_writing_fsp_2302,prog_lan_writing,FSP,B,2023-02-17,2023-05-26,15,30,30,24,582,aggregate,confirmed
+cy_scl_clearing_crc_2303,prog_scl_clearing,CRC,,2023-03-09,,16,,23,21,,aggregate,confirmed
+cy_cmg_peace_sol_2303,prog_cmg_peace,SOL,Facility A,2023-03-22,2023-07-19,18,36,,,,derived_from_individuals,confirmed
+cy_stw_grief_ctf_2304,prog_stw_grief,CTF,D,2023-04-24,2023-08-21,18,36,,,,derived_from_individuals,confirmed
+cy_ced_ged_ctf_2305,prog_ced_ged,CTF,Facility A,2023-05-22,2023-10-30,24,48,22,15,850,aggregate,confirmed
+cy_oph_mentor_rjd_2305,prog_oph_mentor,RJD,D,2023-05-25,2023-10-05,20,30,32,26,628,aggregate,confirmed
+cy_gwy_planning_lac_2306,prog_gwy_planning,LAC,,2023-06-21,2023-08-23,10,20,,,,derived_from_individuals,confirmed
+cy_oph_mentor_sq_2308,prog_oph_mentor,SQ,D,2023-08-26,2024-02-03,24,36,18,10,419,aggregate,confirmed
+cy_lan_spoken_cim_2309,prog_lan_spoken,CIM,C,2023-09-29,2024-03-01,23,34.5,22,14,537,aggregate,confirmed
+cy_lan_writing_sol_2310,prog_lan_writing,SOL,,2023-10-02,2024-01-08,15,30,25,20,479,aggregate,confirmed
+cy_nst_prep_crc_2310,prog_nst_prep,CRC,D,2023-10-31,2024-03-05,19,57,,,,derived_from_individuals,confirmed
+cy_lan_drawing_sol_2401,prog_lan_drawing,SOL,,2024-01-03,2024-04-24,17,34,31,22,837,aggregate,confirmed
+cy_scl_rights_sq_2401,prog_scl_rights,SQ,,2024-01-20,2024-05-25,,,21,12,,aggregate,confirmed
+cy_nst_prep_fsp_2402,prog_nst_prep,FSP,Facility B,2024-02-13,2024-07-02,21,63,,,,derived_from_individuals,confirmed
+cy_nst_abe_crc_2402,prog_nst_abe,CRC,Education Wing,2024-02-19,2024-06-17,18,36,,,,derived_from_individuals,confirmed
+cy_nst_abe_rjd_2402,prog_nst_abe,RJD,Facility B,2024-02-28,2024-07-24,22,44,,,,derived_from_individuals,confirmed
+cy_lan_spoken_sq_2405,prog_lan_spoken,SQ,,2024-05-13,2024-10-07,22,33,24,19,601,aggregate,confirmed
+cy_ced_ged_mcsp_2406,prog_ced_ged,MCSP,A,2024-06-03,2024-09-02,14,28,31,21,552,aggregate,awaiting_confirmation
+cy_brg_finlit_cim_2406,prog_brg_finlit,CIM,,2024-06-20,2024-10-17,18,36,,,,derived_from_individuals,confirmed
+cy_hrb_digital_sac_2407,prog_hrb_digital,SAC,,2024-07-13,2024-11-23,,,14,9,,aggregate,confirmed
+cy_riv_readiness_fsp_2407,prog_riv_readiness,FSP,,2024-07-19,2024-11-15,,,33,21,,aggregate,confirmed
+cy_key_culinary_cmc_2408,prog_key_culinary,CMC,A,2024-08-22,2024-12-12,17,34,,,,derived_from_individuals,confirmed
+cy_scl_rights_cim_2409,prog_scl_rights,CIM,,2024-09-13,2024-11-29,12,,36,21,,aggregate,confirmed
+cy_riv_housing_cmc_2409,prog_riv_housing,CMC,,2024-09-22,2025-01-05,,,30,27,,aggregate,confirmed
+cy_lan_spoken_sq_2501,prog_lan_spoken,SQ,C,2025-01-19,2025-06-15,22,33,28,16,609,aggregate,awaiting_confirmation
+cy_cmg_peace_sq_2502,prog_cmg_peace,SQ,,2025-02-11,2025-05-06,13,26,,,,derived_from_individuals,confirmed
+cy_hrb_digital_ciw_2505,prog_hrb_digital,CIW,,2025-05-04,2025-10-05,,,29,18,,aggregate,confirmed
+cy_riv_readiness_scc_2510,prog_riv_readiness,SCC,,2025-10-02,,,,16,13,,aggregate,confirmed
+cy_brg_finlit_sac_2511,prog_brg_finlit,SAC,A,2025-11-04,2026-01-20,12,24,,,,derived_from_individuals,confirmed
+cy_gwy_recovery_lac_2512,prog_gwy_recovery,LAC,Facility A,2025-12-22,2026-03-30,15,30,,,,derived_from_individuals,confirmed
+cy_riv_housing_scc_2602,prog_riv_readiness,SCC,,2026-02-05,2026-07-02,,,33,19,,aggregate,confirmed
+cy_stw_healing_ciw_2603,prog_stw_healing,CIW,Facility B,2026-03-28,2026-06-13,12,24,,,,derived_from_individuals,confirmed
+cy_nst_prep_rjd_2604,prog_nst_prep,RJD,C,2026-04-20,2026-08-17,18,54,,,,derived_from_individuals,confirmed
+cy_gwy_recovery_lac_2608,prog_gwy_recovery,LAC,D,2026-08-10,2026-11-09,14,28,,,,derived_from_individuals,confirmed
+cy_ced_ged_cmc_2608,prog_ced_ged,CMC,,2026-08-24,2027-01-04,20,40,15,,,aggregate,confirmed
+cy_nst_prep_rjd_2609,prog_nst_prep,RJD,,2026-09-01,2027-01-12,20,60,,,,derived_from_individuals,confirmed
+cy_lan_drawing_sq_2609,prog_lan_drawing,SQ,C,2026-09-08,2026-12-01,13,26,17,,,aggregate,confirmed
+cy_riv_housing_sol_2609,prog_riv_housing,SOL,,2026-09-15,2026-12-08,,,32,,,aggregate,confirmed

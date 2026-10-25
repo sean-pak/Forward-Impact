@@ -1,0 +1,13 @@
+org_id,org_name,org_type,data_persona,primary_contact_email,has_data_agreement
+org_lantern_row,Lantern Row Arts Collective,arts,1,avery.lindqvist@example.org,false
+org_cedar_field,Cedar Field Learning Project,education,1,marisol.okafor@example.org,false
+org_open_hands,Open Hands Fellowship,faith,1,theodore.brandvold@example.org,false
+org_riverbend,Riverbend Reentry Alliance,reentry,2,delphine.arroyonash@example.org,false
+org_second_chapter,Second Chapter Legal Clinic,legal,2,priya.halvorsen@example.org,false
+org_harbor_light,Harbor Light Employment Network,employment,2,beatrix.kowalczyk@example.org,false
+org_still_water,Still Water Healing Circle,healing,3,imani.castellanos@example.org,false
+org_common_ground,Common Ground Peacemaking,healing,3,lorenzo.fitzgerald@example.org,false
+org_bridgeway,Bridgeway Learning Lab,education,3,noor.abernathy@example.org,false
+org_gateway,Gateway Reentry Partners,reentry,4,raquel.thorsen@example.org,true
+org_northstar,Northstar Education Initiative,education,4,winifred.achterberg@example.org,true
+org_keystone,Keystone Job Skills,employment,4,tobias.nakagawa@example.org,true

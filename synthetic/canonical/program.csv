@@ -1,0 +1,26 @@
+program_id,org_id,program_name,program_category,completion_rule,credit_types_offered
+prog_lan_writing,org_lantern_row,Writing Through Walls,arts,attended at least 80% of sessions,rac
+prog_lan_drawing,org_lantern_row,Open Studio Drawing,arts,completed all 12 sessions,none
+prog_lan_spoken,org_lantern_row,Spoken Word Workshop,arts,attended at least 75% of sessions,rac
+prog_ced_ged,org_cedar_field,GED Prep Intensive,education,earned a certificate of completion,rac|emc
+prog_ced_math,org_cedar_field,College Bridge Math,education,attended at least 80% of sessions,emc
+prog_oph_circle,org_open_hands,Fellowship Circle,faith,attended at least 10 sessions,none
+prog_oph_mentor,org_open_hands,Mentor Pairing Program,faith,attended at least 80% of sessions,rac
+prog_riv_readiness,org_riverbend,Release Readiness Workshop,other,unstated,unknown
+prog_riv_housing,org_riverbend,Housing Navigation Class,other,attended all sessions,none
+prog_scl_rights,org_second_chapter,Know Your Rights Series,other,attended at least 80% of sessions,none
+prog_scl_clearing,org_second_chapter,Record Clearing Clinic,other,completed the intake and filing steps,none
+prog_hrb_resume,org_harbor_light,Resume and Interview Skills,job_training,attended at least 80% of sessions,none
+prog_hrb_digital,org_harbor_light,Digital Literacy Basics,education,attended at least 75% of sessions,emc
+prog_stw_healing,org_still_water,Healing Circle,restorative_justice,attended at least 80% of sessions,rac
+prog_stw_grief,org_still_water,Grief and Loss Group,cognitive_behavioral,attended at least 75% of sessions,rac
+prog_cmg_peace,org_common_ground,Peacemaking Circle,restorative_justice,attended at least 80% of sessions,rac
+prog_brg_finlit,org_bridgeway,Financial Literacy Course,education,attended at least 80% of sessions,emc
+prog_brg_smallbiz,org_bridgeway,Small Business Basics,job_training,attended at least 75% of sessions,emc
+prog_gwy_t4c,org_gateway,Thinking for a Change,cognitive_behavioral,completed all 12 modules,rac
+prog_gwy_planning,org_gateway,Release Planning Seminar,other,attended at least 80% of sessions,rac
+prog_gwy_recovery,org_gateway,Substance Use Recovery Group,substance_use,attended at least 80% of sessions,rac
+prog_nst_abe,org_northstar,Adult Basic Education Cohort,education,attended at least 75% of sessions,emc
+prog_nst_prep,org_northstar,College Prep Seminar,education,completed the final project and exam,emc
+prog_key_trades,org_keystone,Construction Trades Pre-Apprenticeship,job_training,passed the final skills assessment,rac|mcc
+prog_key_culinary,org_keystone,Culinary Skills Training,job_training,attended at least 80% of sessions,rac
