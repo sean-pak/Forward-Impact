@@ -28,7 +28,7 @@ WEB_URL = "https://forward-impact-seanpaks-projects.vercel.app"
 # The real EIT locator holds real CDCR data and its client is not built. Never set this to "true" without TPW authorization.
 REAL_LOCATOR_ENABLED = "false"
 # Demo reset (POST /api/demo/reset) deletes everything, including the vault's audit log. Turn it on for the demo only.
-DEMO_MODE = "false"
+DEMO_MODE = "true"
 # The inbox that plays the CBO. Reset recreates this org and contact (the human's own test account).
 DEMO_CBO_EMAIL = "sean-pak@bmore-designful.com"
 DEMO_CBO_ORG = "Bmore Designful Collective"
