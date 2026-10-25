@@ -12,7 +12,7 @@ Read before writing code:
 - Session start: read PROGRESS.md, find the first unchecked phase in PLAN.md, say which phase you're on.
 - Phase end:
   1. `pnpm typecheck && pnpm test`
-  2. Deploy (worker: `pnpm --filter worker deploy`; web deploys on push to main via Vercel).
+  2. Deploy (worker: `pnpm --filter worker run deploy`; web deploys on push to main via Vercel).
   3. Walk the "Done when" list against deployed URLs.
   4. Tick the box in PLAN.md; append 3 to 6 lines to PROGRESS.md (shipped, URLs, gaps, notes for the next phase).
   5. Commit `phase-N: <title>`, `git tag phase-N`.

@@ -12,7 +12,7 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 
 ---
 
-## [ ] Phase 0: Skeleton deployed
+## [x] Phase 0: Skeleton deployed
 
 **Goal:** both apps live and talking, both databases bound.
 
@@ -23,9 +23,9 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 - `docs/PROGRESS.md` created.
 
 **Done when**
-- [ ] `/health` returns `{ ok: true, db: true, vault: true }` from the deployed Worker.
-- [ ] Vercel URL shows it.
-- [ ] `pnpm typecheck && pnpm test` passes.
+- [x] `/health` returns `{ ok: true, db: true, vault: true }` from the deployed Worker.
+- [x] Vercel URL shows it.
+- [x] `pnpm typecheck && pnpm test` passes.
 
 ---
 
