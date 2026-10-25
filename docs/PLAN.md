@@ -108,7 +108,7 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 
 ---
 
-## [ ] Phase 5: Gmail connection
+## [x] Phase 5: Gmail connection
 
 **Goal:** the Worker can read and send as `hello@seanpak.com`.
 
@@ -119,9 +119,9 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 - Admin: "Send test email" form and "Sync now" button, plus an inbound messages list.
 
 **Done when**
-- [ ] Test email from admin arrives in the CBO account.
-- [ ] A reply from the CBO account shows in admin within ~60 s, labeled `sam/processed` in Gmail.
-- [ ] Mail from an unknown sender is labeled `sam/ignored` and not logged.
+- [x] Test email from admin arrives in the CBO account.
+- [x] A reply from the CBO account shows in admin within ~60 s, labeled `sam/processed` in Gmail.
+- [x] Mail from an unknown sender is labeled `sam/ignored` and not logged.
 
 ---
 
