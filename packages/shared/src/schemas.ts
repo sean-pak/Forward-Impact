@@ -62,5 +62,17 @@ export const ReplyClassificationSchema = z.object({
   value: z.string().nullable().describe("The value exactly as the writer gave it, as text. Null when none was given."),
   approx: z.boolean().describe("true when the writer said about / around / roughly"),
   cycle_hint: z.string().nullable().describe("For a correction: the program name, prison or start date the writer is talking about, as written"),
+  also: z
+    .array(
+      z.object({
+        field_key: z.string(),
+        value: z.string(),
+        approx: z.boolean(),
+        cycle_hint: z.string().nullable(),
+      }),
+    )
+    .max(5)
+    .describe("Other facts the same reply gives or changes, beyond the main one. Empty when there are none."),
+  expected_numbers: z.boolean().describe("true when the reply gives an expected, hoped-for or projected number instead of a count"),
 });
 export type ReplyClassification = z.infer<typeof ReplyClassificationSchema>;

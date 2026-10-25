@@ -88,7 +88,7 @@ function scripted(script: Record<string, unknown[]>) {
 }
 
 const env = { GOOGLE_CLIENT_ID: "i", GOOGLE_CLIENT_SECRET: "s", GOOGLE_REFRESH_TOKEN: "r", MAILBOX_ADDRESS: "hello@example.org" };
-const classify = (intent: string, over: Record<string, unknown> = {}) => ({ intent, field_key: null, value: null, approx: false, cycle_hint: null, ...over });
+const classify = (intent: string, over: Record<string, unknown> = {}) => ({ intent, field_key: null, value: null, approx: false, cycle_hint: null, also: [], expected_numbers: false, ...over });
 
 describe.skipIf(!sqlite)("clarify, answer, confirm loop (real SQLite)", () => {
   it("persona 2 text -> one question per email -> receipt -> YES -> confirmed", async () => {
@@ -243,5 +243,100 @@ describe.skipIf(!sqlite)("clarify, answer, confirm loop (real SQLite)", () => {
     expect(g.sent).toHaveLength(1);
     expect(m.calls).toEqual(["extract_cycles"]);
     expect(q("SELECT count(*) AS n FROM submissions")[0]!.n).toBe(1);
+  });
+  it("one class in spring and fall: one program, and the missing prison is a yes/no", async () => {
+    const { db, q } = makeDb();
+    const g = makeGmail();
+    const cyc = (over: Record<string, unknown>) => ({ ...extract.cycles[0], completion_rule_stated: null, ...over });
+    const m = scripted({
+      extract_cycles: [{ persona: 2, cycles: [
+        cyc({ program_name: "spring meditation class", facility_raw: "San Quentin", start_date: "2025-02-03", n_enrolled: 30, n_enrolled_approx: true, n_completed: 22 }),
+        cyc({ program_name: "fall group", facility_raw: null, start_date: "2025-09-08", n_enrolled: 28, n_enrolled_approx: false, n_completed: null }),
+      ] }],
+    });
+    const run = () => syncGmail({ ...env, DB: db }, g.gmail, m.llm);
+    g.receive("T1", "The spring meditation class started February 3, 2025 at San Quentin. We had about 30 guys in it and 22 finished. Our fall group started September 8, 2025 with 28 people. We haven't counted how many finished the fall group yet.");
+    await run();
+    expect(q("SELECT program_name FROM programs")).toEqual([{ program_name: "Meditation class" }]);
+    expect(g.sent[0]!.text).toContain("Did Meditation class (started 2025-09-08) also run at San Quentin Rehabilitation Center? Reply YES");
+    expect(q("SELECT facility_code FROM program_cycles WHERE start_date = '2025-09-08'")).toEqual([{ facility_code: null }]);
+
+    // "Yes" sets the offered prison without a model call.
+    g.receive("T1", "Yes");
+    await run();
+    expect(m.calls).toEqual(["extract_cycles"]);
+    expect(q("SELECT facility_code FROM program_cycles WHERE start_date = '2025-09-08'")).toEqual([{ facility_code: "SQ" }]);
+    expect(g.sent[1]!.text).not.toContain("Which prison");
+  });
+
+  it("a reply to the receipt that fills in the rule without naming the class updates it, leaves out an expected count, then YES closes", async () => {
+    const { db, q } = makeDb();
+    const g = makeGmail();
+    const rule = "a participant needs to attend at least 80% of all sessions";
+    const m = scripted({
+      extract_cycles: [extract],
+      classify_reply: [
+        classify("answer", { field_key: "n_enrolled", value: null, approx: true }),
+        classify("unclear"),
+        // What the model returned for the real thread: the rule with no class named, and a projected count.
+        classify("correction", { field_key: "completion_rule", value: rule, expected_numbers: true }),
+      ],
+    });
+    const run = () => syncGmail({ ...env, DB: db }, g.gmail, m.llm);
+    g.receive("T1", PERSONA2); await run();
+    g.receive("T1", "about 30 is fine"); await run();
+    g.receive("T1", "Not sure"); await run();
+    expect(g.sent[2]!.text).toContain("What counts as completing Writing Class\n");
+
+    g.receive("T1", `What counts as completed is ${rule}. we are expecting 25/28 to complete the writing class that started in the fall`);
+    await run();
+    const receipt = g.sent[3]!.text;
+    expect(receipt).toContain("Thanks, I updated it.");
+    expect(receipt).toContain(`22 completed; completion means: ${rule}`);
+    expect(receipt).toContain(`completed not provided; completion means: ${rule}`);
+    expect(receipt).not.toContain("What counts as completing");
+    expect(receipt).toContain("I left out the expected numbers");
+    expect(q("SELECT n_completed FROM program_cycles ORDER BY start_date").map((r) => r.n_completed)).toEqual([22, null]);
+
+    g.receive("T1", "Yes"); await run();
+    expect(g.sent[4]!.text).toContain("Confirmed. Thank you.");
+    expect(q("SELECT status FROM submissions")).toEqual([{ status: "confirmed" }]);
+    expect(q("SELECT completion_rule FROM programs")).toEqual([{ completion_rule: rule }]);
+  });
+
+  it("two facts in one reply both apply, and a fact for the one cycle missing it needs no class name", async () => {
+    const { db, q } = makeDb();
+    const g = makeGmail();
+    const m = scripted({
+      extract_cycles: [extract],
+      classify_reply: [
+        classify("answer", { field_key: "n_enrolled", value: null, approx: true }),
+        classify("unclear"),
+        classify("correction", { field_key: "completion_rule", value: "attended 80% of sessions", also: [{ field_key: "n_completed", value: "25", approx: false, cycle_hint: null }] }),
+      ],
+    });
+    const run = () => syncGmail({ ...env, DB: db }, g.gmail, m.llm);
+    g.receive("T1", PERSONA2); await run();
+    g.receive("T1", "about 30 is fine"); await run();
+    g.receive("T1", "Not sure"); await run();
+    g.receive("T1", "Completing means attended 80% of sessions. 25 finished the fall group."); await run();
+    expect(q("SELECT n_completed FROM program_cycles ORDER BY start_date").map((r) => r.n_completed)).toEqual([22, 25]);
+    expect(g.sent[3]!.text).toContain("Thanks, I updated it.");
+    expect(g.sent[3]!.text).not.toContain("Not provided yet");
+  });
+
+  it("a reply to the receipt that changes nothing says so instead of repeating the receipt", async () => {
+    const { db } = makeDb();
+    const g = makeGmail();
+    const m = scripted({
+      extract_cycles: [extract],
+      classify_reply: [classify("answer", { field_key: "n_enrolled", value: null, approx: true }), classify("unclear"), classify("unclear")],
+    });
+    const run = () => syncGmail({ ...env, DB: db }, g.gmail, m.llm);
+    g.receive("T1", PERSONA2); await run();
+    g.receive("T1", "about 30 is fine"); await run();
+    g.receive("T1", "Not sure"); await run();
+    g.receive("T1", "Can you call me?"); await run();
+    expect(g.sent[3]!.text).toContain("I could not tell what to change from it");
   });
 });

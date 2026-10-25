@@ -114,3 +114,21 @@ export function deriveCycles(orgId: string, stored: StoredCycle[], registry: Reg
     return { cycle_id: st.cycle_id, cycle, issues, blocked: issues.some(isBlocking) };
   });
 }
+
+/**
+ * The prison to offer for a cycle with none: the one its program's other cycles in this submission ran at, else the
+ * one every other cycle ran at. Null when there is none or more than one, so Sam never picks between prisons.
+ */
+export function suggestFacility(cycleId: string, derived: DerivedCycle[]): { code: string; name: string } | null {
+  const self = derived.find((d) => d.cycle_id === cycleId);
+  if (!self || self.cycle.facility_code) return null;
+  const others = derived.filter((d) => d.cycle_id !== cycleId && d.cycle.facility_code);
+  const only = (ds: DerivedCycle[]) => {
+    const codes = [...new Set(ds.map((d) => d.cycle.facility_code!))];
+    return codes.length === 1 ? codes[0]! : null;
+  };
+  const sameProgram = others.filter((d) => d.cycle.program_id === self.cycle.program_id);
+  const code = (sameProgram.length ? only(sameProgram) : null) ?? only(others);
+  const name = code ? facilityName(code) : null;
+  return code && name ? { code, name } : null;
+}

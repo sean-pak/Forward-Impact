@@ -37,14 +37,34 @@ export function numberAppearsIn(n: number, text: string): boolean {
   return Object.entries(WORDS).some(([w, v]) => v === n && new RegExp(`\\b${w}\\b`).test(lower));
 }
 
+const TERM_PREFIX = /^(?:(?:our|the|this|that)\s+)?(?:(?:spring|summer|fall|autumn|winter|\d{4})\s+)+/i;
+const GENERIC = new Set(["", "group", "class", "cohort", "session", "course", "program", "one", "run", "round"]);
+
+/**
+ * One class run twice is one program: "spring meditation class" and "our fall group" are both "Meditation class".
+ * Season, term and year words are dropped from the front of each name. A name left generic ("group") takes the one
+ * real class name in the same message; with none or several, the name is kept as written so nothing is merged by guess.
+ */
+export function baseProgramNames(names: string[]): string[] {
+  const stripped = names.map((n) => n.trim().replace(TERM_PREFIX, "").trim());
+  const real = [...new Map(stripped.filter((n) => !GENERIC.has(n.toLowerCase())).map((n) => [n.toLowerCase(), n])).values()];
+  const cap = (n: string) => n.charAt(0).toUpperCase() + n.slice(1);
+  return names.map((orig, i) => {
+    const s = stripped[i]!;
+    if (!GENERIC.has(s.toLowerCase())) return cap(s);
+    return real.length === 1 ? cap(real[0]!) : orig.trim();
+  });
+}
+
 /** Rows for the shared cycle cleaner. Counts the text does not contain are dropped and reported. */
 export function extractionToRows(
   result: ExtractionResult,
   sourceText: string,
 ): { rows: CycleFormRow[]; unsupported: { row: number; program_name: string; field: "n_enrolled" | "n_completed"; value: number }[] } {
   const unsupported: { row: number; program_name: string; field: "n_enrolled" | "n_completed"; value: number }[] = [];
+  const names = baseProgramNames(result.cycles.map((c) => c.program_name ?? ""));
   const rows = result.cycles.map((c, row): CycleFormRow => {
-    const name = (c.program_name ?? "").trim() || "Unnamed program";
+    const name = names[row] || "Unnamed program";
     const count = (field: "n_enrolled" | "n_completed"): string => {
       const v = c[field];
       if (v === null) return "";

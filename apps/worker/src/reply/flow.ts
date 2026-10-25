@@ -1,7 +1,7 @@
 import {
   APPROX_FIELDS, FACILITIES, ReplyClassificationSchema, clarifyEmail, confirmReceiptEmail, cycleKey, deriveCycles, escalatedEmail,
   facilityName, isAnswerable, isPlainYes, isSyntheticEmail, numberAppearsIn, overlayAnswer, pickQuestion, replySubject, scrubIdentifiers,
-  stripQuoted, thanksEmail, toFormRow, type Candidate, type CycleFormRow, type ReplyClassification, type DerivedCycle, type Question, type RegistryField, type StoredCycle,
+  stripQuoted, suggestFacility, thanksEmail, toFormRow, type Candidate, type CycleFormRow, type ReplyClassification, type DerivedCycle, type Question, type RegistryField, type StoredCycle,
 } from "@tpw/shared";
 import { confirmById, registryFields } from "../form";
 import type { Gmail } from "../gmail";
@@ -27,7 +27,7 @@ export type Inbound = {
 
 export type Deps = { db: D1Database; gmail: Gmail; llm: Llm };
 
-export type OpenQuestion = { kind: Question["kind"] | "confirm"; field_name: string; cycle_ids: string[]; text: string };
+export type OpenQuestion = { kind: Question["kind"] | "confirm"; field_name: string; cycle_ids: string[]; text: string; suggestion?: string };
 
 type SubRow = { submission_id: string; org_id: string; org_name: string; status: string; followup_rounds: number; open_question: string | null; is_synthetic: number };
 type State = { sub: SubRow; oq: OpenQuestion | null; stored: StoredCycle[]; registry: RegistryField[] };
@@ -97,7 +97,10 @@ function candidates(derived: DerivedCycle[], stored: StoredCycle[]): Candidate[]
   const out: Candidate[] = [];
   for (const d of derived) {
     const base = { cycle_id: d.cycle_id, program_id: d.cycle.program_id, program_name: d.cycle.program_name, facility_name: facilityName(d.cycle.facility_code), start_date: d.cycle.start_date };
-    for (const i of d.issues) out.push({ ...base, kind: "issue", field_name: i.field_name, issue_type: i.issue_type, message: i.message });
+    for (const i of d.issues) {
+      const suggested = i.field_name === "facility_code" && i.issue_type === "missing_required" ? suggestFacility(d.cycle_id, derived) : null;
+      out.push({ ...base, kind: "issue", field_name: i.field_name, issue_type: i.issue_type, message: i.message, ...(suggested ? { suggested_facility: suggested } : {}) });
+    }
     const asked = askedApprox(byId.get(d.cycle_id)!.extra);
     const flags: Record<string, boolean> = {
       n_enrolled: d.cycle.n_enrolled_approx, n_completed: d.cycle.n_completed_approx, total_course_hours_delivered: d.cycle.total_course_hours_delivered_approx,
@@ -111,11 +114,13 @@ function candidates(derived: DerivedCycle[], stored: StoredCycle[]): Candidate[]
 }
 
 function openLabel(c: Candidate): string {
+  // The rule belongs to the program, so it is listed once per program, not per cycle.
+  if (c.field_name === "completion_rule") return `What counts as completing ${c.program_name}`;
   const label = FIELD_LABEL[c.field_name] ?? c.field_name.replace(/_/g, " ");
   return `${label} for ${c.program_name}${c.facility_name ? ` at ${c.facility_name}` : ""}${c.start_date ? `, started ${c.start_date}` : ""}`;
 }
 
-type Change = { overrides?: Map<string, CycleFormRow>; retry?: boolean; updated?: boolean };
+type Change = { overrides?: Map<string, CycleFormRow>; retry?: boolean; updated?: boolean; unchanged?: boolean; expectedLeftOut?: boolean };
 
 /**
  * One turn of the conversation. Re-derives every cycle from what is stored (plus this reply's answer), then picks the
@@ -139,7 +144,7 @@ async function turn(deps: Deps, st: State, inbound: Inbound, change: Change = {}
   if (action === "ask") {
     kind = "clarify";
     body = clarifyEmail({ question: q!.text, retry: change.retry || repeated });
-    openQuestion = { kind: q!.kind, field_name: q!.field_name, cycle_ids: q!.cycle_ids, text: q!.text };
+    openQuestion = { kind: q!.kind, field_name: q!.field_name, cycle_ids: q!.cycle_ids, text: q!.text, ...(q!.suggestion ? { suggestion: q!.suggestion } : {}) };
   } else if (action === "escalate") {
     kind = "escalated";
     body = escalatedEmail();
@@ -153,9 +158,11 @@ async function turn(deps: Deps, st: State, inbound: Inbound, change: Change = {}
         n_enrolled: d.cycle.n_enrolled, n_enrolled_approx: d.cycle.n_enrolled_approx,
         n_completed: d.cycle.n_completed, n_completed_approx: d.cycle.n_completed_approx, completion_rule: d.cycle.completion_rule,
       })),
-      open: cands.filter((c) => c.kind === "issue").map(openLabel),
+      open: [...new Set(cands.filter((c) => c.kind === "issue").map(openLabel))],
       scrambled: { names: 0, cdcr: 0 },
       updated: change.updated,
+      unchanged: change.unchanged,
+      expectedLeftOut: change.expectedLeftOut,
     });
     openQuestion = { kind: "confirm", field_name: "", cycle_ids: derived.map((d) => d.cycle_id), text: "Reply YES to confirm" };
   }
@@ -273,8 +280,13 @@ export async function handleReply(deps: Deps, submissionId: string, inbound: Inb
   const oq = st.oq;
   const text = scrubIdentifiers(stripQuoted(inbound.text)).slice(0, 2000);
 
-  const none: ReplyClassification = { intent: "unclear", field_key: null, value: null, approx: false, cycle_hint: null };
-  let found: ReplyClassification | null = isPlainYes(text) && oq.kind === "confirm" ? { ...none, intent: "confirm" } : null;
+  const none: ReplyClassification = { intent: "unclear", field_key: null, value: null, approx: false, cycle_hint: null, also: [], expected_numbers: false };
+  // "Did it also run at San Quentin?" -> "Yes": the offered prison, no model needed.
+  const suggested = oq.suggestion ? facilityName(oq.suggestion) : null;
+  let found: ReplyClassification | null =
+    isPlainYes(text) && oq.kind === "confirm" ? { ...none, intent: "confirm" }
+    : isPlainYes(text) && suggested ? { ...none, intent: "answer", field_key: "facility_code", value: suggested }
+    : null;
   if (!found && text) {
     try {
       found = await deps.llm.json({
@@ -291,11 +303,12 @@ export async function handleReply(deps: Deps, submissionId: string, inbound: Inb
     }
   }
   const cls = found ?? none;
+  if (suggested && cls.intent === "answer" && cls.value && isPlainYes(cls.value)) cls.value = suggested;
+  const before = deriveCycles(st.sub.org_id, st.stored, st.registry, new Date().toISOString().slice(0, 10));
 
-  // Confirm: only when nothing blocks. Anything else about a "yes" is not a confirmation.
-  if (cls.intent === "confirm" && oq.kind === "confirm") {
-    const derived = deriveCycles(st.sub.org_id, st.stored, st.registry, new Date().toISOString().slice(0, 10));
-    if (!derived.some((d) => d.blocked)) {
+  // Confirm: only when nothing blocks and the reply brings no new facts. Anything else about a "yes" is not a confirmation.
+  if (cls.intent === "confirm" && oq.kind === "confirm" && cls.also.length === 0) {
+    if (!before.some((d) => d.blocked)) {
       if (!isSyntheticEmail(inbound.from)) {
         const body = thanksEmail({ orgName: st.sub.org_name });
         const sent = await deps.gmail.send({
@@ -314,14 +327,26 @@ export async function handleReply(deps: Deps, submissionId: string, inbound: Inb
   }
 
   const overrides = new Map<string, CycleFormRow>();
+  // Several changes can touch one cycle, so each builds on the last one applied.
   const put = (ids: string[], field: string, value: string, approx: boolean): boolean => {
+    const next = new Map<string, CycleFormRow>();
     for (const id of ids) {
       const c = st.stored.find((x) => x.cycle_id === id);
-      const next = c && overlayAnswer(toFormRow(c), field, value, approx, st.registry);
-      if (!next) return false;
-      overrides.set(id, next);
+      const row = c && overlayAnswer(overrides.get(id) ?? toFormRow(c), field, value, approx, st.registry);
+      if (!row) return false;
+      next.set(id, row);
     }
+    for (const [id, row] of next) overrides.set(id, row);
     return ids.length > 0;
+  };
+
+  /** A fact the writer gave or changed without being asked. Applies only when it points at one cycle (or one program, for a rule). */
+  const correct = (c: { field_key: string | null; value: string | null; approx: boolean; cycle_hint: string | null }): boolean => {
+    if (!c.field_key || !c.value || !isAnswerable(c.field_key, st.registry) || !supported(c.field_key, c.value, text)) return false;
+    // An expected number is not a count; the model is told so, and code holds the line too.
+    if (cls.expected_numbers && c.field_key === "n_completed") return false;
+    const ids = targetCycles(st.stored, before, c.field_key, c.cycle_hint);
+    return ids.length > 0 && put(ids, c.field_key, c.value, c.approx);
   };
 
   let applied = false;
@@ -338,15 +363,45 @@ export async function handleReply(deps: Deps, submissionId: string, inbound: Inb
     } else if (cls.value && supported(oq.field_name, cls.value, text)) {
       applied = put(oq.cycle_ids, oq.field_name, cls.value, cls.approx);
     }
-  } else if (cls.intent === "correction" && cls.field_key && cls.value && isAnswerable(cls.field_key, st.registry) && supported(cls.field_key, cls.value, text)) {
-    const hits = matchCycles(st.stored, cls.cycle_hint);
-    // A program's completion rule applies to every cycle of that program in this submission.
-    const ids = cls.field_key === "completion_rule" && hits.length === 1
-      ? st.stored.filter((c) => c.program_id === hits[0]!.program_id).map((c) => c.cycle_id)
-      : hits.map((c) => c.cycle_id);
-    if (hits.length === 1) applied = put(ids, cls.field_key, cls.value, cls.approx);
+  } else if (cls.intent === "correction") {
+    applied = correct(cls);
   }
-  return turn(deps, st, inbound, { overrides, retry: !applied && oq.kind !== "confirm", updated: applied && oq.kind === "confirm" });
+  // A reply can carry more than one fact ("the rule is 80%, and the fall count is 25").
+  let alsoApplied = false;
+  if (cls.intent !== "unclear") for (const c of cls.also) alsoApplied = correct(c) || alsoApplied;
+
+  const changed = applied || alsoApplied;
+  return turn(deps, st, inbound, {
+    overrides,
+    retry: !applied && oq.kind !== "confirm",
+    updated: changed && oq.kind === "confirm",
+    unchanged: !changed && oq.kind === "confirm",
+    expectedLeftOut: cls.expected_numbers,
+  });
+}
+
+/**
+ * The cycles a correction is about. A hint that names one cycle wins. Without one, a completion rule goes to the only
+ * program in the submission, and any other field goes to the one cycle still missing it. Anything wider is not guessed.
+ * A completion rule covers every cycle of its program.
+ */
+function targetCycles(stored: StoredCycle[], derived: DerivedCycle[], field: string, hint: string | null): string[] {
+  let hits = matchCycles(stored, hint);
+  if (hits.length === 0) {
+    const open = stored.filter((c) => derived.find((d) => d.cycle_id === c.cycle_id)?.issues.some((i) => i.field_name === field));
+    const programs = (cs: StoredCycle[]) => new Set(cs.map((c) => c.program_id));
+    if (field === "completion_rule") {
+      if (programs(stored).size === 1) hits = stored;
+      else if (programs(open).size === 1) hits = open;
+    } else if (open.length === 1) {
+      hits = open;
+    }
+  }
+  if (field === "completion_rule" && hits.length > 0) {
+    const ps = new Set(hits.map((c) => c.program_id));
+    return ps.size === 1 ? stored.filter((c) => ps.has(c.program_id)).map((c) => c.cycle_id) : [];
+  }
+  return hits.length === 1 ? [hits[0]!.cycle_id] : [];
 }
 
 export type { DerivedCycle };

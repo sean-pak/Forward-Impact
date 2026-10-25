@@ -44,6 +44,13 @@ describe("pickQuestion (PRD 7.7 order)", () => {
     expect(pickQuestion([issue("n_completed", "missing_required")])!.text).toContain("(This is about Writing Class at California Men's Colony, started 2025-02-03.)");
   });
 
+  it("a missing prison with a likely answer is asked as yes/no", () => {
+    const q = pickQuestion([issue("facility_code", "missing_required", { facility_name: null, start_date: "2025-09-08", suggested_facility: { code: "SQ", name: "San Quentin Rehabilitation Center" } })])!;
+    expect(q.text).toBe("Did Writing Class (started 2025-09-08) also run at San Quentin Rehabilitation Center? Reply YES, or tell me which prison it ran at.");
+    expect(q.suggestion).toBe("SQ");
+    expect(pickQuestion([issue("facility_code", "missing_required")])!.suggestion).toBeUndefined();
+  });
+
   it("an approximate question shows the number given and offers the keep-as-is reply", () => {
     const t = pickQuestion([approx("n_enrolled")])!.text;
     expect(t).toContain('"about 30"');

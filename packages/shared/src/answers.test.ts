@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { deriveCycles, overlayAnswer, toFormRow, type StoredCycle } from "./answers";
+import { deriveCycles, overlayAnswer, suggestFacility, toFormRow, type StoredCycle } from "./answers";
 
 const stored = (over: Partial<StoredCycle> = {}): StoredCycle => ({
   cycle_id: "c1", program_id: "p1", program_name: "Writing Class", facility_code: "CMC", facility_raw: null, yard: null,
@@ -74,5 +74,21 @@ describe("overlayAnswer", () => {
   it("sets an active registry field", () => {
     const reg = [{ field_key: "funding", label: "Funding", type: "text" as const, options: null, required: false }];
     expect(overlayAnswer(row, "funding", "grant", false, reg)!.extra.funding).toBe("grant");
+  });
+});
+
+describe("suggestFacility", () => {
+  it("offers the prison the program's other run used", () => {
+    const d = deriveCycles("o1", [stored({ facility_code: "SQ" }), stored({ cycle_id: "c2", facility_code: null, start_date: "2025-09-08" })], [], today);
+    expect(suggestFacility("c2", d)).toEqual({ code: "SQ", name: "San Quentin Rehabilitation Center" });
+    expect(suggestFacility("c1", d)).toBeNull();
+  });
+
+  it("offers nothing when the other runs were at different prisons", () => {
+    const d = deriveCycles("o1", [
+      stored({ facility_code: "SQ" }), stored({ cycle_id: "c2", facility_code: "CMC", start_date: "2025-05-01" }),
+      stored({ cycle_id: "c3", facility_code: null, start_date: "2025-09-08" }),
+    ], [], today);
+    expect(suggestFacility("c3", d)).toBeNull();
   });
 });

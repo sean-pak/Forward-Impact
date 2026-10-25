@@ -12,6 +12,8 @@ export type Candidate = {
   issue_type: CycleIssue["issue_type"] | null;
   /** Plain-language message for an issue; for an approx candidate, the number as given. */
   message: string;
+  /** For a missing prison: the prison the other cycles in the same message ran at, offered as a yes/no. Never stored until the CBO says yes. */
+  suggested_facility?: { code: string; name: string };
 };
 
 export type Question = {
@@ -20,6 +22,8 @@ export type Question = {
   /** Cycles one answer settles. A completion rule belongs to the program, so it covers all of its cycles in the submission. */
   cycle_ids: string[];
   text: string;
+  /** facility_code a plain YES would set. */
+  suggestion?: string;
 };
 
 const CORE: readonly string[] = REQUIRED_CYCLE_FIELDS;
@@ -57,6 +61,10 @@ export function questionText(c: Candidate): string {
     const label = COUNT_LABEL[c.field_name] ?? c.field_name;
     return `You gave "about ${c.message}" for ${label} in ${about(c)}. Do you have the exact number? If so, reply with it. If about ${c.message} is the best you have, reply "about ${c.message} is fine".`;
   }
+  if (c.field_name === "facility_code" && c.issue_type === "missing_required" && c.suggested_facility) {
+    const when = c.start_date ? ` (started ${c.start_date})` : "";
+    return `Did ${c.program_name}${when} also run at ${c.suggested_facility.name}? Reply YES, or tell me which prison it ran at.`;
+  }
   if (c.field_name === "completion_rule") {
     return `What counts as completing ${c.program_name}? For example: attended all sessions, or attended at least 80% of sessions. Without it I cannot show a completion rate.`;
   }
@@ -74,7 +82,9 @@ export function pickQuestion(candidates: Candidate[]): Question | null {
   const cycle_ids = candidates
     .filter((c) => c.kind === best.kind && c.field_name === best.field_name && (sameRule ? c.program_id === best.program_id : c.cycle_id === best.cycle_id))
     .map((c) => c.cycle_id);
-  return { kind: best.kind, field_name: best.field_name, cycle_ids: [...new Set(cycle_ids)], text: questionText(best) };
+  const q: Question = { kind: best.kind, field_name: best.field_name, cycle_ids: [...new Set(cycle_ids)], text: questionText(best) };
+  if (best.field_name === "facility_code" && best.issue_type === "missing_required" && best.suggested_facility) q.suggestion = best.suggested_facility.code;
+  return q;
 }
 
 /** A short, plain "yes" is the confirmation. Anything longer goes to the classifier so "yes but the SQ count is 29" is not lost. */

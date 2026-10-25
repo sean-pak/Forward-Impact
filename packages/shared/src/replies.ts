@@ -65,13 +65,23 @@ export type ReceiptInput = {
   reportUrl?: string;
   /** True when the CBO changed something and is confirming the updated version. */
   updated?: boolean;
+  /** True when the CBO replied to the receipt but nothing in the reply could be applied. */
+  unchanged?: boolean;
+  /** True when the reply gave an expected number, which Sam does not count. */
+  expectedLeftOut?: boolean;
 };
 
 export function confirmReceiptEmail(i: ReceiptInput): Body {
+  const opener = i.updated
+    ? "Thanks, I updated it."
+    : i.unchanged
+      ? "Thanks for the reply. I could not tell what to change from it, so nothing has changed yet."
+      : "Thanks, that's everything I need.";
   return build([
-    `${i.updated ? "Thanks, I updated it." : "Thanks, that's everything I need."} Here is what I have for ${i.orgName}:`,
+    `${opener} Here is what I have for ${i.orgName}:`,
     i.cycles.map((c) => `- ${receiptLine(c)}`).join("\n"),
     ...(i.open.length ? [`Not provided yet (left out of totals until you tell me):\n${i.open.map((o) => `- ${o}`).join("\n")}`] : []),
+    ...(i.expectedLeftOut ? ["I left out the expected numbers you mentioned, because only final counts are used. Send the count when the class ends."] : []),
     scrambledLine(i.scrambled.names, i.scrambled.cdcr),
     ...(i.reportUrl ? [`Your private report: ${i.reportUrl}`] : []),
     "Nothing is counted until you confirm. Reply YES to confirm, or reply with what to fix.",
