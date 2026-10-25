@@ -19,3 +19,4 @@ export * from "./completion";
 export * from "./attendance";
 export * from "./people";
 export * from "./individual";
+export * from "./orgReport";

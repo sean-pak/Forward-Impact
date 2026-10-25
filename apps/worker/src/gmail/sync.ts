@@ -54,7 +54,7 @@ async function match(
  * Bodies and subjects of inbound mail are never stored and nothing here calls an LLM.
  */
 export async function syncGmail(
-  env: GmailEnv & LlmEnv & { DB: D1Database } & Partial<VaultEnv>,
+  env: GmailEnv & LlmEnv & { DB: D1Database; WEB_URL?: string } & Partial<VaultEnv>,
   gmail = new Gmail(env),
   llm: Llm = new OpenRouterLlm(env),
 ): Promise<SyncResult> {
@@ -94,12 +94,12 @@ export async function syncGmail(
         if (waiting) {
           // A reply to Sam's question or receipt (PRD 7.5): classify, apply, then the next question or the receipt.
           const already = await env.DB.prepare("SELECT submission_id FROM messages WHERE message_id = ?").bind(id).first<{ submission_id: string | null }>();
-          if (!already?.submission_id) await handleReply({ db: env.DB, gmail, llm }, waiting, inbound);
+          if (!already?.submission_id) await handleReply({ db: env.DB, gmail, llm, webUrl: env.WEB_URL }, waiting, inbound);
         } else {
           const done = await ingestMessage(env.DB, llm, { id, orgId: m.orgId, from, occurredAt, parts: dataParts(parsed) }, vaultFactory(env));
           if (done === "retry") continue; // model unavailable: leave unlabeled, the next sync tries again
           result.ingested += done.made;
-          await startConversations(env.DB, { db: env.DB, gmail, llm }, done.ids, inbound);
+          await startConversations(env.DB, { db: env.DB, gmail, llm, webUrl: env.WEB_URL }, done.ids, inbound);
         }
       } catch (e) {
         // Model or Gmail trouble: leave the message unlabeled so the next sync tries it again.

@@ -122,24 +122,26 @@ export type OrgWithContacts = {
   org_id: string;
   org_name: string;
   asks_sent: number;
+  /** For the staff link to the org's private report page. */
+  private_token: string | null;
   contacts: { contact_id: string; name: string | null; email: string; title: string | null; is_primary: boolean; rank: number }[];
 };
 
 export async function listOrgs(db: D1Database): Promise<OrgWithContacts[]> {
   const { results } = await db
     .prepare(
-      `SELECT o.org_id, o.org_name, (SELECT COUNT(*) FROM outreach x WHERE x.org_id = o.org_id) AS asks_sent,
+      `SELECT o.org_id, o.org_name, o.private_token, (SELECT COUNT(*) FROM outreach x WHERE x.org_id = o.org_id) AS asks_sent,
               c.contact_id, c.name, c.email, c.title, c.is_primary, c.rank
        FROM orgs o LEFT JOIN contacts c ON c.org_id = o.org_id
        ORDER BY o.org_name, c.rank`,
     )
     .all<{
-      org_id: string; org_name: string; asks_sent: number;
+      org_id: string; org_name: string; private_token: string | null; asks_sent: number;
       contact_id: string | null; name: string | null; email: string | null; title: string | null; is_primary: number | null; rank: number | null;
     }>();
   const orgs = new Map<string, OrgWithContacts>();
   for (const r of results) {
-    const o = orgs.get(r.org_id) ?? { org_id: r.org_id, org_name: r.org_name, asks_sent: r.asks_sent, contacts: [] };
+    const o = orgs.get(r.org_id) ?? { org_id: r.org_id, org_name: r.org_name, asks_sent: r.asks_sent, private_token: r.private_token, contacts: [] };
     orgs.set(r.org_id, o);
     if (r.contact_id && r.email) {
       o.contacts.push({ contact_id: r.contact_id, name: r.name, email: r.email, title: r.title, is_primary: r.is_primary === 1, rank: r.rank ?? 0 });

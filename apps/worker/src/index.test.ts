@@ -49,17 +49,17 @@ describe("worker", () => {
       n_enrolled: 10, n_completed: 8, total_course_hours_delivered: null,
       n_enrolled_approx: 0, n_completed_approx: 0, total_course_hours_delivered_approx: 0,
     };
-    const db = {
-      prepare: (sql: string) => ({
-        all: async () => {
-          if (sql.includes("FROM facilities")) {
-            return { results: [{ facility_code: "SQ", facility_name: "San Quentin" }, { facility_code: "SATF", facility_name: "SATF" }] };
-          }
-          expect(sql).toContain("status = 'confirmed'");
-          return { results: [row] };
-        },
-      }),
-    } as unknown as D1Database;
+    const stmt = (sql: string) => ({
+      bind: () => stmt(sql),
+      all: async () => {
+        if (sql.includes("FROM facilities")) {
+          return { results: [{ facility_code: "SQ", facility_name: "San Quentin" }, { facility_code: "SATF", facility_name: "SATF" }] };
+        }
+        expect(sql).toContain("status = 'confirmed'");
+        return { results: [row] };
+      },
+    });
+    const db = { prepare: stmt } as unknown as D1Database;
     const e = { ...env(true, true), DB: db };
     expect((await app.request("/api/admin/summary", {}, e)).status).toBe(401);
     const res = await app.request("/api/admin/summary", { headers: { Authorization: "Bearer secret" } }, e);

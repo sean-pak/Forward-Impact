@@ -7,6 +7,7 @@ type Org = {
   org_id: string;
   org_name: string;
   asks_sent: number;
+  private_token: string | null;
   contacts: { contact_id: string; name: string | null; email: string; title: string | null; is_primary: boolean; rank: number }[];
 };
 
@@ -99,7 +100,10 @@ export default async function ContactsPage({ searchParams }: { searchParams: Pro
                 <td style={cell}>
                   {i === 0 ? <input type="checkbox" name="org_ids" value={o.org_id} form="send" aria-label={`Select ${o.org_name}`} disabled={o.asks_sent > 0} /> : null}
                 </td>
-                <td style={cell}>{i === 0 ? o.org_name : ""}</td>
+                <td style={cell}>
+                  {i === 0 ? o.org_name : ""}
+                  {i === 0 && o.private_token ? <> (<a href={`/o/${o.private_token}`}>report</a>)</> : null}
+                </td>
                 <td style={cell}>{c?.name ?? ""}</td>
                 <td style={cell}>{c?.email ?? "no contacts"}</td>
                 <td style={cell}>{c?.title ?? ""}</td>

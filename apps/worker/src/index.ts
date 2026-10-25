@@ -6,6 +6,7 @@ import { PIXEL_GIF, importContacts, listOrgs, listOutreach, recordOpen, sendAsks
 import { FormBodySchema, adminSubmission, confirmSubmission, getSubmission, listSubmissions, loadForm, submitForm, type OrgRow } from "./form";
 import { ingest, type IngestInput } from "./ingest";
 import { OpenRouterLlm } from "./llm";
+import { loadOrgReport } from "./report";
 import { loadDashboard } from "./summary";
 import { createVault, pingVault, vaultFactory } from "./vault";
 
@@ -177,6 +178,14 @@ app.get("/api/form/:token/submissions/:id", async (c) => {
 app.post("/api/form/:token/submissions/:id/confirm", async (c) => {
   const r = await confirmSubmission(c.env.DB, c.req.param("token"), c.req.param("id"));
   return r.ok ? c.json(r) : c.json({ error: r.error }, r.status);
+});
+
+// The CBO's private report (PRD 5): its own numbers and its own people, re-identified. The web page calls this
+// server-side; the token is the only thing that picks the org.
+app.get("/api/org/:token/report", async (c) => {
+  c.header("Cache-Control", "no-store");
+  const report = await loadOrgReport(c.env.DB, c.req.param("token"), vaultFactory(c.env));
+  return report ? c.json(report) : c.json({ error: "unknown report link" }, 404);
 });
 
 export default {

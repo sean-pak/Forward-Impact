@@ -9,6 +9,7 @@ import { confirmById, registryFields } from "../form";
 import type { Gmail } from "../gmail";
 import { attendanceFor, attendanceWrites, loadAttendance, type AttendanceCycle } from "../individual/recompute";
 import type { Llm } from "../llm";
+import { orgReportUrl } from "../report";
 import { LEGEND_SYSTEM, REPLY_SYSTEM } from "./prompts";
 
 /** Clarification emails per submission (PRD 7.7). After this, blocking problems go to staff. */
@@ -28,7 +29,8 @@ export type Inbound = {
   occurredAt: string;
 };
 
-export type Deps = { db: D1Database; gmail: Gmail; llm: Llm };
+/** `webUrl` builds the private report link in the receipt and thanks emails; left out, the emails carry no link. */
+export type Deps = { db: D1Database; gmail: Gmail; llm: Llm; webUrl?: string };
 
 export type OpenQuestion = { kind: Question["kind"] | "confirm"; field_name: string; cycle_ids: string[]; text: string; suggestion?: string };
 
@@ -181,6 +183,7 @@ async function turn(deps: Deps, st: State, inbound: Inbound, change: Change = {}
     openQuestion = null;
   } else {
     kind = "confirm_receipt";
+    const reportUrl = await orgReportUrl(db, deps.webUrl, st.sub.org_id);
     body = confirmReceiptEmail({
       orgName: st.sub.org_name,
       cycles: derived.map((d) => ({
@@ -194,6 +197,7 @@ async function turn(deps: Deps, st: State, inbound: Inbound, change: Change = {}
       updated: change.updated,
       unchanged: change.unchanged,
       expectedLeftOut: change.expectedLeftOut,
+      reportUrl,
     });
     openQuestion = { kind: "confirm", field_name: "", cycle_ids: derived.map((d) => d.cycle_id), text: "Reply YES to confirm" };
   }
@@ -396,7 +400,7 @@ export async function handleReply(deps: Deps, submissionId: string, inbound: Inb
   if (cls.intent === "confirm" && oq.kind === "confirm" && cls.also.length === 0) {
     if (!before.some((d) => d.blocked)) {
       if (!isSyntheticEmail(inbound.from)) {
-        const body = thanksEmail({ orgName: st.sub.org_name });
+        const body = thanksEmail({ orgName: st.sub.org_name, reportUrl: await orgReportUrl(deps.db, deps.webUrl, st.sub.org_id) });
         const sent = await deps.gmail.send({
           to: inbound.from, subject: replySubject(inbound.subject), text: body.text, html: body.html, threadId: inbound.threadId,
           inReplyTo: inbound.rfcMessageId ?? undefined,

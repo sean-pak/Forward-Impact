@@ -63,7 +63,7 @@ export type ReceiptInput = {
   scrambled: { names: number; cdcr: number };
   /** What Sam did while reading a person-level file (see individualNoteLines). Counts only. */
   notes?: string[];
-  /** Private report page. Left out until that page exists. */
+  /** The org's private report page (`/o/[token]`). */
   reportUrl?: string;
   /** True when the CBO changed something and is confirming the updated version. */
   updated?: boolean;
@@ -86,7 +86,7 @@ export function confirmReceiptEmail(i: ReceiptInput): Body {
     ...(i.expectedLeftOut ? ["I left out the expected numbers you mentioned, because only final counts are used. Send the count when the class ends."] : []),
     scrambledLine(i.scrambled.names, i.scrambled.cdcr),
     ...(i.notes?.length ? [`While reading your file:\n${i.notes.map((n) => `- ${n}`).join("\n")}`] : []),
-    ...(i.reportUrl ? [`Your private report: ${i.reportUrl}`] : []),
+    ...(i.reportUrl ? [`Your private report (it shows what you have confirmed, with your participants' names): ${i.reportUrl}`] : []),
     "Nothing is counted until you confirm. Reply YES to confirm, or reply with what to fix.",
   ]);
 }
@@ -94,7 +94,7 @@ export function confirmReceiptEmail(i: ReceiptInput): Body {
 export function thanksEmail(i: { orgName: string; reportUrl?: string }): Body {
   return build([
     `Confirmed. Thank you. The information for ${i.orgName} now counts toward TPW's numbers.`,
-    ...(i.reportUrl ? [`Your private report: ${i.reportUrl}`] : []),
+    ...(i.reportUrl ? [`Your private report, with a paragraph you can use in grant applications: ${i.reportUrl}`] : []),
     "If anything changes, reply to this email or send a new update.",
   ]);
 }
