@@ -32,7 +32,7 @@ const RowSchema = z.object({
 });
 export const FormBodySchema = z.object({ rows: z.array(RowSchema).max(50) });
 
-type OrgRow = { org_id: string; org_name: string; primary_contact_email: string; is_synthetic: number };
+export type OrgRow = { org_id: string; org_name: string; primary_contact_email: string; is_synthetic: number };
 
 export type FormView = {
   org_name: string;
@@ -127,16 +127,27 @@ export type SubmitResult =
   | { ok: true; submission_id: string; blocked: boolean }
   | { ok: false; status: 404 | 400; error: string };
 
-/**
- * Writes the submission, draft cycles and issues in one batch. Nothing counts until confirmSubmission.
- * A row with no dates or counts is a pre-filled program the CBO skipped, and is ignored.
- */
-export async function submitForm(db: D1Database, token: string, rows: CycleFormRow[]): Promise<SubmitResult> {
-  const org = await orgByToken(db, token);
-  if (!org) return { ok: false, status: 404, error: "unknown form link" };
-  const filled = rows.filter((r) => !isBlankRow(r));
-  if (filled.length === 0) return { ok: false, status: 400, error: "Fill in at least one program's dates and counts." };
+export type WriteOptions = {
+  channel: "form" | "email_body" | "email_attachment" | "manual";
+  parserVersion: string;
+  llmMappingUsed: boolean;
+  detectedPersona: number | null;
+  senderEmail: string;
+  /** Issues found before cleaning (for example a count the text never stated), aligned with `rows`. */
+  preIssues?: CycleIssue[][];
+  /** A repeated cycle key in one file: the form rejects it, ingest keeps the row and flags it. */
+  duplicates: "reject" | "flag";
+};
 
+export type WriteResult =
+  | { ok: true; submission_id: string; blocked: boolean; cycle_ids: string[] }
+  | { ok: false; status: 400; error: string };
+
+/**
+ * Writes the submission, draft cycles and issues in one batch. Nothing counts until the CBO confirms.
+ * Shared by the form and by email / upload ingest so both produce the same rows.
+ */
+export async function writeSubmission(db: D1Database, org: OrgRow, rows: CycleFormRow[], opts: WriteOptions): Promise<WriteResult> {
   const registry = await registryFields(db);
   const known = new Map(
     (await db.prepare("SELECT program_id, lower(program_name) AS n FROM programs WHERE org_id = ?").bind(org.org_id)
@@ -150,7 +161,7 @@ export async function submitForm(db: D1Database, token: string, rows: CycleFormR
   const cycleRows: { id: string; cycle: CleanCycle; issues: CycleIssue[]; blocked: boolean }[] = [];
   const seenKeys = new Set<string>();
 
-  for (const row of filled) {
+  for (const [n, row] of rows.entries()) {
     if (row.program_id && !known.has(row.program_id)) return { ok: false, status: 400, error: "A program on the form does not belong to this organization." };
     if (!row.program_name.trim()) return { ok: false, status: 400, error: "Every program needs a name." };
     let programId = row.program_id || byName.get(row.program_name.trim().toLowerCase()) || "";
@@ -163,8 +174,15 @@ export async function submitForm(db: D1Database, token: string, rows: CycleFormR
       );
     }
     const { cycle, issues } = cleanCycleRow({ ...row, program_id: programId }, registry);
+    issues.unshift(...(opts.preIssues?.[n] ?? []));
     const key = cycleKey(org.org_id, programId, cycle.facility_code, cycle.start_date);
-    if (seenKeys.has(key)) return { ok: false, status: 400, error: `${cycle.program_name} is listed twice for the same prison and start date.` };
+    if (seenKeys.has(key)) {
+      if (opts.duplicates === "reject") return { ok: false, status: 400, error: `${cycle.program_name} is listed twice for the same prison and start date.` };
+      issues.push({
+        field_name: "start_date", issue_type: "conflict", raw_value: cycle.start_date,
+        message: `${cycle.program_name} appears twice for the same prison and start date. Which one is right?`,
+      });
+    }
     seenKeys.add(key);
     cycleRows.push({ id: `cyc_${crypto.randomUUID()}`, cycle, issues, blocked: issues.some(isBlocking) });
   }
@@ -172,9 +190,12 @@ export async function submitForm(db: D1Database, token: string, rows: CycleFormR
   const blocked = cycleRows.some((c) => c.blocked);
   statements.unshift(
     db.prepare(
-      `INSERT INTO submissions (submission_id, org_id, channel, received_at, sender_email, parser_version, llm_mapping_used, status, is_synthetic)
-       VALUES (?, ?, 'form', ?, ?, 'form-1', 0, ?, ?)`,
-    ).bind(submissionId, org.org_id, now, org.primary_contact_email, blocked ? "needs_info" : "awaiting_confirmation", org.is_synthetic),
+      `INSERT INTO submissions (submission_id, org_id, channel, received_at, sender_email, detected_persona, parser_version, llm_mapping_used, status, is_synthetic)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ).bind(
+      submissionId, org.org_id, opts.channel, now, opts.senderEmail, opts.detectedPersona, opts.parserVersion,
+      +opts.llmMappingUsed, blocked ? "needs_info" : "awaiting_confirmation", org.is_synthetic,
+    ),
   );
   for (const { id, cycle: c, issues, blocked: b } of cycleRows) {
     const key = cycleKey(org.org_id, c.program_id, c.facility_code, c.start_date);
@@ -206,7 +227,19 @@ export async function submitForm(db: D1Database, token: string, rows: CycleFormR
     }
   }
   await db.batch(statements);
-  return { ok: true, submission_id: submissionId, blocked };
+  return { ok: true, submission_id: submissionId, blocked, cycle_ids: cycleRows.map((c) => c.id) };
+}
+
+export async function submitForm(db: D1Database, token: string, rows: CycleFormRow[]): Promise<SubmitResult> {
+  const org = await orgByToken(db, token);
+  if (!org) return { ok: false, status: 404, error: "unknown form link" };
+  // A row with no dates or counts is a pre-filled program the CBO skipped.
+  const filled = rows.filter((r) => !isBlankRow(r));
+  if (filled.length === 0) return { ok: false, status: 400, error: "Fill in at least one program's dates and counts." };
+  const r = await writeSubmission(db, org, filled, {
+    channel: "form", parserVersion: "form-1", llmMappingUsed: false, detectedPersona: null, senderEmail: org.primary_contact_email, duplicates: "reject",
+  });
+  return r.ok ? { ok: true, submission_id: r.submission_id, blocked: r.blocked } : r;
 }
 
 export async function getSubmission(db: D1Database, token: string, submissionId: string): Promise<SubmissionView | null> {
@@ -216,7 +249,37 @@ export async function getSubmission(db: D1Database, token: string, submissionId:
     .prepare("SELECT submission_id, status FROM submissions WHERE submission_id = ? AND org_id = ? AND channel = 'form'")
     .bind(submissionId, org.org_id)
     .first<{ submission_id: string; status: string }>();
+  return sub ? submissionView(db, org, sub) : null;
+}
+
+/** Staff view of any submission, whatever channel it came in on. */
+export async function adminSubmission(db: D1Database, submissionId: string): Promise<(SubmissionView & { channel: string; received_at: string; detected_persona: number | null; llm_mapping_used: boolean }) | null> {
+  const sub = await db
+    .prepare(
+      `SELECT s.submission_id, s.status, s.channel, s.received_at, s.detected_persona, s.llm_mapping_used, o.org_id, o.org_name, o.primary_contact_email, o.is_synthetic
+       FROM submissions s JOIN orgs o ON o.org_id = s.org_id WHERE s.submission_id = ?`,
+    )
+    .bind(submissionId)
+    .first<{ submission_id: string; status: string; channel: string; received_at: string; detected_persona: number | null; llm_mapping_used: number } & OrgRow>();
   if (!sub) return null;
+  const view = await submissionView(db, sub, sub);
+  return { ...view, channel: sub.channel, received_at: sub.received_at, detected_persona: sub.detected_persona, llm_mapping_used: sub.llm_mapping_used === 1 };
+}
+
+export async function listSubmissions(db: D1Database) {
+  const { results } = await db
+    .prepare(
+      `SELECT s.submission_id, s.channel, s.status, s.received_at, s.detected_persona, o.org_name,
+              (SELECT count(*) FROM program_cycles c WHERE c.submission_id = s.submission_id) AS n_cycles,
+              (SELECT count(*) FROM field_issues i WHERE i.submission_id = s.submission_id AND i.resolved = 0) AS n_issues
+       FROM submissions s JOIN orgs o ON o.org_id = s.org_id ORDER BY s.received_at DESC LIMIT 100`,
+    )
+    .all<{ submission_id: string; channel: string; status: string; received_at: string; detected_persona: number | null; org_name: string; n_cycles: number; n_issues: number }>();
+  return results;
+}
+
+async function submissionView(db: D1Database, org: OrgRow, sub: { submission_id: string; status: string }): Promise<SubmissionView> {
+  const submissionId = sub.submission_id;
   const [cycles, issues, dupes] = await Promise.all([
     db.prepare(
       `SELECT c.cycle_id, p.program_name, f.facility_name, c.start_date, c.end_date, c.n_enrolled, c.n_completed,

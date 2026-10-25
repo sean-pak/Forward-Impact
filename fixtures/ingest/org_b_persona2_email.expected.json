@@ -1,0 +1,10 @@
+{
+  "status": "awaiting_confirmation",
+  "cycles": [
+    { "facility_code": "CMC", "start_date": "2025-02-03", "n_enrolled": 30, "n_enrolled_approx": 1, "n_completed": 22 },
+    { "facility_code": "SQ", "start_date": "2025-09-08", "n_enrolled": 28, "n_enrolled_approx": 0, "n_completed": null }
+  ],
+  "issues": [
+    { "cycle": 0, "field_name": "completion_rule", "issue_type": "missing_required" }
+  ]
+}

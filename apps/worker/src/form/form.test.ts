@@ -45,7 +45,7 @@ describe("submitForm", () => {
     const r = await submitForm(db, "tok", [row()]);
     expect(r).toMatchObject({ ok: true, blocked: false });
     const sub = calls.find((c) => c.sql.includes("INSERT INTO submissions"))!;
-    expect(sub.sql).toContain("'form'");
+    expect(sub.params).toContain("form");
     expect(sub.params).toContain("awaiting_confirmation");
     expect(calls.some((c) => c.sql.includes("INSERT INTO programs"))).toBe(true);
     const cyc = calls.find((c) => c.sql.includes("INSERT INTO program_cycles"))!;

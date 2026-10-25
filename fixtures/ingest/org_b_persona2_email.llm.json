@@ -1,0 +1,23 @@
+{
+  "extract_cycles": {
+    "persona": 2,
+    "cycles": [
+      {
+        "program_name": "Writing Class", "facility_raw": "Men's Colony", "yard": null,
+        "start_date": "2025-02-03", "end_date": null, "sessions_planned": null,
+        "course_hours_planned_per_participant": null, "n_enrolled": 30, "n_completed": 22,
+        "total_course_hours_delivered": null, "n_enrolled_approx": true, "n_completed_approx": false,
+        "total_course_hours_delivered_approx": false, "completion_rule_stated": null,
+        "evidence": "We had about 30 guys in it and 22 finished"
+      },
+      {
+        "program_name": "Writing Class", "facility_raw": "San Quentin", "yard": null,
+        "start_date": "2025-09-08", "end_date": null, "sessions_planned": null,
+        "course_hours_planned_per_participant": null, "n_enrolled": 28, "n_completed": null,
+        "total_course_hours_delivered": null, "n_enrolled_approx": false, "n_completed_approx": false,
+        "total_course_hours_delivered_approx": false, "completion_rule_stated": null,
+        "evidence": "Our fall group at San Quentin started September 8, 2025 with 28 people"
+      }
+    ]
+  }
+}

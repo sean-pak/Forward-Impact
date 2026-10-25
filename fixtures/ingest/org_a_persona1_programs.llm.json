@@ -1,0 +1,17 @@
+{
+  "map_columns": {
+    "persona": 1,
+    "unmapped_marks": [],
+    "columns": [
+      { "index": 0, "target": "ignore" },
+      { "index": 1, "target": "program_name" },
+      { "index": 2, "target": "facility_raw" },
+      { "index": 3, "target": "yard" },
+      { "index": 4, "target": "start_date" },
+      { "index": 5, "target": "end_date" },
+      { "index": 6, "target": "course_hours_planned_per_participant" },
+      { "index": 7, "target": "n_enrolled" },
+      { "index": 8, "target": "n_completed" }
+    ]
+  }
+}

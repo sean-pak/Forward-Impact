@@ -6,6 +6,7 @@
     "dev": "pnpm --parallel --filter worker --filter web dev",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
+    "test:fixtures": "pnpm --filter worker exec vitest run src/ingest/fixtures.test.ts",
     "db:reset": "pnpm --filter @tpw/scripts run db:reset --",
     "seed:muse": "pnpm --filter @tpw/scripts run seed:muse --",
     "keys:generate": "pnpm --filter @tpw/scripts run keys:generate --",

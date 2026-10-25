@@ -20,7 +20,12 @@ export async function workerFetch(path: string, init: RequestInit = {}): Promise
   if (!base || !secret) throw new Error("WORKER_URL and API_SECRET must be set");
   return fetch(`${base}${path}`, {
     ...init,
-    headers: { ...init.headers, Authorization: `Bearer ${secret}`, "Content-Type": "application/json" },
+    // A FormData body sets its own multipart Content-Type.
+    headers: {
+      ...init.headers,
+      Authorization: `Bearer ${secret}`,
+      ...(init.body instanceof FormData ? {} : { "Content-Type": "application/json" }),
+    },
     cache: "no-store",
   });
 }

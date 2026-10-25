@@ -1,0 +1,12 @@
+{
+  "status": "awaiting_confirmation",
+  "cycles": [
+    { "facility_code": "SQ", "start_date": "2025-01-13", "n_enrolled": 25, "n_completed": 20 },
+    { "facility_code": "FSP", "start_date": "2025-03-10", "n_enrolled": 18, "n_completed": null },
+    { "facility_code": "MCSP", "start_date": "2025-02-03", "n_enrolled": 30, "n_completed": 27 }
+  ],
+  "issues": [
+    { "cycle": 0, "field_name": "completion_rule", "issue_type": "missing_required" },
+    { "cycle": 2, "field_name": "completion_rule", "issue_type": "missing_required" }
+  ]
+}

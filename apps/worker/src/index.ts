@@ -3,7 +3,9 @@ import { z } from "zod";
 import { makeHealth } from "@tpw/shared";
 import { sendTest, syncGmail } from "./gmail";
 import { PIXEL_GIF, importContacts, listOrgs, listOutreach, recordOpen, sendAsks, setPrimary } from "./outreach";
-import { FormBodySchema, confirmSubmission, getSubmission, loadForm, submitForm } from "./form";
+import { FormBodySchema, adminSubmission, confirmSubmission, getSubmission, listSubmissions, loadForm, submitForm, type OrgRow } from "./form";
+import { ingest, type IngestInput } from "./ingest";
+import { OpenRouterLlm } from "./llm";
 import { loadDashboard } from "./summary";
 import { createVault, pingVault } from "./vault";
 
@@ -20,6 +22,8 @@ export type Env = {
   ADMIN_EMAILS?: string;
   WORKER_PUBLIC_URL: string;
   WEB_URL: string;
+  OPENROUTER_API_KEY?: string;
+  LLM_MODEL?: string;
 };
 
 export const app = new Hono<{ Bindings: Env }>();
@@ -116,6 +120,44 @@ app.post("/api/outreach/send", async (c) => {
   }
 });
 app.get("/api/outreach", async (c) => c.json(await listOutreach(c.env.DB)));
+
+// Admin upload (on-stage fallback): the same pipeline the email path uses. Multipart: org_id plus a file or pasted text.
+app.post("/api/ingest/upload", async (c) => {
+  const form = await c.req.formData().catch(() => null);
+  const orgId = form?.get("org_id");
+  if (!form || typeof orgId !== "string" || !orgId) return c.json({ error: "org_id is required" }, 400);
+  const org = await c.env.DB
+    .prepare("SELECT org_id, org_name, primary_contact_email, is_synthetic FROM orgs WHERE org_id = ?")
+    .bind(orgId)
+    .first<OrgRow>();
+  if (!org) return c.json({ error: "unknown org" }, 404);
+  const file = form.get("file");
+  const text = form.get("text");
+  let input: IngestInput;
+  if (file instanceof File && file.size > 0) {
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    const name = file.name.toLowerCase();
+    if (name.endsWith(".docx")) input = { kind: "docx", bytes };
+    else if (/\.(csv|xlsx)$/.test(name)) input = { kind: "table", filename: file.name, bytes };
+    else if (name.endsWith(".txt")) input = { kind: "text", text: new TextDecoder().decode(bytes) };
+    else return c.json({ error: "Upload a .csv, .xlsx, .docx or .txt file." }, 400);
+  } else if (typeof text === "string" && text.trim()) {
+    input = { kind: "text", text };
+  } else {
+    return c.json({ error: "Choose a file or paste the text." }, 400);
+  }
+  try {
+    const out = await ingest(c.env.DB, new OpenRouterLlm(c.env), org, input, { channel: "manual", senderEmail: org.primary_contact_email });
+    return c.json(out);
+  } catch (e) {
+    return c.json({ error: e instanceof Error ? e.message : "ingest failed" }, 500);
+  }
+});
+app.get("/api/submissions", async (c) => c.json({ submissions: await listSubmissions(c.env.DB) }));
+app.get("/api/submissions/:id", async (c) => {
+  const view = await adminSubmission(c.env.DB, c.req.param("id"));
+  return view ? c.json(view) : c.json({ error: "submission not found" }, 404);
+});
 
 // Structured form (PRD 7.4). The org is identified by its unguessable form token; the web app calls these server-side.
 app.get("/api/form/:token", async (c) => {

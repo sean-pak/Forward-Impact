@@ -78,7 +78,7 @@ describe("gmail", () => {
     });
     const { db, inserted } = fakeDb(["known@example.org"], ["t-known"]);
     const r = await syncGmail({ ...env, DB: db }, gmail);
-    expect(r).toEqual({ logged: 2, ignored: 1, skipped: 1 });
+    expect(r).toEqual({ logged: 2, ignored: 1, skipped: 1, ingested: 0 });
     expect(inserted.map((a) => a[0])).toEqual(["m1", "m2"]);
     // m3 got sam/ignored only; no row was written for it.
     const m3 = calls.modify.find((c) => c.id === "m3")!;
@@ -91,7 +91,7 @@ describe("gmail", () => {
     const { gmail, calls } = fakeGmail({ a1: { threadId: "ta", from: "Admin@Example.org" } });
     const { db, inserted } = fakeDb([], []);
     const r = await syncGmail({ ...env, ADMIN_EMAILS: "x@example.org, admin@example.org", DB: db }, gmail);
-    expect(r).toEqual({ logged: 1, ignored: 0, skipped: 0 });
+    expect(r).toEqual({ logged: 1, ignored: 0, skipped: 0, ingested: 0 });
     expect(inserted[0]?.[2]).toBeNull();
     expect(calls.modify[0]?.body.addLabelIds).toEqual(["L1"]);
   });
