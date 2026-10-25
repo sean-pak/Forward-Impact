@@ -3,6 +3,7 @@ import { z } from "zod";
 import { makeHealth } from "@tpw/shared";
 import { sendTest, syncGmail } from "./gmail";
 import { PIXEL_GIF, importContacts, listOrgs, listOutreach, recordOpen, sendAsks, setPrimary } from "./outreach";
+import { FormBodySchema, confirmSubmission, getSubmission, loadForm, submitForm } from "./form";
 import { loadDashboard } from "./summary";
 import { createVault, pingVault } from "./vault";
 
@@ -115,6 +116,26 @@ app.post("/api/outreach/send", async (c) => {
   }
 });
 app.get("/api/outreach", async (c) => c.json(await listOutreach(c.env.DB)));
+
+// Structured form (PRD 7.4). The org is identified by its unguessable form token; the web app calls these server-side.
+app.get("/api/form/:token", async (c) => {
+  const form = await loadForm(c.env.DB, c.req.param("token"));
+  return form ? c.json(form) : c.json({ error: "unknown form link" }, 404);
+});
+app.post("/api/form/:token/submit", async (c) => {
+  const body = FormBodySchema.safeParse(await c.req.json().catch(() => null));
+  if (!body.success) return c.json({ error: "the form could not be read" }, 400);
+  const r = await submitForm(c.env.DB, c.req.param("token"), body.data.rows);
+  return r.ok ? c.json(r) : c.json({ error: r.error }, r.status);
+});
+app.get("/api/form/:token/submissions/:id", async (c) => {
+  const view = await getSubmission(c.env.DB, c.req.param("token"), c.req.param("id"));
+  return view ? c.json(view) : c.json({ error: "submission not found" }, 404);
+});
+app.post("/api/form/:token/submissions/:id/confirm", async (c) => {
+  const r = await confirmSubmission(c.env.DB, c.req.param("token"), c.req.param("id"));
+  return r.ok ? c.json(r) : c.json({ error: r.error }, r.status);
+});
 
 export default {
   fetch: app.fetch,
