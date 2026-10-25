@@ -104,3 +104,19 @@ export function escalatedEmail(): Body {
     "Thank you. I could not finish this one on my own, so I have passed it to TPW staff. Nothing from it is counted yet, and someone will follow up with you directly.",
   ]);
 }
+
+/** The model (or a setting) failed and Sam cannot read what was sent. Says so, and says a person will follow up. */
+export function holdingEmail(): Body {
+  return build([
+    "Thank you. I received what you sent, but I am having trouble reading it right now. I have passed it to TPW staff, so nothing from it is counted yet, and someone will follow up with you directly.",
+  ]);
+}
+
+/** An attachment Sam cannot read. Names only the file types, never the contents. */
+export function unsupportedFileEmail(fileNames: string[]): Body {
+  const list = fileNames.length === 1 ? fileNames[0] : fileNames.join(", ");
+  return build([
+    `Thanks for sending ${list}. I cannot read that kind of file.`,
+    "I can read CSV files, Excel (.xlsx) files, Word (.docx) files, and numbers typed into the email itself. Could you reply with the information as a CSV or Excel file? In Excel or Google Sheets, use File > Save as (or Download) and choose CSV or .xlsx.",
+  ]);
+}

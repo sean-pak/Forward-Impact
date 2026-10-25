@@ -13,6 +13,7 @@ import { loadOrgReport } from "./report";
 import { loadDashboard } from "./summary";
 import { loadOutcomePanel } from "./outcomes";
 import { createVault, pingVault, vaultFactory } from "./vault";
+import { resetDemo } from "./demo";
 
 export type Env = {
   DB: D1Database;
@@ -29,6 +30,12 @@ export type Env = {
   WEB_URL: string;
   OPENROUTER_API_KEY?: string;
   LLM_MODEL?: string;
+  /** Must be exactly "true" for POST /api/demo/reset to do anything. It deletes everything, so leave it "false" outside the demo. */
+  DEMO_MODE?: string;
+  /** The inbox that plays the CBO; reset recreates its org. */
+  DEMO_CBO_EMAIL?: string;
+  DEMO_CBO_ORG?: string;
+  DEMO_CBO_PROGRAMS?: string;
   /** Must be exactly "true" to even consider the real locator, which is not built. Leave it "false". */
   REAL_LOCATOR_ENABLED?: string;
 };
@@ -243,6 +250,14 @@ app.post("/api/lookups/reveal", async (c) => {
   } catch (e) {
     return c.json({ error: e instanceof Error ? e.message : "vault unavailable" }, 500);
   }
+});
+
+// One-click reset to the demo's starting state (docs/DEMO.md). Refuses unless DEMO_MODE is "true" and the body confirms it.
+app.post("/api/demo/reset", async (c) => {
+  const body = z.object({ confirm: z.literal("reset") }).safeParse(await c.req.json().catch(() => null));
+  if (!body.success) return c.json({ error: 'send {"confirm":"reset"}' }, 400);
+  const r = await resetDemo(c.env);
+  return r.ok ? c.json(r) : c.json({ error: r.error }, r.status);
 });
 
 // Field registry (phase 14). Active fields are asked by email and shown on the form; retiring stops both.

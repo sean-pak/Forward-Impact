@@ -1,5 +1,6 @@
 // WebCrypto only. HMAC-SHA256 for person keys, AES-256-GCM for identifier fields.
 // Nothing in here logs, and no error message includes key material or plaintext.
+import { ConfigError } from "../config";
 
 export type VaultKeys = { hmac: CryptoKey; aes: CryptoKey };
 
@@ -24,10 +25,10 @@ function decodeKey(name: string, b64: string | undefined, exactly?: number): Uin
   try {
     bytes = fromBase64((b64 ?? "").trim());
   } catch {
-    throw new Error(`${name} must be base64 (run pnpm keys:generate)`);
+    throw new ConfigError(`${name} must be base64 (run pnpm keys:generate)`);
   }
   const ok = exactly ? bytes.length === exactly : bytes.length >= 32;
-  if (!ok) throw new Error(`${name} must be base64 of ${exactly ? "exactly" : "at least"} 32 bytes (run pnpm keys:generate)`);
+  if (!ok) throw new ConfigError(`${name} must be base64 of ${exactly ? "exactly" : "at least"} 32 bytes (run pnpm keys:generate)`);
   return bytes;
 }
 
@@ -35,7 +36,7 @@ function decodeKey(name: string, b64: string | undefined, exactly?: number): Uin
 export async function importVaultKeys(hmacB64: string | undefined, encB64: string | undefined): Promise<VaultKeys> {
   const hmacBytes = decodeKey("VAULT_HMAC_KEY", hmacB64);
   const aesBytes = decodeKey("VAULT_ENC_KEY", encB64, 32);
-  if (toBase64(hmacBytes) === toBase64(aesBytes)) throw new Error("VAULT_HMAC_KEY and VAULT_ENC_KEY must be different keys");
+  if (toBase64(hmacBytes) === toBase64(aesBytes)) throw new ConfigError("VAULT_HMAC_KEY and VAULT_ENC_KEY must be different keys");
   const [hmac, aes] = await Promise.all([
     crypto.subtle.importKey("raw", hmacBytes, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]),
     crypto.subtle.importKey("raw", aesBytes, { name: "AES-GCM" }, false, ["encrypt", "decrypt"]),

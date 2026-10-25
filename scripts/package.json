@@ -9,7 +9,8 @@
     "db:reset": "tsx src/dbReset.ts",
     "seed:muse": "tsx src/seedMuse.ts",
     "keys:generate": "tsx src/keysGenerate.ts",
-    "google:auth": "tsx src/googleAuth.ts"
+    "google:auth": "tsx src/googleAuth.ts",
+    "demo:bundle": "tsx src/demoBundle.ts"
   },
   "dependencies": {
     "@tpw/shared": "workspace:^",

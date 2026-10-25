@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ConfigError } from "./config";
 
 export type LlmEnv = { OPENROUTER_API_KEY?: string; LLM_MODEL?: string };
 
@@ -30,7 +31,7 @@ export class OpenRouterLlm implements Llm {
     const clean = (v?: string) => v?.trim().replace(/^["']+|["']+$/g, "").trim();
     const key = clean(this.env.OPENROUTER_API_KEY);
     const model = clean(this.env.LLM_MODEL);
-    if (!key || !model) throw new Error("OPENROUTER_API_KEY and LLM_MODEL must be set");
+    if (!key || !model) throw new ConfigError("OPENROUTER_API_KEY and LLM_MODEL must be set");
     const jsonSchema = z.toJSONSchema(req.schema, { target: "draft-7" });
     let lastError = "unknown";
     for (let attempt = 1; attempt <= 2; attempt++) {

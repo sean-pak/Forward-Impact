@@ -9,6 +9,7 @@
     "test:fixtures": "pnpm --filter worker exec vitest run src/ingest/fixtures.test.ts",
     "db:reset": "pnpm --filter @tpw/scripts run db:reset --",
     "seed:muse": "pnpm --filter @tpw/scripts run seed:muse --",
+    "demo:bundle": "pnpm --filter @tpw/scripts run demo:bundle --",
     "keys:generate": "pnpm --filter @tpw/scripts run keys:generate --",
     "google:auth": "pnpm --filter @tpw/scripts run google:auth --",
     "fixtures:individual": "pnpm --filter @tpw/scripts exec tsx ../apps/worker/tools/genIndividualFixtures.ts"
