@@ -97,14 +97,14 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 
 ---
 
-## [ ] Phase 4: One-pager PDF
+## [x] Phase 4: One-pager PDF
 
 **Build**
 - `apps/web/app/api/report/route.ts` (Node runtime), `@react-pdf/renderer`, public view.
 - Participants, completion (n/N), hours, prisons covered, program deserts, assumption footnotes, "association, not cause", recidivism context placeholder marked "pending TPW confirmation".
 
 **Done when**
-- [ ] One click downloads a clean one-page PDF with live numbers; suppressed metrics read `suppressed`.
+- [x] One click downloads a clean one-page PDF with live numbers; suppressed metrics read `suppressed`.
 
 ---
 
