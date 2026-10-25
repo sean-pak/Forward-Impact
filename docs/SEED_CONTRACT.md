@@ -1,6 +1,6 @@
 # Seed Contract (for Muse and the seed loader)
 
-This is the exact shape of the files `pnpm seed:muse ./synthetic` accepts (loader arrives in phase 2).
+This is the exact shape of the files `pnpm seed:muse ./synthetic` accepts (and `pnpm db:reset --local --data ./synthetic` for a clean slate).
 It extends `docs/schema-v2.md` section 11.7. Where this file and the schema differ, this file wins for file layout; the schema wins for meaning and enums.
 A test (`scripts/src/contract.test.ts`) checks every column below against the migrations in `apps/worker/migrations/analytics`.
 
@@ -14,6 +14,7 @@ A test (`scripts/src/contract.test.ts`) checks every column below against the mi
 - Enums are lowercase snake_case exactly as listed in `docs/schema-v2.md`.
 - **Synthetic only.** CDCR numbers are `SYN` + 5 digits. Emails end in `@example.org`. The loader refuses the whole load on any other CDCR number or email domain.
 - Same seed, same output: seed `20261024`.
+- The loader reads `synthetic/canonical/` if it exists, else the directory itself. Files that are absent are skipped (only `org.csv` is required). One bad row, unknown reference, duplicate key, non-`SYN` person, or non-`@example.org` email refuses the whole load before anything is written.
 
 ### How people are referenced (differs from schema-v2)
 

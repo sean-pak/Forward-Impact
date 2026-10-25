@@ -6,7 +6,9 @@
     "dev": "pnpm --parallel --filter worker --filter web dev",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
-    "db:reset": "pnpm --filter @tpw/scripts run db:reset --"
+    "db:reset": "pnpm --filter @tpw/scripts run db:reset --",
+    "seed:muse": "pnpm --filter @tpw/scripts run seed:muse --",
+    "keys:generate": "pnpm --filter @tpw/scripts run keys:generate --"
   },
   "devDependencies": {
     "typescript": "^7.0.2",

@@ -15,6 +15,8 @@ function fakeD1(up: boolean): D1Database {
 const env = (db: boolean, vault: boolean): Env => ({
   DB: fakeD1(db),
   VAULT: fakeD1(vault),
+  VAULT_HMAC_KEY: "",
+  VAULT_ENC_KEY: "",
   API_SECRET: "secret",
 });
 

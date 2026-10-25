@@ -78,8 +78,129 @@ export const PersonIdentityRow = z.object({
   org_internal_id: str,
 });
 
+const reqDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "expected YYYY-MM-DD");
+const optBool = z.preprocess(empty, bool.nullable());
+/** Enum cell where blank means the column's `unknown` default. */
+const enumOr = <T extends readonly [string, ...string[]]>(values: T, fallback: T[number] = "unknown") =>
+  z.preprocess(empty, z.enum(values).nullable()).transform((v) => v ?? fallback);
+const SOURCES = ["cbo_report", "locator", "cdcr_file", "simulated"] as const;
+
+/** Every person-linked file uses person_ref (SYN number or org_id:internal_id); the loader swaps in person_key. */
+const personRef = reqStr;
+
+export const SessionRow = z.object({
+  session_id: reqStr,
+  cycle_id: reqStr,
+  session_date: reqDate,
+  cancelled: bool,
+  cancel_reason: z.preprocess(empty, z.enum(["lockdown", "staff_unavailable", "facility_event", "holiday", "other", "unknown"]).nullable()),
+});
+
+export const SessionAttendanceRow = z.object({
+  session_id: reqStr,
+  person_ref: personRef,
+  status: z.enum(["present", "absent", "excused", "late", "unknown"]),
+});
+
+export const ConsentRow = z.object({
+  person_ref: personRef,
+  org_id: reqStr,
+  consent_followup: bool,
+  consent_share_with_tpw: bool,
+  consent_date: reqDate,
+  revoked_date: date,
+  consent_form_version: reqStr,
+});
+
+export const PersonAttributesRow = z.object({
+  person_ref: personRef,
+  birth_year: int,
+  age_band_at_release: enumOr(["18_19", "20_24", "25_29", "30_34", "35_39", "40_44", "45_49", "50_54", "55_59", "60_plus", "unknown"]),
+  age_band_raw: str,
+  risk_band: enumOr(["low", "moderate", "high", "unknown"]),
+  commitment_offense_category: enumOr(["persons", "property", "drug", "other", "unknown"]),
+  sentence_type: enumOr(["determinate", "determinate_2nd_strike", "indeterminate", "third_strike", "unknown"]),
+  prior_cdcr_stays_band: enumOr(["1", "2", "3", "4", "5_9", "10_plus", "unknown"]),
+  county_of_release: str,
+});
+
+export const EnrollmentRow = z.object({
+  enrollment_id: reqStr,
+  cycle_id: reqStr,
+  person_ref: personRef,
+  enrollment_date: date,
+  sessions_attended: int,
+  sessions_planned_for_person: int,
+  attendance_rate: z.preprocess(empty, z.coerce.number().min(0).max(1).nullable()),
+  hours_attended: num,
+  completed: z.enum(["yes", "no", "in_progress", "unknown"]),
+  completion_basis: enumOr(["rule_applied", "cbo_marked", "unknown"]),
+  completion_date: date,
+});
+
+export const CreditAwardRow = z.object({
+  person_ref: personRef,
+  cycle_id: str,
+  credit_type: z.enum(["rac", "emc", "mcc", "other", "unknown"]),
+  credit_days_earned: z.coerce.number().int(),
+  credit_days_applied: int, // blank stays null: never copy earned into applied
+  award_date: date,
+});
+
+export const CustodyStatusRow = z.object({
+  person_ref: personRef,
+  status: z.enum(["in_custody", "released", "unknown"]),
+  projected_release_date: date,
+  as_of: z.string().regex(/^\d{4}-\d{2}-\d{2}T/, "expected an ISO 8601 timestamp"),
+  source: z.enum(SOURCES),
+});
+
+export const ReleaseEventRow = z.object({
+  release_id: reqStr,
+  person_ref: personRef,
+  release_date: reqDate,
+  release_fiscal_year: str,
+  release_type: enumOr(["first_release", "re_release", "discharge", "unknown"]),
+  supervision_type: enumOr(["parole", "prcs", "discharged", "unknown"]),
+  source: z.enum(SOURCES),
+  post_program: optBool,
+});
+
+export const OutcomeEventRow = z.object({
+  person_ref: personRef,
+  release_id: reqStr,
+  outcome_type: z.enum(["return_to_prison", "conviction", "arrest", "county_jail"]),
+  outcome_date: reqDate,
+  outcome_date_precision: z.enum(["exact", "interval"]),
+  outcome_date_earliest: date,
+  days_to_outcome: int,
+  within_3yr: optBool,
+  outcome_offense_category: z.preprocess(empty, z.enum(["persons", "property", "drug_alcohol", "other", "supervision_violation", "unknown"]).nullable()),
+  outcome_source: z.enum(["simulated", "mock_locator", "eit_locator_verified", "eit_locator_unverified", "cdcr_file", "doj_file", "self_report"]),
+  evidence_check_id: str,
+});
+
+export const FollowUpStatusRow = z.object({
+  person_ref: personRef,
+  release_id: reqStr,
+  days_observed: z.coerce.number().int(),
+  last_negative_check: date,
+  censored: bool,
+  follow_up_complete: bool,
+});
+
 export type OrgRow = z.infer<typeof OrgRow>;
 export type ContactRow = z.infer<typeof ContactRow>;
 export type ProgramRow = z.infer<typeof ProgramRow>;
 export type ProgramCycleRow = z.infer<typeof ProgramCycleRow>;
 export type PersonIdentityRow = z.infer<typeof PersonIdentityRow>;
+export type SessionRow = z.infer<typeof SessionRow>;
+export type SessionAttendanceRow = z.infer<typeof SessionAttendanceRow>;
+export type ConsentRow = z.infer<typeof ConsentRow>;
+export type PersonAttributesRow = z.infer<typeof PersonAttributesRow>;
+export type EnrollmentRow = z.infer<typeof EnrollmentRow>;
+export type CreditAwardRow = z.infer<typeof CreditAwardRow>;
+export type CustodyStatusRow = z.infer<typeof CustodyStatusRow>;
+export type ReleaseEventRow = z.infer<typeof ReleaseEventRow>;
+export type OutcomeEventRow = z.infer<typeof OutcomeEventRow>;
+export type FollowUpStatusRow = z.infer<typeof FollowUpStatusRow>;

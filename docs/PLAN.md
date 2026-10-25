@@ -63,7 +63,7 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 
 ---
 
-## [ ] Phase 2: Vault module + Muse seed path
+## [x] Phase 2: Vault module + Muse seed path
 
 **Goal:** identifiers can go in scrambled and come out only through audited code.
 
@@ -77,8 +77,8 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 **Not in this phase:** UI for re-identification.
 
 **Done when**
-- [ ] Tests pass.
-- [ ] If Muse output exists: seeded remote D1 has persons in the vault (ciphertext only, verify with a raw `SELECT`) and person_keys in analytics. If not yet: the fixture identities load the same way.
+- [x] Tests pass.
+- [x] If Muse output exists: seeded remote D1 has persons in the vault (ciphertext only, verify with a raw `SELECT`) and person_keys in analytics. If not yet: the fixture identities load the same way.
 
 ---
 

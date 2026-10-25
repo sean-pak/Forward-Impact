@@ -6,7 +6,9 @@
   "scripts": {
     "typecheck": "tsc -p .",
     "test": "vitest run --passWithNoTests",
-    "db:reset": "tsx src/dbReset.ts"
+    "db:reset": "tsx src/dbReset.ts",
+    "seed:muse": "tsx src/seedMuse.ts",
+    "keys:generate": "tsx src/keysGenerate.ts"
   },
   "dependencies": {
     "@tpw/shared": "workspace:^",

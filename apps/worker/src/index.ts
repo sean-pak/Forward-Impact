@@ -1,10 +1,13 @@
 import { Hono } from "hono";
 import { makeHealth } from "@tpw/shared";
 import { loadAdminSummary } from "./summary";
+import { createVault, pingVault } from "./vault";
 
 export type Env = {
   DB: D1Database;
   VAULT: D1Database;
+  VAULT_HMAC_KEY: string;
+  VAULT_ENC_KEY: string;
   API_SECRET: string;
 };
 
@@ -19,10 +22,8 @@ async function ping(d1: D1Database): Promise<boolean> {
   }
 }
 
-// Phase 0 only: SELECT 1 on both bindings. From phase 2 on, only code under
-// src/vault/ may query VAULT; move this ping there then.
 app.get("/health", async (c) => {
-  const [db, vault] = await Promise.all([ping(c.env.DB), ping(c.env.VAULT)]);
+  const [db, vault] = await Promise.all([ping(c.env.DB), pingVault(c.env)]);
   return c.json(makeHealth(db, vault));
 });
 
@@ -33,6 +34,13 @@ app.use("/api/*", async (c, next) => {
   await next();
 });
 app.get("/api/ping", (c) => c.json({ ok: true }));
+app.get("/api/admin/vault/status", async (c) => {
+  try {
+    return c.json(await (await createVault(c.env)).status());
+  } catch (e) {
+    return c.json({ error: e instanceof Error ? e.message : "vault unavailable" }, 500);
+  }
+});
 app.get("/api/admin/summary", async (c) => c.json(await loadAdminSummary(c.env.DB)));
 
 export default app;

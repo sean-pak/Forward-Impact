@@ -21,3 +21,12 @@
 - Decisions: completion rate counts only cycles with a stated rule and both counts known (excluded cycles reported). Hours use delivered when present, else planned per participant x enrolled, labeled approx. Staff view is unsuppressed until phase 3.
 - Gaps: Vercel Authentication still on. Worker `API_SECRET` compare is still not constant-time. No login rate limiting.
 - Dependencies: none new (vitest added to web test script).
+
+## Phase 2: Vault module + Muse seed path (done)
+- Shipped: `apps/worker/src/vault/` (`normalizeCdcr`, `personKey()` 3 bases, AES-256-GCM field encryption bound to person_key+field via AAD, `Vault.upsertIdentity()`, `Vault.reidentify()` that writes `vault_access_log` first and can filter to one org, `status()`); `GET /api/admin/vault/status` (counts + can_decrypt, never plaintext). Scripts: `pnpm keys:generate [--write]`, `pnpm seed:muse <dir> --local | --remote --yes`, `pnpm db:reset ... [--data <dir>]` now loads fixture identities through the vault. Loader handles every file in SEED_CONTRACT (person_ref -> person_key), validates everything before writing.
+- Verified: local and remote `SELECT` on `person_identity` shows ciphertext only (3 fixture people); analytics still 31 facilities / 4 orgs / 10 confirmed cycles. Local: one person at two orgs merges into one row, Worker decrypted a stored row and logged it.
+- Boundary tests (`scripts/src/boundary.test.ts`): only `vault/` names the VAULT binding, vault keys, or vault tables; web has no DB access.
+- GAPS / HUMAN: Worker secrets are NOT set on the deployed Worker, so `/api/admin/vault/status` returns 500 until they are. Local keys live in `apps/worker/.dev.vars` (gitignored) and were also used to seed the remote vault. Run `cd apps/worker && pnpm exec wrangler secret put VAULT_HMAC_KEY` and `... VAULT_ENC_KEY`, pasting the two values from `.dev.vars`, and keep a copy in a password manager (lose the enc key = identities unreadable; change the HMAC key = person_keys orphaned). No Muse output in `./synthetic` yet; fixture identities were used. Muse's derived columns are loaded as given, not yet recomputed (phase 10/13).
+- Notes: `person_ref` forms accepted: `SYN#####` or `org_id:internal_id` (either form resolves to the same person). Blank enum cells that default to `unknown` in the schema load as `unknown`. Wrangler needs Node 22+ (`/opt/homebrew/bin` had it here). `org_ids` stores `""` when an org gave no internal id.
+- Dependencies: none new (zod already in scripts).
+
