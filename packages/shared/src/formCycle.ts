@@ -197,6 +197,14 @@ export function cleanCycleRow(r: CycleFormRow, registry: RegistryField[]): { cyc
   };
 }
 
+/**
+ * Email and upload ask for a missing completed count, unless the cycle is still running (its end date is in the future).
+ * An unknown end date counts as finished. Never guessed: the count stays null until the CBO answers.
+ */
+export function needsCompletedCount(c: Pick<CleanCycle, "n_completed" | "end_date">, today: string): boolean {
+  return c.n_completed === null && !(c.end_date !== null && c.end_date > today);
+}
+
 /** "just now", "5 minutes ago", "1 hour ago", "3 days ago". */
 export function timeAgo(fromIso: string, now: Date): string {
   const mins = Math.max(0, Math.floor((now.getTime() - Date.parse(fromIso)) / 60_000));

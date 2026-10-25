@@ -26,7 +26,10 @@ export class OpenRouterLlm implements Llm {
   constructor(private env: LlmEnv, private doFetch: typeof fetch = (i, init) => fetch(i, init)) {}
 
   async json<T>(req: LlmRequest<T>): Promise<T> {
-    const { OPENROUTER_API_KEY: key, LLM_MODEL: model } = this.env;
+    // Secrets pasted into a prompt often carry quotes or a trailing newline.
+    const clean = (v?: string) => v?.trim().replace(/^["']+|["']+$/g, "").trim();
+    const key = clean(this.env.OPENROUTER_API_KEY);
+    const model = clean(this.env.LLM_MODEL);
     if (!key || !model) throw new Error("OPENROUTER_API_KEY and LLM_MODEL must be set");
     const jsonSchema = z.toJSONSchema(req.schema, { target: "draft-7" });
     let lastError = "unknown";
@@ -40,7 +43,6 @@ export class OpenRouterLlm implements Llm {
           signal: AbortSignal.timeout(TIMEOUT_MS),
           body: JSON.stringify({
             model,
-            temperature: 0,
             messages: [{ role: "system", content: req.system }, { role: "user", content: req.user }],
             response_format: { type: "json_schema", json_schema: { name: req.name, strict: true, schema: jsonSchema } },
             provider: { require_parameters: true },

@@ -63,7 +63,7 @@ async function ingestText(db: D1Database, llm: Llm, org: OrgRow, text: string, m
   }
   const w = await writeSubmission(db, org, rows, {
     channel: meta.channel, parserVersion: PARSER_VERSION, llmMappingUsed: false, detectedPersona: result.persona,
-    senderEmail: meta.senderEmail, preIssues, duplicates: "flag",
+    senderEmail: meta.senderEmail, preIssues, duplicates: "flag", askMissingCompleted: true,
   });
   if (!w.ok) throw new Error(w.error);
   await noteDetectedPersona(db, org, result.persona);
@@ -93,7 +93,7 @@ async function ingestTable(db: D1Database, llm: Llm, org: OrgRow, filename: stri
   if (rows.length === 0) return { submission_id: null, status: "no_data", cycles: 0, note: "The file has no data rows." };
   const w = await writeSubmission(db, org, rows, {
     channel: meta.channel, parserVersion: PARSER_VERSION, llmMappingUsed: true, detectedPersona: mapping.persona,
-    senderEmail: meta.senderEmail, duplicates: "flag",
+    senderEmail: meta.senderEmail, duplicates: "flag", askMissingCompleted: true,
   });
   if (!w.ok) throw new Error(w.error);
   await noteDetectedPersona(db, org, mapping.persona);

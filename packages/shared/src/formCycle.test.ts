@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { cleanCycleRow, cycleKey, timeAgo, isBlankRow, isBlocking, parseIsoDate, type CycleFormRow } from "./formCycle";
+import { cleanCycleRow, cycleKey, timeAgo, isBlankRow, isBlocking, needsCompletedCount, parseIsoDate, type CycleFormRow } from "./formCycle";
 
 const row = (o: Partial<CycleFormRow> = {}): CycleFormRow => ({
   program_id: "p1", program_name: "Writing Circle", facility_raw: "San Quentin", yard: "", start_date: "2025-02-01",
@@ -92,5 +92,16 @@ describe("timeAgo", () => {
     expect(timeAgo("2025-03-01T11:45:00Z", now)).toBe("15 minutes ago");
     expect(timeAgo("2025-03-01T10:00:00Z", now)).toBe("2 hours ago");
     expect(timeAgo("2025-02-26T12:00:00Z", now)).toBe("3 days ago");
+  });
+});
+
+describe("needsCompletedCount", () => {
+  it("asks when completed is blank and the cycle is finished or its end is unknown", () => {
+    expect(needsCompletedCount({ n_completed: null, end_date: "2025-06-09" }, "2025-10-24")).toBe(true);
+    expect(needsCompletedCount({ n_completed: null, end_date: null }, "2025-10-24")).toBe(true);
+  });
+  it("does not ask for a cycle still running, or when a count exists (including 0)", () => {
+    expect(needsCompletedCount({ n_completed: null, end_date: "2026-01-01" }, "2025-10-24")).toBe(false);
+    expect(needsCompletedCount({ n_completed: 0, end_date: null }, "2025-10-24")).toBe(false);
   });
 });

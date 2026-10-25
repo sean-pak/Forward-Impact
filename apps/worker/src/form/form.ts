@@ -5,6 +5,7 @@ import {
   cycleKey,
   isBlankRow,
   isBlocking,
+  needsCompletedCount,
   type CleanCycle,
   type CycleFormRow,
   type CycleIssue,
@@ -137,6 +138,8 @@ export type WriteOptions = {
   preIssues?: CycleIssue[][];
   /** A repeated cycle key in one file: the form rejects it, ingest keeps the row and flags it. */
   duplicates: "reject" | "flag";
+  /** Ask about a blank completed count on finished cycles. Email and upload only; the form lets it stay blank. */
+  askMissingCompleted?: boolean;
 };
 
 export type WriteResult =
@@ -175,6 +178,12 @@ export async function writeSubmission(db: D1Database, org: OrgRow, rows: CycleFo
     }
     const { cycle, issues } = cleanCycleRow({ ...row, program_id: programId }, registry);
     issues.unshift(...(opts.preIssues?.[n] ?? []));
+    if (opts.askMissingCompleted && needsCompletedCount(cycle, now.slice(0, 10))) {
+      issues.push({
+        field_name: "n_completed", issue_type: "missing_required", raw_value: null,
+        message: `How many people completed ${cycle.program_name}${cycle.start_date ? ` (started ${cycle.start_date})` : ""}?`,
+      });
+    }
     const key = cycleKey(org.org_id, programId, cycle.facility_code, cycle.start_date);
     if (seenKeys.has(key)) {
       if (opts.duplicates === "reject") return { ok: false, status: 400, error: `${cycle.program_name} is listed twice for the same prison and start date.` };
