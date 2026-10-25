@@ -1,4 +1,4 @@
-import { DashboardSchema, type Dashboard, type View } from "@tpw/shared";
+import { DashboardSchema, OutcomePanelSchema, type Dashboard, type OutcomePanel, type View } from "@tpw/shared";
 
 /** Server-side only: the web app reaches the Worker with the bearer secret, never from the browser. */
 export async function fetchDashboard(view: View): Promise<Dashboard> {
@@ -11,6 +11,13 @@ export async function fetchDashboard(view: View): Promise<Dashboard> {
   });
   if (!res.ok) throw new Error(`Worker returned ${res.status}`);
   return DashboardSchema.parse(await res.json());
+}
+
+/** Return-to-prison outcome panel. Suppression is done by the Worker for the public view. */
+export async function fetchOutcomes(view: View): Promise<OutcomePanel> {
+  const res = await workerFetch(`/api/admin/outcomes?view=${view}`);
+  if (!res.ok) throw new Error(`Worker returned ${res.status}`);
+  return OutcomePanelSchema.parse(await res.json());
 }
 
 /** Authenticated call to any other Worker `/api/*` route. Server-side only. */

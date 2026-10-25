@@ -1,7 +1,15 @@
-import type { Dashboard } from "@tpw/shared";
+import type { Dashboard, OutcomePanel } from "@tpw/shared";
 import { hoursNote, rateNote, show } from "./format";
+import { benchmarkText, outcomeNotes, outcomeTable, simulatedBanner, type OutcomeTextRow } from "./outcomes";
 
 export type ReportStat = { label: string; value: string; note: string };
+
+export type ReportOutcomes = {
+  banner: string | null;
+  rows: OutcomeTextRow[];
+  benchmark: string;
+  notes: string[];
+};
 
 export type ReportContent = {
   title: string;
@@ -10,14 +18,16 @@ export type ReportContent = {
   deserts: string;
   footnotes: string[];
   recidivismContext: string;
+  /** Present only when the outcome panel is switched on for this PDF. */
+  outcomes: ReportOutcomes | null;
 };
 
 /**
  * Plain text for the one-pager. Takes the public dashboard only, so a staff view
  * can never be printed by mistake. Every number goes through `show()`.
  */
-export function buildReportContent(d: Dashboard, generatedOn: string): ReportContent {
-  if (d.view !== "public") throw new Error("The one-pager is built from the public view only");
+export function buildReportContent(d: Dashboard, generatedOn: string, outcomes: OutcomePanel | null = null): ReportContent {
+  if (d.view !== "public" || (outcomes && outcomes.view !== "public")) throw new Error("The one-pager is built from the public view only");
   const hours = hoursNote(d.hoursNote);
   const footnotes = [
     "Counts only data confirmed by the program's organization. Cells shown as \"suppressed\" are too small to publish: rates with fewer than 30 in the denominator, counts of 1 to 10, and facilities with fewer than 3 organizations.",
@@ -37,5 +47,8 @@ export function buildReportContent(d: Dashboard, generatedOn: string): ReportCon
     deserts: `${d.deserts.length} of ${d.prisons.total} prisons have no confirmed program cycle (program deserts).`,
     footnotes,
     recidivismContext: "Recidivism context: pending TPW confirmation.",
+    outcomes: outcomes
+      ? { banner: simulatedBanner(outcomes), rows: outcomeTable(outcomes), benchmark: benchmarkText(outcomes), notes: outcomeNotes(outcomes) }
+      : null,
   };
 }

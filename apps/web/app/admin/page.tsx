@@ -1,6 +1,7 @@
 import type { View } from "@tpw/shared";
 import { hoursNote, rateNote, show } from "../../lib/format";
-import { fetchDashboard } from "../../lib/worker";
+import { fetchDashboard, fetchOutcomes } from "../../lib/worker";
+import { OutcomePanel } from "./OutcomePanel";
 
 export const dynamic = "force-dynamic";
 
@@ -27,13 +28,18 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       </main>
     );
   }
+  // The outcome panel failing must not take the rest of the dashboard down.
+  const outcomes = await fetchOutcomes(view).then(
+    (panel) => ({ panel, error: null }),
+    (e: unknown) => ({ panel: null, error: e instanceof Error ? e.message : "unknown error" }),
+  );
   const cell = { border: "1px solid #ddd", padding: "0.35rem 0.6rem", textAlign: "left" as const };
   return (
     <main>
       <h1>Dashboard</h1>
       <p style={{ color: "#555" }}>
         Confirmed cycles only. {view === "public" ? "Public view: small cells are suppressed." : "Staff view, not suppressed."}{" "}
-        <a href="/admin">Staff view</a> | <a href="/admin?view=public">Public view</a> | <a href="/api/report">Download one-pager (PDF)</a> | <a href="/admin/contacts">Contacts and asks</a> | <a href="/admin/outreach">Outreach</a> | <a href="/admin/email">Email</a> | <a href="/admin/upload">Upload</a> | <a href="/admin/submissions">Submissions</a> | <a href="/admin/lookups">Lookups</a>
+        <a href="/admin">Staff view</a> | <a href="/admin?view=public">Public view</a> | <a href="/api/report">Download one-pager (PDF)</a> | <a href="/api/report?outcomes=1">One-pager with outcomes (PDF)</a> | <a href="/admin/contacts">Contacts and asks</a> | <a href="/admin/outreach">Outreach</a> | <a href="/admin/email">Email</a> | <a href="/admin/upload">Upload</a> | <a href="/admin/submissions">Submissions</a> | <a href="/admin/lookups">Lookups</a>
       </p>
       <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
         <Stat label="Participants" value={show(summary.participants, "count")} />
@@ -74,6 +80,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       <p style={{ color: "#555" }}>
         Program deserts (no confirmed cycle): {summary.deserts.length} of {summary.prisons.total} facilities.
       </p>
+      {outcomes.panel ? <OutcomePanel panel={outcomes.panel} /> : <p role="alert">Could not load outcomes: {outcomes.error}</p>}
       {view === "staff" ? (
         <>
       <h2>Cycles</h2>

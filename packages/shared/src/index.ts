@@ -21,3 +21,4 @@ export * from "./people";
 export * from "./individual";
 export * from "./orgReport";
 export * from "./locator";
+export * from "./outcomes";

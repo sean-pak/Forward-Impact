@@ -10,6 +10,7 @@ import { OpenRouterLlm } from "./llm";
 import { MAX_PER_CALL, listLookups, pickCohort, revealPerson, runChecks, verifyCheck, mockData, type Deps as LookupDeps } from "./locator";
 import { loadOrgReport } from "./report";
 import { loadDashboard } from "./summary";
+import { loadOutcomePanel } from "./outcomes";
 import { createVault, pingVault, vaultFactory } from "./vault";
 
 export type Env = {
@@ -77,6 +78,11 @@ app.get("/api/admin/vault/status", async (c) => {
 // Suppression happens here, so a public response never contains the hidden numbers.
 app.get("/api/admin/summary", async (c) =>
   c.json(await loadDashboard(c.env.DB, c.req.query("view") === "public" ? "public" : "staff")),
+);
+
+// Return-to-prison rates by release fiscal year. Suppressed server-side like the summary; every row names its source.
+app.get("/api/admin/outcomes", async (c) =>
+  c.json(await loadOutcomePanel(c.env.DB, c.req.query("view") === "public" ? "public" : "staff", new Date().toISOString().slice(0, 10))),
 );
 
 app.post("/api/gmail/sync", async (c) => {
