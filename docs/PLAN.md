@@ -29,7 +29,7 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 
 ---
 
-## [ ] Phase 1.a: Schema, seed contract, static seed, fixtures
+## [x] Phase 1.a: Schema, seed contract, static seed, fixtures
 
 **Goal:** frozen schema and a contract Muse can generate against, with a reset command that works locally and on the deployed D1.
 
@@ -44,9 +44,9 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 **Not in this phase:** vault crypto (fixture identities are validated and skipped until phase 2); the admin UI (1.b).
 
 **Done when**
-- [ ] `pnpm typecheck && pnpm test` pass.
-- [ ] `db:reset --remote --yes` leaves the deployed D1 migrated and seeded (31 facilities, 4 orgs, 10 confirmed cycles).
-- [ ] `SEED_CONTRACT.md` exists and matches the migrations (test). **Hand it to Muse now.**
+- [x] `pnpm typecheck && pnpm test` pass.
+- [x] `db:reset --remote --yes` leaves the deployed D1 migrated and seeded (31 facilities, 4 orgs, 10 confirmed cycles).
+- [x] `SEED_CONTRACT.md` exists and matches the migrations (test). **Hand it to Muse now.**
 
 ---
 
