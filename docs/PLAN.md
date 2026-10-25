@@ -50,7 +50,7 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 
 ---
 
-## [ ] Phase 1.b: Dashboard v0
+## [x] Phase 1.b: Dashboard v0
 
 **Goal:** a deployed admin dashboard with real numbers.
 
@@ -59,7 +59,7 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 - Web: admin password gate (middleware + httpOnly cookie). `/admin`: participants, completion rate (n/N), hours, prisons covered, cycles table.
 
 **Done when**
-- [ ] `/admin` shows non-zero numbers from deployed D1.
+- [x] `/admin` shows non-zero numbers from deployed D1.
 
 ---
 

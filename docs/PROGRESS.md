@@ -14,3 +14,10 @@
 - Remote D1 verified after `db:reset --remote --yes`: 31 facilities, 4 orgs, 10 confirmed cycles, 11 benchmarks, 10 fields, 5 contacts; vault has 3 tables and 0 identities.
 - Gaps: dashboard is 1.b. Wrangler needs Node 22+ (`.nvmrc`).
 - Dependencies: papaparse (read seed CSVs, in the stack list), tsx (run TypeScript scripts), zod in `scripts` (validate seed rows), @types/papaparse + @types/node (types).
+
+## Phase 1.b: Dashboard v0 (done)
+- Shipped: Worker `GET /api/admin/summary` (bearer-protected, confirmed cycles only); pure metrics in `packages/shared/src/summary.ts` (participants, completion n/N, hours, prisons x of 31); web `proxy.ts` password gate (signed httpOnly cookie, constant-time compare), `/login`, `/admin` with stat tiles and cycles table.
+- URLs: Worker https://tpw-worker.sean-mk-pak.workers.dev; web `/admin` on the Vercel URL (needs `WORKER_URL`, `API_SECRET`, `ADMIN_PASSWORD`, `SESSION_SECRET` set in Vercel).
+- Decisions: completion rate counts only cycles with a stated rule and both counts known (excluded cycles reported). Hours use delivered when present, else planned per participant x enrolled, labeled approx. Staff view is unsuppressed until phase 3.
+- Gaps: Vercel Authentication still on. Worker `API_SECRET` compare is still not constant-time. No login rate limiting.
+- Dependencies: none new (vitest added to web test script).
