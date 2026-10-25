@@ -8,9 +8,9 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "tpw_analytics"
-database_id = "REPLACE_ME"
+database_id = "550e1702-5f9c-47de-bce2-be075a9ef56a"
 
 [[d1_databases]]
 binding = "VAULT"
 database_name = "tpw_vault"
-database_id = "REPLACE_ME"
+database_id = "d15226b5-d5ed-4afc-86e1-14c5c74168c8"
