@@ -51,6 +51,24 @@ ON CONFLICT (person_key) DO UPDATE SET
   org_ids = json_patch(person_identity.org_ids, excluded.org_ids),
   is_synthetic = MIN(person_identity.is_synthetic, excluded.is_synthetic)`;
 
+/**
+ * Many people in one statement (one bound parameter holding a JSON array of rows). Same upsert rules as above.
+ * The array is ciphertext and keys only. Callers pass distinct person_keys.
+ */
+export const UPSERT_IDENTITIES_JSON_SQL = `INSERT INTO person_identity
+  (person_key, person_key_basis, cdcr_enc, first_enc, last_enc, dob_enc, org_ids, is_synthetic)
+SELECT json_extract(value,'$[0]'), json_extract(value,'$[1]'), json_extract(value,'$[2]'), json_extract(value,'$[3]'),
+       json_extract(value,'$[4]'), json_extract(value,'$[5]'), json_extract(value,'$[6]'), json_extract(value,'$[7]')
+FROM json_each(?)
+WHERE true
+ON CONFLICT (person_key) DO UPDATE SET
+  cdcr_enc = COALESCE(person_identity.cdcr_enc, excluded.cdcr_enc),
+  first_enc = COALESCE(person_identity.first_enc, excluded.first_enc),
+  last_enc = COALESCE(person_identity.last_enc, excluded.last_enc),
+  dob_enc = COALESCE(person_identity.dob_enc, excluded.dob_enc),
+  org_ids = json_patch(person_identity.org_ids, excluded.org_ids),
+  is_synthetic = MIN(person_identity.is_synthetic, excluded.is_synthetic)`;
+
 export function identityParams(r: IdentityRow): (string | number | null)[] {
   return [r.person_key, r.person_key_basis, r.cdcr_enc, r.first_enc, r.last_enc, r.dob_enc, r.org_ids, r.is_synthetic];
 }

@@ -1,0 +1,454 @@
+{
+  "note": "Ground truth planted by the generator. Legend: JT = excused, L = late; a late counts as attended. Rule: at least 80% of sessions.",
+  "sessions": {
+    "total": 18,
+    "cancelled_columns": [
+      5,
+      12
+    ],
+    "planned": 16,
+    "start_date": "2026-01-12",
+    "end_date": "2026-05-11"
+  },
+  "legend_question_marks": [
+    "JT",
+    "L"
+  ],
+  "duplicate": {
+    "lines": [
+      21,
+      64
+    ]
+  },
+  "people": [
+    {
+      "line": 4,
+      "attended": 16,
+      "planned": 16,
+      "rate": 1,
+      "completed": true
+    },
+    {
+      "line": 5,
+      "attended": 6,
+      "planned": 16,
+      "rate": 0.375,
+      "completed": false
+    },
+    {
+      "line": 6,
+      "attended": 16,
+      "planned": 16,
+      "rate": 1,
+      "completed": true
+    },
+    {
+      "line": 7,
+      "attended": 15,
+      "planned": 16,
+      "rate": 0.9375,
+      "completed": true
+    },
+    {
+      "line": 8,
+      "attended": 16,
+      "planned": 16,
+      "rate": 1,
+      "completed": true
+    },
+    {
+      "line": 9,
+      "attended": 5,
+      "planned": 16,
+      "rate": 0.3125,
+      "completed": false
+    },
+    {
+      "line": 10,
+      "attended": 7,
+      "planned": 16,
+      "rate": 0.4375,
+      "completed": false
+    },
+    {
+      "line": 11,
+      "attended": 16,
+      "planned": 16,
+      "rate": 1,
+      "completed": true
+    },
+    {
+      "line": 12,
+      "attended": 10,
+      "planned": 16,
+      "rate": 0.625,
+      "completed": false
+    },
+    {
+      "line": 13,
+      "attended": 16,
+      "planned": 16,
+      "rate": 1,
+      "completed": true
+    },
+    {
+      "line": 14,
+      "attended": 3,
+      "planned": 16,
+      "rate": 0.1875,
+      "completed": false
+    },
+    {
+      "line": 15,
+      "attended": 16,
+      "planned": 16,
+      "rate": 1,
+      "completed": true
+    },
+    {
+      "line": 16,
+      "attended": 16,
+      "planned": 16,
+      "rate": 1,
+      "completed": true
+    },
+    {
+      "line": 17,
+      "attended": 14,
+      "planned": 16,
+      "rate": 0.875,
+      "completed": true
+    },
+    {
+      "line": 18,
+      "attended": 13,
+      "planned": 16,
+      "rate": 0.8125,
+      "completed": true
+    },
+    {
+      "line": 19,
+      "attended": 16,
+      "planned": 16,
+      "rate": 1,
+      "completed": true
+    },
+    {
+      "line": 20,
+      "attended": 14,
+      "planned": 16,
+      "rate": 0.875,
+      "completed": true
+    },
+    {
+      "line": 21,
+      "attended": 15,
+      "planned": 16,
+      "rate": 0.9375,
+      "completed": true
+    },
+    {
+      "line": 22,
+      "attended": 16,
+      "planned": 16,
+      "rate": 1,
+      "completed": true
+    },
+    {
+      "line": 23,
+      "attended": 15,
+      "planned": 16,
+      "rate": 0.9375,
+      "completed": true
+    },
+    {
+      "line": 24,
+      "attended": 13,
+      "planned": 16,
+      "rate": 0.8125,
+      "completed": true
+    },
+    {
+      "line": 25,
+      "attended": 15,
+      "planned": 16,
+      "rate": 0.9375,
+      "completed": true
+    },
+    {
+      "line": 26,
+      "attended": 10,
+      "planned": 16,
+      "rate": 0.625,
+      "completed": false
+    },
+    {
+      "line": 27,
+      "attended": 13,
+      "planned": 16,
+      "rate": 0.8125,
+      "completed": true
+    },
+    {
+      "line": 28,
+      "attended": 2,
+      "planned": 16,
+      "rate": 0.125,
+      "completed": false
+    },
+    {
+      "line": 29,
+      "attended": 14,
+      "planned": 16,
+      "rate": 0.875,
+      "completed": true
+    },
+    {
+      "line": 30,
+      "attended": 16,
+      "planned": 16,
+      "rate": 1,
+      "completed": true
+    },
+    {
+      "line": 31,
+      "attended": 8,
+      "planned": 16,
+      "rate": 0.5,
+      "completed": false
+    },
+    {
+      "line": 32,
+      "attended": 14,
+      "planned": 16,
+      "rate": 0.875,
+      "completed": true
+    },
+    {
+      "line": 33,
+      "attended": 5,
+      "planned": 16,
+      "rate": 0.3125,
+      "completed": false
+    },
+    {
+      "line": 34,
+      "attended": 15,
+      "planned": 16,
+      "rate": 0.9375,
+      "completed": true
+    },
+    {
+      "line": 35,
+      "attended": 14,
+      "planned": 16,
+      "rate": 0.875,
+      "completed": true
+    },
+    {
+      "line": 36,
+      "attended": 14,
+      "planned": 16,
+      "rate": 0.875,
+      "completed": true
+    },
+    {
+      "line": 37,
+      "attended": 15,
+      "planned": 16,
+      "rate": 0.9375,
+      "completed": true
+    },
+    {
+      "line": 38,
+      "attended": 12,
+      "planned": 16,
+      "rate": 0.75,
+      "completed": false
+    },
+    {
+      "line": 39,
+      "attended": 15,
+      "planned": 16,
+      "rate": 0.9375,
+      "completed": true
+    },
+    {
+      "line": 40,
+      "attended": 5,
+      "planned": 16,
+      "rate": 0.3125,
+      "completed": false
+    },
+    {
+      "line": 41,
+      "attended": 5,
+      "planned": 16,
+      "rate": 0.3125,
+      "completed": false
+    },
+    {
+      "line": 42,
+      "attended": 13,
+      "planned": 16,
+      "rate": 0.8125,
+      "completed": true
+    },
+    {
+      "line": 43,
+      "attended": 11,
+      "planned": 16,
+      "rate": 0.6875,
+      "completed": false
+    },
+    {
+      "line": 44,
+      "attended": 14,
+      "planned": 16,
+      "rate": 0.875,
+      "completed": true
+    },
+    {
+      "line": 45,
+      "attended": 14,
+      "planned": 16,
+      "rate": 0.875,
+      "completed": true
+    },
+    {
+      "line": 46,
+      "attended": 8,
+      "planned": 16,
+      "rate": 0.5,
+      "completed": false
+    },
+    {
+      "line": 47,
+      "attended": 6,
+      "planned": 16,
+      "rate": 0.375,
+      "completed": false
+    },
+    {
+      "line": 48,
+      "attended": 15,
+      "planned": 16,
+      "rate": 0.9375,
+      "completed": true
+    },
+    {
+      "line": 49,
+      "attended": 14,
+      "planned": 16,
+      "rate": 0.875,
+      "completed": true
+    },
+    {
+      "line": 50,
+      "attended": 6,
+      "planned": 16,
+      "rate": 0.375,
+      "completed": false
+    },
+    {
+      "line": 51,
+      "attended": 11,
+      "planned": 16,
+      "rate": 0.6875,
+      "completed": false
+    },
+    {
+      "line": 52,
+      "attended": 14,
+      "planned": 16,
+      "rate": 0.875,
+      "completed": true
+    },
+    {
+      "line": 53,
+      "attended": 10,
+      "planned": 16,
+      "rate": 0.625,
+      "completed": false
+    },
+    {
+      "line": 54,
+      "attended": 13,
+      "planned": 16,
+      "rate": 0.8125,
+      "completed": true
+    },
+    {
+      "line": 55,
+      "attended": 7,
+      "planned": 16,
+      "rate": 0.4375,
+      "completed": false
+    },
+    {
+      "line": 56,
+      "attended": 7,
+      "planned": 16,
+      "rate": 0.4375,
+      "completed": false
+    },
+    {
+      "line": 57,
+      "attended": 16,
+      "planned": 16,
+      "rate": 1,
+      "completed": true
+    },
+    {
+      "line": 58,
+      "attended": 15,
+      "planned": 16,
+      "rate": 0.9375,
+      "completed": true
+    },
+    {
+      "line": 59,
+      "attended": 6,
+      "planned": 16,
+      "rate": 0.375,
+      "completed": false
+    },
+    {
+      "line": 60,
+      "attended": 13,
+      "planned": 16,
+      "rate": 0.8125,
+      "completed": true
+    },
+    {
+      "line": 61,
+      "attended": 16,
+      "planned": 16,
+      "rate": 1,
+      "completed": true
+    },
+    {
+      "line": 62,
+      "attended": 12,
+      "planned": 16,
+      "rate": 0.75,
+      "completed": false
+    },
+    {
+      "line": 63,
+      "attended": 8,
+      "planned": 16,
+      "rate": 0.5,
+      "completed": false
+    }
+  ],
+  "n_enrolled_before_merge": 61,
+  "n_enrolled": 60,
+  "n_completed": 37,
+  "n_completed_if_late_not_counted": 36,
+  "conflicts": [
+    4,
+    5,
+    6
+  ]
+}

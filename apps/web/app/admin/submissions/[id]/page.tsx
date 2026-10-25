@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic";
 type Detail = {
   submission_id: string; status: string; org_name: string; channel: string; received_at: string;
   detected_persona: number | null; llm_mapping_used: boolean;
+  scrambled?: { names: number; cdcr: number }; notes?: string[];
   cycles: {
     cycle_id: string; program_name: string; facility_name: string | null; start_date: string | null; end_date: string | null;
     n_enrolled: number | null; n_completed: number | null; n_enrolled_approx: boolean; n_completed_approx: boolean;
@@ -33,6 +34,10 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
         Status: <strong>{d.status}</strong> | Channel: {d.channel} | Received: {d.received_at.replace("T", " ").slice(0, 19)} UTC |
         Persona: {d.detected_persona ?? "unknown"}{d.llm_mapping_used ? " | Columns mapped by the model" : ""}
       </p>
+      {d.scrambled && (d.scrambled.names > 0 || d.scrambled.cdcr > 0) ? (
+        <p>{d.scrambled.names} names and {d.scrambled.cdcr} CDCR numbers were scrambled into the vault. Only person keys are stored here.</p>
+      ) : null}
+      {d.notes?.length ? <ul>{d.notes.map((n) => <li key={n}>{n}</li>)}</ul> : null}
       <p style={{ color: "#555" }}>These cycles do not count on the dashboard until the organization confirms them.</p>
       {d.duplicates.length ? <p role="status">{d.duplicates.length} earlier entr{d.duplicates.length === 1 ? "y has" : "ies have"} the same program, prison and start date; confirming would replace {d.duplicates.length === 1 ? "it" : "them"}.</p> : null}
 

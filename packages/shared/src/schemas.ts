@@ -32,7 +32,9 @@ export const CANONICAL_TARGETS = [
   "course_hours_planned_per_participant", "n_enrolled", "n_completed", "total_course_hours_delivered", "completion_rule",
 ] as const;
 export const IDENTIFIER_TARGETS = ["id_first_name", "id_last_name", "id_full_name", "id_cdcr", "id_dob"] as const;
-export const ColumnTargetSchema = z.enum([...CANONICAL_TARGETS, ...IDENTIFIER_TARGETS, "session_date", "ignore"]);
+/** Per-person columns (persona 3 and 4). Their values go to enrollments, credits and the release tables, never to the model. */
+export const INDIVIDUAL_TARGETS = ["completed_flag", "hours_attended", "credit_days_earned", "release_date", "supervision_type", "risk_band"] as const;
+export const ColumnTargetSchema = z.enum([...CANONICAL_TARGETS, ...IDENTIFIER_TARGETS, ...INDIVIDUAL_TARGETS, "session_date", "ignore"]);
 export type ColumnTarget = z.infer<typeof ColumnTargetSchema>;
 
 export const ColumnMappingSchema = z
@@ -76,3 +78,18 @@ export const ReplyClassificationSchema = z.object({
   expected_numbers: z.boolean().describe("true when the reply gives an expected, hoped-for or projected number instead of a count"),
 });
 export type ReplyClassification = z.infer<typeof ReplyClassificationSchema>;
+
+/** What the model may return for a reply about attendance marks. Code keeps only marks Sam asked about. */
+export const LegendAnswerSchema = z.object({
+  marks: z
+    .array(
+      z.object({
+        mark: z.string().describe("The mark exactly as asked about, for example JT or L"),
+        meaning: z.enum(["present", "absent", "excused", "late", "unknown"]),
+      }),
+    )
+    .max(20)
+    .describe("One entry per mark the writer explained. Leave out marks the writer did not explain."),
+  late_counts_as_attended: z.boolean().nullable().describe("true or false when the writer says whether a late counts as attended, else null"),
+});
+export type LegendAnswer = z.infer<typeof LegendAnswerSchema>;

@@ -6,6 +6,7 @@ import {
 import { writeSubmission, type OrgRow } from "../form";
 import type { Llm } from "../llm";
 import { TABLE_SYSTEM, TEXT_SYSTEM } from "./prompts";
+import { ingestIndividual, type IdentityStore } from "../individual/ingest";
 import { readGrid } from "./table";
 
 export type IngestInput =
@@ -13,7 +14,14 @@ export type IngestInput =
   | { kind: "docx"; bytes: Uint8Array }
   | { kind: "table"; filename: string; bytes: Uint8Array };
 
-export type IngestMeta = { channel: "email_body" | "email_attachment" | "manual"; senderEmail: string };
+export type IngestMeta = {
+  channel: "email_body" | "email_attachment" | "manual";
+  senderEmail: string;
+  /** Tests only: the date that separates a release from an expected release. Defaults to today (UTC). */
+  today?: string;
+};
+/** Opens the vault when a person-level file arrives. Absent when the vault keys are not configured. */
+export type VaultSource = () => Promise<IdentityStore>;
 
 export type IngestOutcome = {
   submission_id: string | null;
@@ -24,6 +32,7 @@ export type IngestOutcome = {
 
 export const PARSER_VERSION = "ingest-1";
 const MAX_TABLE_ROWS = 200;
+const MAX_PERSON_ROWS = 2000;
 
 async function recordNeedsStaff(db: D1Database, org: OrgRow, meta: IngestMeta, persona: number | null, llmUsed: boolean): Promise<string> {
   const id = `sub_${crypto.randomUUID()}`;
@@ -71,7 +80,9 @@ async function ingestText(db: D1Database, llm: Llm, org: OrgRow, text: string, m
 }
 
 /** Persona 1: the LLM sees only a masked column profile; code reads every value. */
-async function ingestTable(db: D1Database, llm: Llm, org: OrgRow, filename: string, bytes: Uint8Array, meta: IngestMeta): Promise<IngestOutcome> {
+async function ingestTable(
+  db: D1Database, llm: Llm, org: OrgRow, filename: string, bytes: Uint8Array, meta: IngestMeta, vault?: VaultSource,
+): Promise<IngestOutcome> {
   const grid = readGrid(filename, bytes);
   if (grid.length < 2) return { submission_id: null, status: "no_data", cycles: 0, note: "The file has no rows." };
   const headerRow = findHeaderRow(grid);
@@ -82,12 +93,23 @@ async function ingestTable(db: D1Database, llm: Llm, org: OrgRow, filename: stri
   });
   if (mapping.columns.some((c) => c.index >= profile.length)) throw new Error("column mapping points past the last column");
 
-  if (isIndividualLevel(mapping) || grid.length - headerRow - 1 > MAX_TABLE_ROWS) {
+  const dataRows = grid.length - headerRow - 1;
+  if (isIndividualLevel(mapping)) {
+    // Identifiers go to the vault here and nowhere else; without the vault keys the file is not read at all.
+    const out = vault && dataRows <= MAX_PERSON_ROWS ? await ingestIndividual(db, org, grid, headerRow, mapping, meta, await vault()) : null;
+    if (out) {
+      await noteDetectedPersona(db, org, mapping.persona);
+      return out;
+    }
     const id = await recordNeedsStaff(db, org, meta, mapping.persona, true);
     return {
       submission_id: id, status: "needs_staff", cycles: 0,
-      note: isIndividualLevel(mapping) ? "This looks like a person-level file. It is not read yet; staff will follow up." : "The file has too many rows for the aggregate path.",
+      note: !vault ? "This looks like a person-level file, and the vault is not configured, so it was not read." : dataRows > MAX_PERSON_ROWS ? "The file has too many rows." : "I could not read this person-level file; staff will follow up.",
     };
+  }
+  if (dataRows > MAX_TABLE_ROWS) {
+    const id = await recordNeedsStaff(db, org, meta, mapping.persona, true);
+    return { submission_id: id, status: "needs_staff", cycles: 0, note: "The file has too many rows for the aggregate path." };
   }
   const { rows } = rowsFromMapping(grid, headerRow, mapping);
   if (rows.length === 0) return { submission_id: null, status: "no_data", cycles: 0, note: "The file has no data rows." };
@@ -101,8 +123,8 @@ async function ingestTable(db: D1Database, llm: Llm, org: OrgRow, filename: stri
 }
 
 /** One pipeline for email and for admin upload, so both give the same result. */
-export async function ingest(db: D1Database, llm: Llm, org: OrgRow, input: IngestInput, meta: IngestMeta): Promise<IngestOutcome> {
-  if (input.kind === "table") return ingestTable(db, llm, org, input.filename, input.bytes, meta);
+export async function ingest(db: D1Database, llm: Llm, org: OrgRow, input: IngestInput, meta: IngestMeta, vault?: VaultSource): Promise<IngestOutcome> {
+  if (input.kind === "table") return ingestTable(db, llm, org, input.filename, input.bytes, meta, vault);
   const text = input.kind === "docx" ? await docxToText(input.bytes) : input.text;
   return ingestText(db, llm, org, text, meta);
 }

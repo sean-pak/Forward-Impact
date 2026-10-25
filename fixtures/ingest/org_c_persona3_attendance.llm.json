@@ -1,0 +1,92 @@
+{
+  "map_columns": {
+    "persona": 3,
+    "unmapped_marks": [],
+    "columns": [
+      {
+        "index": 0,
+        "target": "id_full_name"
+      },
+      {
+        "index": 1,
+        "target": "id_cdcr"
+      },
+      {
+        "index": 2,
+        "target": "session_date"
+      },
+      {
+        "index": 3,
+        "target": "session_date"
+      },
+      {
+        "index": 4,
+        "target": "session_date"
+      },
+      {
+        "index": 5,
+        "target": "session_date"
+      },
+      {
+        "index": 6,
+        "target": "session_date"
+      },
+      {
+        "index": 7,
+        "target": "session_date"
+      },
+      {
+        "index": 8,
+        "target": "session_date"
+      },
+      {
+        "index": 9,
+        "target": "session_date"
+      },
+      {
+        "index": 10,
+        "target": "session_date"
+      },
+      {
+        "index": 11,
+        "target": "session_date"
+      },
+      {
+        "index": 12,
+        "target": "session_date"
+      },
+      {
+        "index": 13,
+        "target": "session_date"
+      },
+      {
+        "index": 14,
+        "target": "session_date"
+      },
+      {
+        "index": 15,
+        "target": "session_date"
+      },
+      {
+        "index": 16,
+        "target": "session_date"
+      },
+      {
+        "index": 17,
+        "target": "session_date"
+      },
+      {
+        "index": 18,
+        "target": "session_date"
+      },
+      {
+        "index": 19,
+        "target": "session_date"
+      },
+      {
+        "index": 20,
+        "target": "completed_flag"
+      }
+    ]
+  }
+}

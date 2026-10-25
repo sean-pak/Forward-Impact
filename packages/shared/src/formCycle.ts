@@ -82,6 +82,8 @@ export function cycleKey(orgId: string, programId: string, facilityCode: string 
 
 /** Blocking = the CBO must fix it before the data can count. */
 export function isBlocking(i: Pick<CycleIssue, "field_name" | "issue_type">): boolean {
+  // A possible duplicate person is asked about, but both rows count until the CBO says otherwise.
+  if (i.field_name === "duplicate_person") return false;
   return i.issue_type !== "missing_required" || (REQUIRED_CYCLE_FIELDS as readonly string[]).includes(i.field_name);
 }
 

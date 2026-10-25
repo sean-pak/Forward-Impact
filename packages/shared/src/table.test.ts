@@ -8,6 +8,12 @@ describe("findHeaderRow", () => {
     const grid = [["Report"], ["Prepared by staff", ""], ["program", "prison", "n"], ["A", "SQ", "5"], ["B", "CMC", "6"]];
     expect(findHeaderRow(grid)).toBe(2);
   });
+
+  it("accepts a header made of class dates, but not a row of plain numbers", () => {
+    const attendance = [["Healing Circle notes", "", "", ""], ["Name", "2026-01-12", "1/19/2026", "Completed?"], ["Ann Example", "X", "X", "Y"]];
+    expect(findHeaderRow(attendance)).toBe(1);
+    expect(findHeaderRow([["1", "2", "3"], ["a", "b", "c"]])).toBe(1);
+  });
 });
 
 describe("profileColumns", () => {

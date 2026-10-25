@@ -1,0 +1,60 @@
+{
+  "map_columns": {
+    "persona": 4,
+    "unmapped_marks": [],
+    "columns": [
+      {
+        "index": 0,
+        "target": "id_full_name"
+      },
+      {
+        "index": 1,
+        "target": "id_cdcr"
+      },
+      {
+        "index": 2,
+        "target": "id_dob"
+      },
+      {
+        "index": 3,
+        "target": "program_name"
+      },
+      {
+        "index": 4,
+        "target": "facility_raw"
+      },
+      {
+        "index": 5,
+        "target": "start_date"
+      },
+      {
+        "index": 6,
+        "target": "end_date"
+      },
+      {
+        "index": 7,
+        "target": "hours_attended"
+      },
+      {
+        "index": 8,
+        "target": "completed_flag"
+      },
+      {
+        "index": 9,
+        "target": "credit_days_earned"
+      },
+      {
+        "index": 10,
+        "target": "release_date"
+      },
+      {
+        "index": 11,
+        "target": "supervision_type"
+      },
+      {
+        "index": 12,
+        "target": "risk_band"
+      }
+    ]
+  }
+}

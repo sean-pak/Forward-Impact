@@ -4,6 +4,8 @@ import {
   cleanCycleRow,
   cycleKey,
   isBlankRow,
+  individualIssues,
+  individualNoteLines,
   isBlocking,
   missingCompletedIssue,
   needsCompletedCount,
@@ -12,6 +14,8 @@ import {
   type CycleIssue,
   type RegistryField,
 } from "@tpw/shared";
+import type { IndividualRow } from "../individual/types";
+import { promoteStatements } from "../individual/promote";
 
 /** One form row as the browser sends it. Everything is text; code reads it in cleanCycleRow. */
 const RowSchema = z.object({
@@ -141,6 +145,12 @@ export type WriteOptions = {
   duplicates: "reject" | "flag";
   /** Ask about a blank completed count on finished cycles. Email and upload only; the form lets it stay blank. */
   askMissingCompleted?: boolean;
+  /** Person-level cycles (phase 10), aligned with `rows`; null for an aggregate row. */
+  individual?: (IndividualRow | null)[];
+  /** The counts behind "N names and M CDCR numbers scrambled". Never the values. */
+  scrambled?: { names: number; cdcr: number };
+  /** Statements for the submission as a whole (staged person data), added to the same batch. */
+  extraStatements?: (submissionId: string) => D1PreparedStatement[];
 };
 
 export type WriteResult =
@@ -162,7 +172,7 @@ export async function writeSubmission(db: D1Database, org: OrgRow, rows: CycleFo
   const statements: D1PreparedStatement[] = [];
   const submissionId = `sub_${crypto.randomUUID()}`;
   const now = new Date().toISOString();
-  const cycleRows: { id: string; cycle: CleanCycle; issues: CycleIssue[]; blocked: boolean }[] = [];
+  const cycleRows: { id: string; cycle: CleanCycle; issues: CycleIssue[]; blocked: boolean; ind: IndividualRow | null }[] = [];
   const seenKeys = new Set<string>();
 
   for (const [n, row] of rows.entries()) {
@@ -179,7 +189,13 @@ export async function writeSubmission(db: D1Database, org: OrgRow, rows: CycleFo
     }
     const { cycle, issues } = cleanCycleRow({ ...row, program_id: programId }, registry);
     issues.unshift(...(opts.preIssues?.[n] ?? []));
-    if (opts.askMissingCompleted && needsCompletedCount(cycle, now.slice(0, 10))) issues.push(missingCompletedIssue(cycle));
+    const ind = opts.individual?.[n] ?? null;
+    // A person-level cycle gets its counts from the people, so Sam never asks for a typed total.
+    if (ind) {
+      for (const i of individualIssues(ind.extra, cycle)) if (!issues.some((x) => x.field_name === i.field_name)) issues.push(i);
+    } else if (opts.askMissingCompleted && needsCompletedCount(cycle, now.slice(0, 10))) {
+      issues.push(missingCompletedIssue(cycle));
+    }
     const key = cycleKey(org.org_id, programId, cycle.facility_code, cycle.start_date);
     if (seenKeys.has(key)) {
       if (opts.duplicates === "reject") return { ok: false, status: 400, error: `${cycle.program_name} is listed twice for the same prison and start date.` };
@@ -189,20 +205,21 @@ export async function writeSubmission(db: D1Database, org: OrgRow, rows: CycleFo
       });
     }
     seenKeys.add(key);
-    cycleRows.push({ id: `cyc_${crypto.randomUUID()}`, cycle, issues, blocked: issues.some(isBlocking) });
+    cycleRows.push({ id: `cyc_${crypto.randomUUID()}`, cycle, issues, blocked: issues.some(isBlocking), ind });
   }
 
   const blocked = cycleRows.some((c) => c.blocked);
   statements.unshift(
     db.prepare(
-      `INSERT INTO submissions (submission_id, org_id, channel, received_at, sender_email, detected_persona, parser_version, llm_mapping_used, status, is_synthetic)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO submissions (submission_id, org_id, channel, received_at, sender_email, detected_persona, parser_version, llm_mapping_used, status, is_synthetic, scrambled_names, scrambled_cdcr)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     ).bind(
       submissionId, org.org_id, opts.channel, now, opts.senderEmail, opts.detectedPersona, opts.parserVersion,
       +opts.llmMappingUsed, blocked ? "needs_info" : "awaiting_confirmation", org.is_synthetic,
+      opts.scrambled?.names ?? 0, opts.scrambled?.cdcr ?? 0,
     ),
   );
-  for (const { id, cycle: c, issues, blocked: b } of cycleRows) {
+  for (const { id, cycle: c, issues, blocked: b, ind } of cycleRows) {
     const key = cycleKey(org.org_id, c.program_id, c.facility_code, c.start_date);
     statements.push(
       db.prepare(
@@ -211,17 +228,19 @@ export async function writeSubmission(db: D1Database, org: OrgRow, rows: CycleFo
             course_hours_planned_per_participant, n_enrolled, n_completed, total_course_hours_delivered,
             n_enrolled_approx, n_completed_approx, total_course_hours_delivered_approx,
             source_grain, status, extra, submission_id, is_synthetic)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'aggregate', ?, ?, ?, ?)`,
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       ).bind(
         id, key, c.program_id, org.org_id, c.facility_code, c.yard, c.start_date, c.end_date, c.sessions_planned,
         c.course_hours_planned_per_participant, c.n_enrolled, c.n_completed, c.total_course_hours_delivered,
         +c.n_enrolled_approx, +c.n_completed_approx, +c.total_course_hours_delivered_approx,
+        ind ? "derived_from_individuals" : "aggregate",
         b ? "draft" : "awaiting_confirmation",
         // `_completion_rule` is staged here and applied to the program only when the CBO confirms.
-        JSON.stringify({ ...c.extra, _completion_rule: c.completion_rule }),
+        JSON.stringify({ ...c.extra, ...ind?.extra, _completion_rule: c.completion_rule }),
         submissionId, org.is_synthetic,
       ),
     );
+    if (ind) statements.push(...ind.children({ cycleId: id, submissionId }));
     for (const i of issues) {
       statements.push(
         db.prepare(
@@ -231,6 +250,7 @@ export async function writeSubmission(db: D1Database, org: OrgRow, rows: CycleFo
       );
     }
   }
+  if (opts.extraStatements) statements.push(...opts.extraStatements(submissionId));
   await db.batch(statements);
   return { ok: true, submission_id: submissionId, blocked, cycle_ids: cycleRows.map((c) => c.id) };
 }
@@ -258,17 +278,25 @@ export async function getSubmission(db: D1Database, token: string, submissionId:
 }
 
 /** Staff view of any submission, whatever channel it came in on. */
-export async function adminSubmission(db: D1Database, submissionId: string): Promise<(SubmissionView & { channel: string; received_at: string; detected_persona: number | null; llm_mapping_used: boolean }) | null> {
+export async function adminSubmission(
+  db: D1Database,
+  submissionId: string,
+): Promise<(SubmissionView & { channel: string; received_at: string; detected_persona: number | null; llm_mapping_used: boolean; scrambled: { names: number; cdcr: number }; notes: string[] }) | null> {
   const sub = await db
     .prepare(
-      `SELECT s.submission_id, s.status, s.channel, s.received_at, s.detected_persona, s.llm_mapping_used, o.org_id, o.org_name, o.primary_contact_email, o.is_synthetic
+      `SELECT s.submission_id, s.status, s.channel, s.received_at, s.detected_persona, s.llm_mapping_used, s.scrambled_names, s.scrambled_cdcr, o.org_id, o.org_name, o.primary_contact_email, o.is_synthetic
        FROM submissions s JOIN orgs o ON o.org_id = s.org_id WHERE s.submission_id = ?`,
     )
     .bind(submissionId)
-    .first<{ submission_id: string; status: string; channel: string; received_at: string; detected_persona: number | null; llm_mapping_used: number } & OrgRow>();
+    .first<{ submission_id: string; status: string; channel: string; received_at: string; detected_persona: number | null; llm_mapping_used: number; scrambled_names: number; scrambled_cdcr: number } & OrgRow>();
   if (!sub) return null;
   const view = await submissionView(db, sub, sub);
-  return { ...view, channel: sub.channel, received_at: sub.received_at, detected_persona: sub.detected_persona, llm_mapping_used: sub.llm_mapping_used === 1 };
+  const extras = await db.prepare("SELECT extra FROM program_cycles WHERE submission_id = ?").bind(submissionId).all<{ extra: string }>();
+  const notes = individualNoteLines(extras.results.map((r) => (JSON.parse(r.extra || "{}") as { _notes?: Record<string, number> })._notes ?? {}));
+  return {
+    ...view, channel: sub.channel, received_at: sub.received_at, detected_persona: sub.detected_persona, llm_mapping_used: sub.llm_mapping_used === 1,
+    scrambled: { names: sub.scrambled_names, cdcr: sub.scrambled_cdcr }, notes,
+  };
 }
 
 export async function listSubmissions(db: D1Database) {
@@ -378,6 +406,7 @@ async function applyConfirm(db: D1Database, view: SubmissionView): Promise<Confi
     if (rule && rule !== "unstated") statements.push(db.prepare("UPDATE programs SET completion_rule = ? WHERE program_id = ?").bind(rule, c.program_id));
   }
   statements.push(db.prepare("UPDATE submissions SET status = 'confirmed', open_question = NULL, confirmed_by_cbo_at = ? WHERE submission_id = ?").bind(now, submissionId));
+  statements.push(...promoteStatements(db, submissionId, now));
   await db.batch(statements);
   return { ok: true, already: false };
 }

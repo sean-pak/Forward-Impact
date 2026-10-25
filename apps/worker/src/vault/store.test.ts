@@ -56,6 +56,37 @@ describe("Vault.upsertIdentity", () => {
   });
 });
 
+describe("Vault.upsertIdentities", () => {
+  const person = (n: number) => ({ cdcrNumber: `SYN0000${n}`, firstName: `First${n}`, lastName: `Last${n}`, dateOfBirth: "1980-01-01", orgId: "org_a", isSynthetic: true });
+
+  it("writes many people in one statement, ciphertext only, and returns the keys in order", async () => {
+    const { db, calls } = fakeD1();
+    const keys = await new Vault(db, await testKeys()).upsertIdentities([person(1), person(2), person(1)]);
+    expect(keys).toHaveLength(3);
+    expect(keys[0]).toEqual(keys[2]); // the same person twice has the same key
+    expect(keys[0]!.personKey).not.toBe(keys[1]!.personKey);
+    expect(calls).toHaveLength(1);
+    expect(calls[0]!.sql).toContain("json_each(?)");
+    const rows = JSON.parse(calls[0]!.params[0] as string) as unknown[][];
+    expect(rows).toHaveLength(2); // duplicates are written once
+    const bound = JSON.stringify(rows);
+    for (const secret of ["SYN00001", "First1", "Last2", "1980-01-01"]) expect(bound).not.toContain(secret);
+  });
+
+  it("writes nothing for an empty list", async () => {
+    const { db, calls } = fakeD1();
+    expect(await new Vault(db, await testKeys()).upsertIdentities([])).toEqual([]);
+    expect(calls).toHaveLength(0);
+  });
+
+  it("gives the same key as upsertIdentity for the same person", async () => {
+    const { db } = fakeD1();
+    const vault = new Vault(db, await testKeys());
+    const [bulk] = await vault.upsertIdentities([person(1)]);
+    expect(bulk!.personKey).toBe((await vault.upsertIdentity(person(1))).personKey);
+  });
+});
+
 describe("Vault.reidentify", () => {
   it("writes the access log first, then returns plaintext", async () => {
     const keys = await testKeys();

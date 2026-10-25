@@ -12,7 +12,8 @@ Extract one entry per program cycle (one run of a class at one prison). Rules:
 export const TABLE_SYSTEM = `You map the columns of a spreadsheet to fields. You see only a masked profile of each column: its header, type, value shapes and counts. You never see the data.
 Each profile column has an index. Return one entry per column index with its target:
 program_name, facility_raw, yard, start_date, end_date, sessions_planned, course_hours_planned_per_participant, n_enrolled, n_completed, total_course_hours_delivered, completion_rule,
-id_first_name, id_last_name, id_full_name, id_cdcr, id_dob (columns that identify a person), session_date (one column per class date), or ignore.
+id_first_name, id_last_name, id_full_name, id_cdcr, id_dob (columns that identify a person: "Name", "Inmate #", "CDCR #", "DOB"), session_date (one column per class date, the header is the date),
+completed_flag (one person's completed or graduated mark, "Completed?", "Grad?"), hours_attended (one person's hours), credit_days_earned (one person's credit days), release_date (one person's release date), supervision_type (parole or PRCS), risk_band (low, moderate or high), or ignore.
 Use each target for at most one column (except ignore and session_date). Use ignore when unsure. Do not map org_name.
 persona: 1 if each row is one program cycle with counts; 3 if rows are people and columns are session dates with marks; 4 if rows are individual people with program details.
-unmapped_marks: symbols in attendance cells you cannot interpret (persona 3 only), else an empty list.`;
+unmapped_marks: always an empty list; code reads the marks itself.`;

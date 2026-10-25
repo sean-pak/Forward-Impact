@@ -1,12 +1,15 @@
 import {
-  APPROX_FIELDS, FACILITIES, ReplyClassificationSchema, clarifyEmail, confirmReceiptEmail, cycleKey, deriveCycles, escalatedEmail,
-  facilityName, isAnswerable, isPlainYes, isSyntheticEmail, numberAppearsIn, overlayAnswer, pickQuestion, replySubject, scrubIdentifiers,
-  stripQuoted, suggestFacility, thanksEmail, toFormRow, type Candidate, type CycleFormRow, type ReplyClassification, type DerivedCycle, type Question, type RegistryField, type StoredCycle,
+  APPROX_FIELDS, FACILITIES, LegendAnswerSchema, ReplyClassificationSchema, UNNAMED_PROGRAM, clarifyEmail, confirmReceiptEmail, cycleKey, deriveCycles,
+  escalatedEmail, facilityName, individualNoteLines, isAnswerable, isPlainNo, isPlainYes, isSyntheticEmail, normalizeMark, numberAppearsIn, openMarks,
+  overlayAnswer, parseCompletionRule, pickQuestion, replySubject, scrubIdentifiers, stripQuoted, suggestFacility, thanksEmail, toFormRow, unresolvedPair,
+  type AttendanceResult, type Candidate, type CycleFormRow, type DerivedCycle, type IndividualExtra, type Meaning, type Question, type RegistryField,
+  type ReplyClassification, type StoredCycle,
 } from "@tpw/shared";
 import { confirmById, registryFields } from "../form";
 import type { Gmail } from "../gmail";
+import { attendanceFor, attendanceWrites, loadAttendance, type AttendanceCycle } from "../individual/recompute";
 import type { Llm } from "../llm";
-import { REPLY_SYSTEM } from "./prompts";
+import { LEGEND_SYSTEM, REPLY_SYSTEM } from "./prompts";
 
 /** Clarification emails per submission (PRD 7.7). After this, blocking problems go to staff. */
 export const MAX_ROUNDS = 2;
@@ -29,8 +32,11 @@ export type Deps = { db: D1Database; gmail: Gmail; llm: Llm };
 
 export type OpenQuestion = { kind: Question["kind"] | "confirm"; field_name: string; cycle_ids: string[]; text: string; suggestion?: string };
 
-type SubRow = { submission_id: string; org_id: string; org_name: string; status: string; followup_rounds: number; open_question: string | null; is_synthetic: number };
-type State = { sub: SubRow; oq: OpenQuestion | null; stored: StoredCycle[]; registry: RegistryField[] };
+type SubRow = {
+  submission_id: string; org_id: string; org_name: string; status: string; followup_rounds: number; open_question: string | null; is_synthetic: number;
+  scrambled_names: number; scrambled_cdcr: number;
+};
+type State = { sub: SubRow; oq: OpenQuestion | null; stored: StoredCycle[]; registry: RegistryField[]; attendance: Map<string, AttendanceCycle> };
 
 export type Outcome = { action: "ask" | "receipt" | "escalate" | "confirmed" | "ignored"; question?: string };
 
@@ -51,7 +57,7 @@ export async function activeSubmissionForThread(db: D1Database, threadId: string
 async function loadState(db: D1Database, submissionId: string): Promise<State | null> {
   const sub = await db
     .prepare(
-      `SELECT s.submission_id, s.org_id, o.org_name, s.status, s.followup_rounds, s.open_question, s.is_synthetic
+      `SELECT s.submission_id, s.org_id, o.org_name, s.status, s.followup_rounds, s.open_question, s.is_synthetic, s.scrambled_names, s.scrambled_cdcr
        FROM submissions s JOIN orgs o ON o.org_id = s.org_id WHERE s.submission_id = ?`,
     )
     .bind(submissionId)
@@ -61,7 +67,7 @@ async function loadState(db: D1Database, submissionId: string): Promise<State | 
     db.prepare(
       `SELECT c.cycle_id, c.program_id, p.program_name, c.facility_code, c.yard, c.start_date, c.end_date, c.sessions_planned,
               c.course_hours_planned_per_participant, c.n_enrolled, c.n_completed, c.total_course_hours_delivered,
-              c.n_enrolled_approx, c.n_completed_approx, c.total_course_hours_delivered_approx, c.extra
+              c.n_enrolled_approx, c.n_completed_approx, c.total_course_hours_delivered_approx, c.extra, c.source_grain
        FROM program_cycles c JOIN programs p ON p.program_id = c.program_id
        WHERE c.submission_id = ? ORDER BY c.rowid`,
     ).bind(submissionId).all<Record<string, unknown> & { extra: string }>(),
@@ -80,9 +86,11 @@ async function loadState(db: D1Database, submissionId: string): Promise<State | 
     total_course_hours_delivered: (r.total_course_hours_delivered as number | null) ?? null,
     n_enrolled_approx: r.n_enrolled_approx === 1, n_completed_approx: r.n_completed_approx === 1,
     total_course_hours_delivered_approx: r.total_course_hours_delivered_approx === 1,
+    source_grain: r.source_grain as StoredCycle["source_grain"],
     extra: JSON.parse(r.extra || "{}") as Record<string, unknown>,
   }));
-  return { sub, oq: sub.open_question ? (JSON.parse(sub.open_question) as OpenQuestion) : null, stored, registry };
+  const attendance = await loadAttendance(db, stored.filter((c) => c.extra._individual === "attendance").map((c) => c.cycle_id));
+  return { sub, oq: sub.open_question ? (JSON.parse(sub.open_question) as OpenQuestion) : null, stored, registry, attendance };
 }
 
 const askedApprox = (extra: Record<string, unknown>): string[] => (Array.isArray(extra._approx_asked) ? (extra._approx_asked as string[]) : []);
@@ -90,6 +98,8 @@ const askedApprox = (extra: Record<string, unknown>): string[] => (Array.isArray
 const FIELD_LABEL: Record<string, string> = {
   n_enrolled: "People enrolled", n_completed: "People completed", completion_rule: "What counts as completing",
   start_date: "Start date", end_date: "End date", facility_code: "Prison",
+  attendance_legend: "What your attendance marks mean", late_counts: "Whether a late counts as attended",
+  duplicate_person: "Whether two lines are the same person", program_name: "Program name",
 };
 
 function candidates(derived: DerivedCycle[], stored: StoredCycle[]): Candidate[] {
@@ -130,7 +140,27 @@ type Change = { overrides?: Map<string, CycleFormRow>; retry?: boolean; updated?
 async function turn(deps: Deps, st: State, inbound: Inbound, change: Change = {}): Promise<Outcome> {
   const { db } = deps;
   const today = new Date().toISOString().slice(0, 10);
-  const derived = deriveCycles(st.sub.org_id, st.stored, st.registry, today, change.overrides);
+  // A sheet of marks gets its counts from the people, so rebuild them from the stored marks and the answers so far.
+  const overrides = new Map(change.overrides);
+  const attendance = new Map<string, AttendanceResult>();
+  for (const c of st.stored) {
+    const data = st.attendance.get(c.cycle_id);
+    if (c.extra._individual !== "attendance" || !data) continue;
+    const row = overrides.get(c.cycle_id) ?? toFormRow(c);
+    const res = attendanceFor(data, c.extra as IndividualExtra, row.completion_rule || "unstated");
+    attendance.set(c.cycle_id, res);
+    overrides.set(c.cycle_id, {
+      ...row, n_enrolled: String(res.nEnrolled), n_completed: res.nCompleted === null ? "" : String(res.nCompleted),
+      n_enrolled_approx: false, n_completed_approx: false,
+    });
+  }
+  const derived = deriveCycles(st.sub.org_id, st.stored, st.registry, today, overrides);
+  const dynamicNotes: Record<string, number> = {};
+  for (const [id, res] of attendance) {
+    const rule = derived.find((d) => d.cycle_id === id)!.cycle.completion_rule;
+    dynamicNotes.conflicting_completed = (dynamicNotes.conflicting_completed ?? 0) + res.conflicts;
+    if (rule !== "unstated" && !parseCompletionRule(rule)) dynamicNotes.rule_unreadable = (dynamicNotes.rule_unreadable ?? 0) + 1;
+  }
   const cands = candidates(derived, st.stored);
   const blocked = derived.some((d) => d.blocked);
   const q = pickQuestion(cands);
@@ -159,7 +189,8 @@ async function turn(deps: Deps, st: State, inbound: Inbound, change: Change = {}
         n_completed: d.cycle.n_completed, n_completed_approx: d.cycle.n_completed_approx, completion_rule: d.cycle.completion_rule,
       })),
       open: [...new Set(cands.filter((c) => c.kind === "issue").map(openLabel))],
-      scrambled: { names: 0, cdcr: 0 },
+      scrambled: { names: st.sub.scrambled_names, cdcr: st.sub.scrambled_cdcr },
+      notes: individualNoteLines([...st.stored.map((c) => (c.extra._notes ?? {}) as Record<string, number>), dynamicNotes]),
       updated: change.updated,
       unchanged: change.unchanged,
       expectedLeftOut: change.expectedLeftOut,
@@ -196,6 +227,12 @@ async function turn(deps: Deps, st: State, inbound: Inbound, change: Change = {}
         JSON.stringify({ ...kept, ...c.extra, _completion_rule: c.completion_rule, _approx_asked: asked }), d.cycle_id,
       ),
     );
+    // The CBO named a program Sam could not name. Only a program this submission created, and only from "Unnamed program".
+    if (old.program_name === UNNAMED_PROGRAM && c.program_name !== UNNAMED_PROGRAM) {
+      statements.push(db.prepare("UPDATE programs SET program_name = ? WHERE program_id = ? AND submission_id = ?").bind(c.program_name, c.program_id, st.sub.submission_id));
+    }
+    const res = attendance.get(d.cycle_id);
+    if (res) statements.push(...attendanceWrites(db, st.attendance.get(d.cycle_id)!, old.extra as IndividualExtra, res));
   }
   statements.push(db.prepare("UPDATE field_issues SET resolved = 1 WHERE submission_id = ? AND resolved = 0").bind(st.sub.submission_id));
   for (const d of derived) {
@@ -270,6 +307,54 @@ function supported(field: string, value: string, text: string): boolean {
   return Number.isFinite(n) ? numberAppearsIn(n, text) : true;
 }
 
+const INDIVIDUAL_FIELDS = ["attendance_legend", "late_counts", "duplicate_person"];
+
+/**
+ * A reply about attendance marks, whether a late counts, or two lines that may be one person. A plain YES or NO
+ * settles the late and duplicate questions without a model. For marks, the model only reads the meanings; code keeps
+ * the ones Sam asked about, and nothing else changes.
+ */
+async function individualReply(deps: Deps, st: State, inbound: Inbound, oq: OpenQuestion, text: string): Promise<Outcome> {
+  const cycle = st.stored.find((c) => c.cycle_id === oq.cycle_ids[0]);
+  if (!cycle) return { action: "ignored" };
+  const extra = cycle.extra as IndividualExtra;
+  const patch: Record<string, unknown> = {};
+  const plain = isPlainYes(text) ? true : isPlainNo(text) ? false : null;
+
+  if (oq.field_name === "duplicate_person") {
+    const pair = unresolvedPair(extra);
+    if (pair && plain !== null) patch._dup_resolved = { ...(extra._dup_resolved ?? {}), [pair.id]: plain ? "same" : "different" };
+  } else {
+    const open = openMarks(extra);
+    let late: boolean | null = null;
+    const marks: Record<string, Meaning> = {};
+    if (oq.field_name === "late_counts" && plain !== null) {
+      late = plain;
+    } else if (text) {
+      try {
+        const answer = await deps.llm.json({
+          name: "classify_legend", system: LEGEND_SYSTEM, schema: LegendAnswerSchema,
+          user: JSON.stringify({ marks_asked: open, reply: text }),
+        });
+        for (const m of answer.marks) {
+          const mark = normalizeMark(m.mark);
+          if (open.includes(mark) && m.meaning !== "unknown") marks[mark] = m.meaning;
+        }
+        late = answer.late_counts_as_attended;
+      } catch (e) {
+        // A model outage is retried by the next sync; after an hour the reply counts as unclear so the round limit can finish the job.
+        if (Date.now() - Date.parse(inbound.occurredAt) < GIVE_UP_AFTER_MS) throw e;
+      }
+    }
+    if (Object.keys(marks).length) patch._legend = { ...(extra._legend ?? {}), ...marks };
+    if (late !== null) patch._late_counts = late;
+  }
+
+  const applied = Object.keys(patch).length > 0;
+  const stored = st.stored.map((c) => (c.cycle_id === cycle.cycle_id ? { ...c, extra: { ...c.extra, ...patch } } : c));
+  return turn(deps, { ...st, stored }, inbound, { retry: !applied });
+}
+
 /**
  * A reply to Sam's question (PRD 7.5). The model only classifies; code decides whether the value is allowed,
  * validates it, applies it, then asks the next question or sends the receipt. A plain YES never reaches the model.
@@ -279,6 +364,7 @@ export async function handleReply(deps: Deps, submissionId: string, inbound: Inb
   if (!st || !st.oq) return { action: "ignored" };
   const oq = st.oq;
   const text = scrubIdentifiers(stripQuoted(inbound.text)).slice(0, 2000);
+  if (oq.kind === "issue" && INDIVIDUAL_FIELDS.includes(oq.field_name)) return individualReply(deps, st, inbound, oq, text);
 
   const none: ReplyClassification = { intent: "unclear", field_key: null, value: null, approx: false, cycle_hint: null, also: [], expected_numbers: false };
   // "Did it also run at San Quentin?" -> "Yes": the offered prison, no model needed.

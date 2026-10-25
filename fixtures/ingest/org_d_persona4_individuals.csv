@@ -1,0 +1,151 @@
+Name,Inmate #,DOB,Program,Facility,Start,End,Hours,Grad?,Credits earned,Release date,Supervision,Risk
+Jerome Pellegrino,SYN52000,1/1/1965,Reentry Readiness,Folsom,2025-02-03,2025-05-12,30,Y,36,8/18/2028,,Low
+Yusuf Radcliffe,SYN52001,6/12/1972,Reentry Readiness,Folsom,2025-02-03,2025-05-12,8,In progress,,2025-09-27,Parole,Moderate
+Orlando Abernathy,SYN52002,11/23/1979,Reentry Readiness,Folsom,2025-02-03,2025-05-12,24,Y,24,2025-12-30,PRCS,Low
+Bernard Thibodeaux,SYN52003,4/6/1986,Reentry Readiness,Folsom,2025-02-03,2025-05-12,9,In progress,,10/27/2025,PRCS,Moderate
+Octavio Bellamy,SYN52004,9/17/1993,Reentry Readiness,Folsom,2025-02-03,2025-05-12,31,Y,40,1/3/2027,,Low
+Napoleon Hawthorne,SYN52005,2/28/1965,Reentry Readiness,Folsom,2025-02-03,2025-05-12,25,Y,25,2027-12-20,,Moderate
+Horacio Fairbanks,SYN52006,7/11/1972,Reentry Readiness,Folsom,2025-02-03,2025-05-12,27,Y,39,2027-01-25,,
+Julian Ibarra,,12/22/1979,Reentry Readiness,Folsom,2025-02-03,2025-05-12,11,N,,2/6/2026,Parole,Low
+Leopold Quigley,SYN52008,5/5/1986,Reentry Readiness,Folsom,2025-02-03,2025-05-12,31,Y,29,2025-10-14,Parole,High
+Fernando Isaacson,SYN52009,10/16/1993,Reentry Readiness,Folsom,2025-02-03,2025-05-12,10,N,,7/9/2025,Parole,Low
+Armando Wolverton,SYN52010,3/27/1965,Reentry Readiness,Folsom,2025-02-03,2025-05-12,16,N,,2025-11-26,PRCS,High
+Alonzo Ashworth,SYN52011,8/10/1972,Reentry Readiness,Folsom,2025-02-03,2025-05-12,30,Y,12,9/14/2025,Parole,High
+Gustavo Kowalczyk,SYN52012,1/21/1979,Reentry Readiness,Folsom,2025-02-03,2025-05-12,9,N,,1/6/2026,Parole,High
+Wendell Espinoza,SYN52013,6/4/1986,Reentry Readiness,Folsom,2025-02-03,2025-05-12,30,Y,31,2025-12-11,Parole,Low
+Salvador Ellington,SYN52014,11/15/1993,Reentry Readiness,Folsom,2025-02-03,2025-05-12,27,Y,16,2025-12-19,Parole,Moderate
+Kareem Montenegro,SYN52015,4/26/1965,Reentry Readiness,Folsom,2025-02-03,2025-05-12,24,Y,24,1/8/2028,,Low
+Basilio Zamudio,SYN52016,9/9/1972,Reentry Readiness,Folsom,2025-02-03,2025-05-12,19,In progress,,2025-11-20,PRCS,Moderate
+Nelson Sandoval,SYN52017,2/20/1979,Reentry Readiness,Folsom,2025-02-03,2025-05-12,27,Y,31,3/12/2028,,Low
+Leonard Nakamura,SYN52018,7/3/1986,Reentry Readiness,Folsom,2025-02-03,2025-05-12,13,N,,2027-10-05,,Moderate
+Ulrich Okonkwo,SYN52019,12/14/1993,Reentry Readiness,Folsom,2025-02-03,2025-05-12,29,Y,32,2028-08-24,,Moderate
+Kendrick Yamamoto,SYN52020,5/25/1965,Reentry Readiness,Folsom,2025-02-03,2025-05-12,18,In progress,,2024-11-20,Parole,Low
+Dominic Yeager,SYN52021,10/8/1972,Reentry Readiness,Folsom,2025-02-03,2025-05-12,15,N,,12/26/2025,Parole,Moderate
+Alberto Calderon,SYN52022,3/19/1979,Reentry Readiness,Folsom,2025-02-03,2025-05-12,31,Y,31,1/15/2026,PRCS,Moderate
+Desmond Castellano,SYN52023,8/2/1986,Reentry Readiness,Folsom,2025-02-03,2025-05-12,29,Y,13,2027-04-04,,Low
+Florian Hargrove,SYN52024,1/13/1993,Reentry Readiness,Folsom,2025-02-03,2025-05-12,11,N,,2027-07-07,,Moderate
+Gregory Jovanovic,SYN52025,6/24/1965,Reentry Readiness,Folsom,2025-02-03,2025-05-12,24,Y,24,12/22/2025,Parole,Low
+Calvin Galvan,SYN52026,11/7/1972,Reentry Readiness,Folsom,2025-02-03,2025-05-12,24,Y,38,5/8/2028,,
+Damian Dillingham,,4/18/1979,Reentry Readiness,Folsom,2025-02-03,2025-05-12,31,Y,36,2025-12-16,Parole,
+Rafael Tavares,SYN52028,9/1/1986,Reentry Readiness,Folsom,2025-02-03,2025-05-12,27,Y,35,3/4/2027,,Low
+Ismael Fontaine,SYN52029,2/12/1993,Reentry Readiness,Folsom,2025-02-03,2025-05-12,28,Y,38,5/14/2027,,Moderate
+Clarence Escobedo,SYN52030,7/23/1965,Reentry Readiness,Folsom,2025-02-03,2025-05-12,30,Y,12,2025-09-06,PRCS,
+Reginald Lockhart,SYN52031,12/6/1972,Reentry Readiness,Folsom,2025-02-03,2025-05-12,11,N,,2027-02-13,,Low
+Bartholomew Zellner,SYN52032,5/17/1979,Reentry Readiness,Folsom,2025-02-03,2025-05-12,30,Y,27,2025-07-24,Parole,Moderate
+Franklin Dunleavy,SYN52033,10/28/1986,Reentry Readiness,Folsom,2025-02-03,2025-05-12,11,N,,2025-06-14,PRCS,Moderate
+Ignacio Nightingale,SYN52034,3/11/1993,Reentry Readiness,Folsom,2025-02-03,2025-05-12,29,Y,21,9/5/2025,Parole,Moderate
+Hector Quattrone,SYN52035,8/22/1965,Reentry Readiness,Folsom,2025-02-03,2025-05-12,18,N,,2026-01-13,Parole,Low
+Emmanuel Fitzgerald,SYN52036,1/5/1972,Reentry Readiness,Folsom,2025-02-03,2025-05-12,15,N,,3/27/2028,,Low
+Vernon Vasquez,SYN52037,6/16/1979,Reentry Readiness,Folsom,2025-02-03,2025-05-12,27,Y,30,2028-02-21,,Moderate
+Maurice Cavanaugh,SYN52038,11/27/1986,Reentry Readiness,Folsom,2025-02-03,2025-05-12,14,In progress,,3/28/2027,,Moderate
+Patrick Urquhart,SYN52039,4/10/1993,Reentry Readiness,Folsom,2025-02-03,2025-05-12,19,N,,2028-08-21,,Low
+Jerome Pellegrino,SYN52000,1/1/1965,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,26,Y,11,8/18/2028,,Low
+Yusuf Radcliffe,SYN52001,6/12/1972,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,30,Y,14,9/27/2025,Parole,Moderate
+Orlando Abernathy,SYN52002,11/23/1979,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,26,Y,25,2025-12-30,PRCS,Low
+Everett Ostrander,SYN52040,9/21/1965,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,30,Y,30,6/24/2028,,Moderate
+Percy Rutherford,SYN52041,2/4/1972,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,17,N,,2027-08-06,,High
+Warren Holloway,SYN52042,7/15/1979,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,29,Y,40,7/28/2028,,Low
+Xavier Delacroix,SYN52043,12/26/1986,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,30,Y,32,3/10/2028,,Moderate
+Isidro Gutierrez,SYN52044,5/9/1993,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,12,N,,2025-07-22,Parole,
+Nathaniel Whitaker,SYN52045,10/20/1965,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,29,Y,38,8/23/2027,,High
+Valentin Salazar,SYN52046,3/3/1972,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,25,Y,37,7/30/2025,Parole,High
+Terrence Brantley,,8/14/1979,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,18,N,,8/30/2027,,Moderate
+Tobias Mendoza,SYN52048,1/25/1986,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,15,N,,1/28/2026,PRCS,Moderate
+Lorenzo Blackwood,SYN52049,6/8/1993,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,9,N,,2028-07-28,,Low
+Jasper Jablonski,SYN52050,11/19/1965,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,21,In progress,,2028-06-09,,Low
+Gilbert Lindqvist,SYN52051,4/2/1972,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,26,Y,25,10/4/2025,Parole,Moderate
+Ulysses Iglesias,SYN52052,9/13/1979,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,31,Y,33,4/17/2026,Parole,High
+Marshall Kimbrough,SYN52053,2/24/1986,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,11,In progress,,8/7/2028,,Low
+Harlan Underhill,SYN52054,7/7/1993,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,26,Y,40,2028-05-17,,High
+Silas Valdivia,SYN52055,12/18/1965,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,24,Y,20,1/22/2026,Parole,Low
+Mauricio Pemberton,SYN52056,5/1/1972,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,30,Y,37,1/28/2027,,Low
+Edmund Amundsen,SYN52057,10/12/1979,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,24,Y,23,2028-02-19,,Moderate
+Zachary Grantham,SYN52058,3/23/1986,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,26,Y,21,1/5/2026,Parole,High
+Cornelius Pellegrino,SYN52059,8/6/1993,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,27,Y,37,11/9/2025,Parole,
+Jerome Nakamura,SYN52060,1/17/1965,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,21,N,,2026-02-06,Parole,Low
+Yusuf Okonkwo,SYN52061,6/28/1972,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,25,Y,17,2027-02-25,,Moderate
+Orlando Yamamoto,SYN52062,11/11/1979,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,29,Y,20,5/25/2028,,High
+Bernard Yeager,SYN52063,4/22/1986,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,27,Y,25,2028-10-30,,High
+Octavio Calderon,SYN52064,9/5/1993,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,25,Y,27,1/15/2026,Parole,High
+Napoleon Castellano,SYN52065,2/16/1965,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,15,N,,9/30/2025,Parole,Low
+Horacio Hargrove,SYN52066,7/27/1972,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,25,Y,32,1/18/2026,Parole,Low
+Julian Jovanovic,,12/10/1979,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,14,N,,4/21/2028,,Moderate
+Leopold Galvan,SYN52068,5/21/1986,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,27,Y,22,2026-01-29,PRCS,Moderate
+Fernando Dillingham,SYN52069,10/4/1993,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,15,N,,11/1/2025,Parole,Moderate
+Armando Tavares,SYN52070,3/15/1965,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,26,Y,32,2025-07-30,Parole,Moderate
+Alonzo Fontaine,SYN52071,8/26/1972,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,12,N,,9/19/2027,,Moderate
+Gustavo Escobedo,SYN52072,1/9/1979,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,24,Y,29,2025-07-21,Parole,Moderate
+Wendell Lockhart,SYN52073,6/20/1986,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,13,N,,2025-09-28,PRCS,Moderate
+Salvador Zellner,SYN52074,11/3/1993,Reentry Readiness,Men's Colony,2025-03-10,2025-06-16,28,Y,20,3/6/2026,Parole,
+Kareem Dunleavy,SYN52075,4/14/1965,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,11,N,,7/10/2028,,High
+Basilio Nightingale,SYN52076,9/25/1972,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,27,Y,35,2027-10-26,,
+Nelson Quattrone,SYN52077,2/8/1979,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,24,Y,25,2/28/2027,,Low
+Leonard Fitzgerald,SYN52078,7/19/1986,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,15,N,,2028-03-08,,Moderate
+Ulrich Vasquez,SYN52079,12/2/1993,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,31,Y,28,2026-04-15,Parole,Low
+Kendrick Cavanaugh,SYN52080,5/13/1965,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,18,N,,4/9/2028,,Moderate
+Dominic Urquhart,SYN52081,10/24/1972,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,31,Y,28,2026-04-11,Parole,Moderate
+Alberto Ostrander,SYN52082,3/7/1979,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,24,Y,31,3/17/2026,PRCS,Moderate
+Desmond Rutherford,SYN52083,8/18/1986,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,24,Y,40,2026-07-23,Parole,Low
+Florian Holloway,SYN52084,1/1/1993,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,18,N,,2027-12-06,,Low
+Gregory Delacroix,SYN52085,6/12/1965,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,9,N,,2026-03-27,Parole,Low
+Calvin Gutierrez,SYN52086,11/23/1972,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,28,Y,26,2028-01-06,,Moderate
+Damian Whitaker,,4/6/1979,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,25,Y,25,1/7/2028,,Low
+Rafael Salazar,SYN52088,9/17/1986,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,28,Y,16,2026-01-18,Parole,
+Ismael Brantley,SYN52089,2/28/1993,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,15,N,,2027-11-04,,Moderate
+Clarence Mendoza,SYN52090,7/11/1965,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,25,Y,40,2026-09-26,Parole,Moderate
+Reginald Blackwood,SYN52091,12/22/1972,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,31,Y,22,4/22/2026,Parole,High
+Bartholomew Jablonski,SYN52092,5/5/1979,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,31,Y,35,2/2/2027,,
+Franklin Lindqvist,SYN52093,10/16/1986,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,25,Y,11,2026-06-01,Parole,High
+Ignacio Iglesias,SYN52094,3/27/1993,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,29,Y,33,9/8/2026,Parole,Moderate
+Hector Kimbrough,SYN52095,8/10/1965,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,26,Y,13,7/16/2027,,Low
+Emmanuel Underhill,SYN52096,1/21/1972,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,27,Y,22,6/2/2025,PRCS,Low
+Vernon Valdivia,SYN52097,6/4/1979,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,31,Y,11,2026-12-30,,Low
+Maurice Pemberton,SYN52098,11/15/1986,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,30,Y,23,2026-08-01,PRCS,High
+Patrick Amundsen,SYN52099,4/26/1993,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,28,Y,16,2028-05-28,,Low
+Everett Grantham,SYN52100,9/9/1965,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,10,In progress,,2028-03-20,,Low
+Percy Pellegrino,SYN52101,2/20/1972,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,11,N,,2026-09-22,Parole,Low
+Warren Radcliffe,SYN52102,7/3/1979,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,26,Y,28,3/19/2026,PRCS,Low
+Xavier Abernathy,SYN52103,12/14/1986,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,29,Y,35,2026-09-02,Parole,
+Isidro Thibodeaux,SYN52104,5/25/1993,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,10,N,,10/24/2026,Parole,Low
+Nathaniel Bellamy,SYN52105,10/8/1965,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,26,Y,26,2027-05-01,,Moderate
+Valentin Hawthorne,SYN52106,3/19/1972,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,25,Y,34,9/20/2028,,Moderate
+Terrence Fairbanks,,8/2/1979,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,24,Y,34,2026-10-08,PRCS,Moderate
+Tobias Ibarra,SYN52108,1/13/1986,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,28,Y,17,2027-06-12,,Moderate
+Lorenzo Quigley,SYN52109,6/24/1993,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,29,Y,17,3/31/2028,,Low
+Jasper Isaacson,SYN52110,11/7/1965,Job Skills Lab,San Quentin,2025-09-08,2025-12-15,27,Y,37,3/28/2026,Parole,High
+Gilbert Wolverton,SYN52111,4/18/1972,Job Skills Lab,Folsom,2026-02-02,2026-05-11,25,Y,10,11/27/2026,,Moderate
+Ulysses Ashworth,SYN52112,9/1/1979,Job Skills Lab,Folsom,2026-02-02,2026-05-11,30,Y,40,1/7/2027,,Low
+Marshall Kowalczyk,SYN52113,2/12/1986,Job Skills Lab,Folsom,2026-02-02,2026-05-11,29,Y,16,2027-02-25,,
+Harlan Espinoza,SYN52114,7/23/1993,Job Skills Lab,Folsom,2026-02-02,2026-05-11,18,N,,2028-09-26,,Moderate
+Silas Ellington,SYN52115,12/6/1965,Job Skills Lab,Folsom,2026-02-02,2026-05-11,29,Y,13,2027-02-07,,Low
+Mauricio Montenegro,SYN52116,5/17/1972,Job Skills Lab,Folsom,2026-02-02,2026-05-11,27,Y,22,2027-10-14,,Low
+Edmund Zamudio,SYN52117,10/28/1979,Job Skills Lab,Folsom,2026-02-02,2026-05-11,29,Y,26,3/16/2028,,
+Zachary Sandoval,SYN52118,3/11/1986,Job Skills Lab,Folsom,2026-02-02,2026-05-11,10,N,,2028-06-28,,
+Cornelius Nakamura,SYN52119,8/22/1993,Job Skills Lab,Folsom,2026-02-02,2026-05-11,30,Y,10,2026-08-15,Parole,Moderate
+Jerome Fitzgerald,SYN52120,1/5/1965,Job Skills Lab,Folsom,2026-02-02,2026-05-11,31,Y,22,2027-09-29,,Moderate
+Yusuf Vasquez,SYN52121,6/16/1972,Job Skills Lab,Folsom,2026-02-02,2026-05-11,26,Y,16,2026-11-21,,Low
+Orlando Cavanaugh,SYN52122,11/27/1979,Job Skills Lab,Folsom,2026-02-02,2026-05-11,19,N,,1/20/2027,,Moderate
+Bernard Urquhart,SYN52123,4/10/1986,Job Skills Lab,Folsom,2026-02-02,2026-05-11,15,N,,2027-02-10,,Low
+Octavio Ostrander,SYN52124,9/21/1993,Job Skills Lab,Folsom,2026-02-02,2026-05-11,25,Y,26,6/24/2027,,
+Napoleon Rutherford,SYN52125,2/4/1965,Job Skills Lab,Folsom,2026-02-02,2026-05-11,26,Y,13,2026-06-30,Parole,Moderate
+Horacio Holloway,SYN52126,7/15/1972,Job Skills Lab,Folsom,2026-02-02,2026-05-11,29,Y,21,6/1/2028,,High
+Julian Delacroix,,12/26/1979,Job Skills Lab,Folsom,2026-02-02,2026-05-11,8,In progress,,1/24/2028,,Moderate
+Leopold Gutierrez,SYN52128,5/9/1986,Job Skills Lab,Folsom,2026-02-02,2026-05-11,26,Y,22,6/12/2027,,Moderate
+Fernando Whitaker,SYN52129,10/20/1993,Job Skills Lab,Folsom,2026-02-02,2026-05-11,24,Y,20,7/14/2026,PRCS,
+Armando Salazar,SYN52130,3/3/1965,Job Skills Lab,Folsom,2026-02-02,2026-05-11,27,Y,26,2027-12-30,,Low
+Alonzo Brantley,SYN52131,8/14/1972,Job Skills Lab,Folsom,2026-02-02,2026-05-11,28,Y,21,8/27/2026,Parole,Moderate
+Gustavo Mendoza,SYN52132,1/25/1979,Job Skills Lab,Folsom,2026-02-02,2026-05-11,21,N,,12/26/2026,,Moderate
+Wendell Blackwood,SYN52133,6/8/1986,Job Skills Lab,Folsom,2026-02-02,2026-05-11,30,Y,20,2/7/2028,,Low
+Salvador Jablonski,SYN52134,11/19/1993,Job Skills Lab,Folsom,2026-02-02,2026-05-11,11,N,,2026-08-17,PRCS,Moderate
+Kareem Lindqvist,SYN52135,4/2/1965,Job Skills Lab,Folsom,2026-02-02,2026-05-11,29,Y,38,2026-08-06,Parole,Low
+Basilio Iglesias,SYN52136,9/13/1972,Job Skills Lab,Folsom,2026-02-02,2026-05-11,24,Y,23,2026-06-12,Parole,Low
+Nelson Kimbrough,SYN52137,2/24/1979,Job Skills Lab,Folsom,2026-02-02,2026-05-11,30,Y,27,2027-10-27,,High
+Leonard Underhill,SYN52138,7/7/1986,Job Skills Lab,Folsom,2026-02-02,2026-05-11,27,Y,23,9/29/2027,,High
+Ulrich Valdivia,SYN52139,12/18/1993,Job Skills Lab,Folsom,2026-02-02,2026-05-11,24,Y,21,2026-12-19,,Moderate
+Kendrick Pemberton,SYN52140,5/1/1965,Job Skills Lab,Folsom,2026-02-02,2026-05-11,25,Y,24,7/1/2026,PRCS,Low
+Dominic Amundsen,SYN52141,10/12/1972,Job Skills Lab,Folsom,2026-02-02,2026-05-11,28,Y,37,2026-09-01,Parole,Moderate
+Alberto Grantham,SYN52142,3/23/1979,Job Skills Lab,Folsom,2026-02-02,2026-05-11,29,Y,33,2/18/2027,,Low
+Desmond Pellegrino,SYN52143,8/6/1986,Job Skills Lab,Folsom,2026-02-02,2026-05-11,27,Y,36,12/21/2027,,Low
+Florian Radcliffe,SYN52144,1/17/1993,Job Skills Lab,Folsom,2026-02-02,2026-05-11,29,Y,31,2027-04-27,,High
+Gregory Abernathy,SYN52145,6/28/1965,Job Skills Lab,Folsom,2026-02-02,2026-05-11,26,Y,36,2027-12-19,,Low
+Calvin Thibodeaux,SYN52146,11/11/1972,Job Skills Lab,Folsom,2026-02-02,2026-05-11,21,N,,2027-12-13,,Low

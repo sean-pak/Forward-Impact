@@ -15,7 +15,8 @@ export function findHeaderRow(grid: Grid): number {
   const width = Math.max(0, ...top.map((r) => r.filter((c) => !blank(c)).length));
   const i = top.findIndex((r) => {
     const cells = r.filter((c) => !blank(c));
-    return cells.length >= 2 && cells.length >= width * 0.6 && cells.every((c) => !/^[\d.,/-]+$/.test(c.trim()));
+    // Class dates are a valid header ("2026-01-12"); a row of plain numbers is data.
+    return cells.length >= 2 && cells.length >= width * 0.6 && cells.every((c) => !/^[\d.,/-]+$/.test(c.trim()) || parseDate(c.trim()) !== null);
   });
   return i === -1 ? 0 : i;
 }

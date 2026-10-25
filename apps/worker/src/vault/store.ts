@@ -1,6 +1,6 @@
 // The only file that talks to the VAULT binding (with index.ts re-exporting it).
 import { decryptField, importVaultKeys, type VaultKeys } from "./crypto";
-import { buildIdentityRow, identityParams, UPSERT_IDENTITY_SQL, type IdentityInput } from "./identity";
+import { buildIdentityRow, identityParams, UPSERT_IDENTITIES_JSON_SQL, UPSERT_IDENTITY_SQL, type IdentityInput } from "./identity";
 import type { PersonKeyBasis } from "./personKey";
 
 export type VaultEnv = {
@@ -36,6 +36,7 @@ type Row = {
 };
 
 const CHUNK = 50; // D1 allows 100 bound parameters per statement
+const BULK = 200; // identities per statement when many are written at once
 
 export class Vault {
   constructor(private db: D1Database, private keys: VaultKeys) {}
@@ -45,6 +46,19 @@ export class Vault {
     const row = await buildIdentityRow(this.keys, input);
     await this.db.prepare(UPSERT_IDENTITY_SQL).bind(...identityParams(row)).run();
     return { personKey: row.person_key, basis: row.person_key_basis };
+  }
+
+  /**
+   * Many people at once, for a spreadsheet. Returns keys in the order given. Duplicate people (same key) are
+   * written once. Ciphertext only leaves this method, and only one statement per 200 people reaches the database.
+   */
+  async upsertIdentities(inputs: IdentityInput[]): Promise<{ personKey: string; basis: PersonKeyBasis }[]> {
+    const rows = await Promise.all(inputs.map((i) => buildIdentityRow(this.keys, i)));
+    const unique = [...new Map(rows.map((r) => [r.person_key, r])).values()];
+    for (let i = 0; i < unique.length; i += BULK) {
+      await this.db.prepare(UPSERT_IDENTITIES_JSON_SQL).bind(JSON.stringify(unique.slice(i, i + BULK).map(identityParams))).run();
+    }
+    return rows.map((r) => ({ personKey: r.person_key, basis: r.person_key_basis }));
   }
 
   /**
@@ -122,4 +136,9 @@ export async function pingVault(env: Pick<VaultEnv, "VAULT">): Promise<boolean> 
   } catch {
     return false;
   }
+}
+
+/** For code outside vault/ that may need the vault later (a person-level file). Undefined when the keys are not configured. */
+export function vaultFactory(env: Partial<VaultEnv>): (() => Promise<Vault>) | undefined {
+  return env.VAULT && env.VAULT_HMAC_KEY && env.VAULT_ENC_KEY ? () => createVault(env as VaultEnv) : undefined;
 }

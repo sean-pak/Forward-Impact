@@ -40,6 +40,7 @@ const COUNT_LABEL: Record<string, string> = {
  */
 export function rank(c: Pick<Candidate, "kind" | "field_name" | "issue_type">): number {
   if (c.kind === "approx") return 3;
+  if (c.field_name === "duplicate_person") return 3;
   if (c.issue_type === "missing_required" && CORE.includes(c.field_name)) return 0;
   if (c.issue_type === "conflict" || c.issue_type === "out_of_range" || c.issue_type === "invalid_value") return 1;
   if (c.issue_type === "ambiguous_mapping") return 2;
@@ -90,4 +91,9 @@ export function pickQuestion(candidates: Candidate[]): Question | null {
 /** A short, plain "yes" is the confirmation. Anything longer goes to the classifier so "yes but the SQ count is 29" is not lost. */
 export function isPlainYes(text: string): boolean {
   return /^(yes|yes please|y|yep|yeah|yup|confirm|confirmed|correct|that is correct|that's correct|looks good|looks right|all good|approved|ok|okay|sounds good)[\s.!]*$/i.test(text.trim());
+}
+
+/** A short, plain "no". Used for yes/no questions where a longer answer is not understood. */
+export function isPlainNo(text: string): boolean {
+  return /^(no|nope|nah|n|not the same|they are different|different people|two different people)[\s.!]*$/i.test(text.trim());
 }

@@ -10,7 +10,8 @@
     "db:reset": "pnpm --filter @tpw/scripts run db:reset --",
     "seed:muse": "pnpm --filter @tpw/scripts run seed:muse --",
     "keys:generate": "pnpm --filter @tpw/scripts run keys:generate --",
-    "google:auth": "pnpm --filter @tpw/scripts run google:auth --"
+    "google:auth": "pnpm --filter @tpw/scripts run google:auth --",
+    "fixtures:individual": "pnpm --filter @tpw/scripts exec tsx ../apps/worker/tools/genIndividualFixtures.ts"
   },
   "devDependencies": {
     "typescript": "^7.0.2",

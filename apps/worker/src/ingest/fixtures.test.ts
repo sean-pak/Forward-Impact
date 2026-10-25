@@ -31,7 +31,7 @@ function fakeD1() {
 
 function written(calls: Call[]) {
   const cycles = calls.filter((c) => c.sql.includes("INSERT INTO program_cycles")).map((c) => {
-    const names = COLS.exec(c.sql)![1]!.split(",").map((s) => s.trim()).filter((n) => n !== "source_grain");
+    const names = COLS.exec(c.sql)![1]!.split(",").map((s) => s.trim());
     return Object.fromEntries(names.map((n, i) => [n, c.params[i]])) as Record<string, unknown>;
   });
   const issues = calls.filter((c) => c.sql.includes("INSERT INTO field_issues")).map((c) => ({

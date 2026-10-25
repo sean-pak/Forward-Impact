@@ -61,6 +61,8 @@ export type ReceiptInput = {
   /** Things still unknown, in plain words. They stay out of the totals until answered. */
   open: string[];
   scrambled: { names: number; cdcr: number };
+  /** What Sam did while reading a person-level file (see individualNoteLines). Counts only. */
+  notes?: string[];
   /** Private report page. Left out until that page exists. */
   reportUrl?: string;
   /** True when the CBO changed something and is confirming the updated version. */
@@ -83,6 +85,7 @@ export function confirmReceiptEmail(i: ReceiptInput): Body {
     ...(i.open.length ? [`Not provided yet (left out of totals until you tell me):\n${i.open.map((o) => `- ${o}`).join("\n")}`] : []),
     ...(i.expectedLeftOut ? ["I left out the expected numbers you mentioned, because only final counts are used. Send the count when the class ends."] : []),
     scrambledLine(i.scrambled.names, i.scrambled.cdcr),
+    ...(i.notes?.length ? [`While reading your file:\n${i.notes.map((n) => `- ${n}`).join("\n")}`] : []),
     ...(i.reportUrl ? [`Your private report: ${i.reportUrl}`] : []),
     "Nothing is counted until you confirm. Reply YES to confirm, or reply with what to fix.",
   ]);

@@ -6,7 +6,7 @@ const stored = (over: Partial<StoredCycle> = {}): StoredCycle => ({
   start_date: "2025-02-03", end_date: null, sessions_planned: null, course_hours_planned_per_participant: null,
   n_enrolled: 30, n_completed: 22, total_course_hours_delivered: null,
   n_enrolled_approx: true, n_completed_approx: false, total_course_hours_delivered_approx: false,
-  extra: { _completion_rule: "unstated" }, ...over,
+  source_grain: "aggregate", extra: { _completion_rule: "unstated" }, ...over,
 });
 const today = "2026-10-24";
 

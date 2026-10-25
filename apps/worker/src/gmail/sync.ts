@@ -1,7 +1,8 @@
 import PostalMime from "postal-mime";
 import { hasNumber, stripQuoted } from "@tpw/shared";
-import { ingest, type IngestInput, type IngestMeta } from "../ingest";
+import { ingest, type IngestInput, type IngestMeta, type VaultSource } from "../ingest";
 import { OpenRouterLlm, type Llm, type LlmEnv } from "../llm";
+import { vaultFactory, type VaultEnv } from "../vault";
 import { markReplied } from "../outreach/track";
 import { activeSubmissionForThread, handleReply, startConversation, type Inbound } from "../reply";
 import type { OrgRow } from "../form";
@@ -53,7 +54,7 @@ async function match(
  * Bodies and subjects of inbound mail are never stored and nothing here calls an LLM.
  */
 export async function syncGmail(
-  env: GmailEnv & LlmEnv & { DB: D1Database },
+  env: GmailEnv & LlmEnv & { DB: D1Database } & Partial<VaultEnv>,
   gmail = new Gmail(env),
   llm: Llm = new OpenRouterLlm(env),
 ): Promise<SyncResult> {
@@ -95,7 +96,7 @@ export async function syncGmail(
           const already = await env.DB.prepare("SELECT submission_id FROM messages WHERE message_id = ?").bind(id).first<{ submission_id: string | null }>();
           if (!already?.submission_id) await handleReply({ db: env.DB, gmail, llm }, waiting, inbound);
         } else {
-          const done = await ingestMessage(env.DB, llm, { id, orgId: m.orgId, from, occurredAt, parts: dataParts(parsed) });
+          const done = await ingestMessage(env.DB, llm, { id, orgId: m.orgId, from, occurredAt, parts: dataParts(parsed) }, vaultFactory(env));
           if (done === "retry") continue; // model unavailable: leave unlabeled, the next sync tries again
           result.ingested += done.made;
           await startConversations(env.DB, { db: env.DB, gmail, llm }, done.ids, inbound);
@@ -123,6 +124,7 @@ async function ingestMessage(
   db: D1Database,
   llm: Llm,
   m: { id: string; orgId: string; from: string; occurredAt: string; parts: Part[] },
+  vault?: VaultSource,
 ): Promise<{ ids: string[]; made: number } | "retry"> {
   const none = { ids: [], made: 0 };
   if (m.parts.length === 0) return none;
@@ -137,7 +139,7 @@ async function ingestMessage(
   const ids: string[] = [];
   try {
     for (const p of m.parts) {
-      const out = await ingest(db, llm, org, p.input, { channel: p.channel, senderEmail: m.from });
+      const out = await ingest(db, llm, org, p.input, { channel: p.channel, senderEmail: m.from }, vault);
       if (out.submission_id) ids.push(out.submission_id);
     }
   } catch (e) {

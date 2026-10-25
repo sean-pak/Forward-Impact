@@ -1,0 +1,49 @@
+{
+  "note": "Ground truth planted by the generator. Today for the test is 2026-10-25. People are counted once however many programs they are in.",
+  "rows": 150,
+  "cycles": [
+    {
+      "program": "Reentry Readiness",
+      "facility": "Folsom",
+      "code": "FSP",
+      "start": "2025-02-03",
+      "enrolled": 40,
+      "completed": 23,
+      "credits": 644
+    },
+    {
+      "program": "Reentry Readiness",
+      "facility": "Men's Colony",
+      "code": "CMC",
+      "start": "2025-03-10",
+      "enrolled": 38,
+      "completed": 25,
+      "credits": 687
+    },
+    {
+      "program": "Job Skills Lab",
+      "facility": "San Quentin",
+      "code": "SQ",
+      "start": "2025-09-08",
+      "enrolled": 36,
+      "completed": 27,
+      "credits": 708
+    },
+    {
+      "program": "Job Skills Lab",
+      "facility": "Folsom",
+      "code": "FSP",
+      "start": "2026-02-02",
+      "enrolled": 36,
+      "completed": 28,
+      "credits": 673
+    }
+  ],
+  "people": 147,
+  "people_with_no_cdcr": 7,
+  "people_with_cdcr": 140,
+  "people_released": 67,
+  "people_with_future_release": 80,
+  "people_released_before_program_start": 2,
+  "rows_with_blank_risk": 16
+}

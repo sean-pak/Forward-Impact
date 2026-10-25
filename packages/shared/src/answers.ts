@@ -3,6 +3,7 @@ import {
   cleanCycleRow, cycleKey, isBlocking, needsCompletedCount,
   type CleanCycle, type CycleFormRow, type CycleIssue, type RegistryField,
 } from "./formCycle";
+import { individualIssues, type IndividualExtra } from "./individual";
 
 /** A cycle as stored, before cleaning. Counts and flags are exactly what the database holds. */
 export type StoredCycle = {
@@ -23,6 +24,8 @@ export type StoredCycle = {
   n_enrolled_approx: boolean;
   n_completed_approx: boolean;
   total_course_hours_delivered_approx: boolean;
+  /** `derived_from_individuals` cycles get their counts from enrollments, so Sam never asks for a typed total. */
+  source_grain: "aggregate" | "derived_from_individuals";
   /** program_cycles.extra: registry answers plus the underscore keys Sam keeps (`_completion_rule`, `_approx_asked`). */
   extra: Record<string, unknown>;
 };
@@ -57,7 +60,7 @@ export function toFormRow(c: StoredCycle): CycleFormRow {
 }
 
 const TEXT_FIELDS = [
-  "yard", "start_date", "end_date", "sessions_planned", "course_hours_planned_per_participant",
+  "program_name", "yard", "start_date", "end_date", "sessions_planned", "course_hours_planned_per_participant",
   "n_enrolled", "n_completed", "total_course_hours_delivered", "completion_rule",
 ] as const;
 export const APPROX_FIELDS = ["n_enrolled", "n_completed", "total_course_hours_delivered"] as const;
@@ -102,7 +105,13 @@ export function deriveCycles(orgId: string, stored: StoredCycle[], registry: Reg
   const seen = new Set<string>();
   return stored.map((st) => {
     const { cycle, issues } = cleanCycleRow(overrides.get(st.cycle_id) ?? toFormRow(st), registry);
-    if (needsCompletedCount(cycle, today)) issues.push(missingCompletedIssue(cycle));
+    if (st.source_grain === "aggregate" && needsCompletedCount(cycle, today)) issues.push(missingCompletedIssue(cycle));
+    if (st.extra._individual) {
+      for (const i of individualIssues(st.extra as IndividualExtra, cycle)) {
+        // The cleaner may already have asked for the rule (when completed is known); never ask twice.
+        if (!issues.some((x) => x.field_name === i.field_name)) issues.push(i);
+      }
+    }
     const key = cycleKey(orgId, cycle.program_id, cycle.facility_code, cycle.start_date);
     if (seen.has(key)) {
       issues.push({

@@ -7,7 +7,7 @@ import { FormBodySchema, adminSubmission, confirmSubmission, getSubmission, list
 import { ingest, type IngestInput } from "./ingest";
 import { OpenRouterLlm } from "./llm";
 import { loadDashboard } from "./summary";
-import { createVault, pingVault } from "./vault";
+import { createVault, pingVault, vaultFactory } from "./vault";
 
 export type Env = {
   DB: D1Database;
@@ -147,7 +147,7 @@ app.post("/api/ingest/upload", async (c) => {
     return c.json({ error: "Choose a file or paste the text." }, 400);
   }
   try {
-    const out = await ingest(c.env.DB, new OpenRouterLlm(c.env), org, input, { channel: "manual", senderEmail: org.primary_contact_email });
+    const out = await ingest(c.env.DB, new OpenRouterLlm(c.env), org, input, { channel: "manual", senderEmail: org.primary_contact_email }, vaultFactory(c.env));
     return c.json(out);
   } catch (e) {
     return c.json({ error: e instanceof Error ? e.message : "ingest failed" }, 500);

@@ -15,3 +15,7 @@ export * from "./table";
 export * from "./questions";
 export * from "./answers";
 export * from "./replies";
+export * from "./completion";
+export * from "./attendance";
+export * from "./people";
+export * from "./individual";

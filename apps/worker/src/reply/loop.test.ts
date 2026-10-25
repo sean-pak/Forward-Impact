@@ -22,7 +22,7 @@ class Stmt {
 
 function makeDb() {
   const raw = new sqlite!.DatabaseSync(":memory:");
-  for (const f of ["0001_init.sql", "0002_open_question.sql"]) raw.exec(readFileSync(join(ROOT, "apps/worker/migrations/analytics", f), "utf8"));
+  for (const f of ["0001_init.sql", "0002_open_question.sql", "0003_individual_ingest.sql"]) raw.exec(readFileSync(join(ROOT, "apps/worker/migrations/analytics", f), "utf8"));
   raw.exec(`INSERT INTO orgs (org_id, org_name, data_persona, primary_contact_email, form_token, is_synthetic) VALUES ('o1','Dana Arts',2,'dana@real.test','ftok',0);
             INSERT INTO contacts (contact_id, org_id, name, email, is_primary, is_synthetic) VALUES ('k1','o1','Dana','dana@real.test',1,0);`);
   const db = {
