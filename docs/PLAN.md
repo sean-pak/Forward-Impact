@@ -125,7 +125,7 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 
 ---
 
-## [ ] Phase 6: Mailing list import + asks
+## [x] Phase 6: Mailing list import + asks
 
 **Goal:** TPW sends one ask per CBO from its list.
 
@@ -136,7 +136,7 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 - `/admin/outreach`: sent, opened (approx), replied, time to reply, response rate.
 
 **Done when**
-- [ ] Import a 3-org CSV, send asks, the CBO account receives one; replying marks it replied in outreach.
+- [x] Import a 3-org CSV, send asks, the CBO account receives one; replying marks it replied in outreach.
 
 ---
 
