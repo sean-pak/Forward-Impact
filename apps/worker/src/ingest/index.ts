@@ -3,7 +3,8 @@ import {
   ColumnMappingSchema, ExtractionResultSchema, extractionToRows, findHeaderRow, isIndividualLevel, profileColumns,
   rowsFromMapping, scrubIdentifiers, type CycleIssue,
 } from "@tpw/shared";
-import { writeSubmission, type OrgRow } from "../form";
+import { recordHeaderSightings } from "../fields";
+import { registryFields, writeSubmission, type OrgRow } from "../form";
 import type { Llm } from "../llm";
 import { TABLE_SYSTEM, TEXT_SYSTEM } from "./prompts";
 import { ingestIndividual, type IdentityStore } from "../individual/ingest";
@@ -111,7 +112,8 @@ async function ingestTable(
     const id = await recordNeedsStaff(db, org, meta, mapping.persona, true);
     return { submission_id: id, status: "needs_staff", cycles: 0, note: "The file has too many rows for the aggregate path." };
   }
-  const { rows } = rowsFromMapping(grid, headerRow, mapping);
+  const registry = await registryFields(db);
+  const { rows, unmatchedHeaders } = rowsFromMapping(grid, headerRow, mapping, registry);
   if (rows.length === 0) return { submission_id: null, status: "no_data", cycles: 0, note: "The file has no data rows." };
   const w = await writeSubmission(db, org, rows, {
     channel: meta.channel, parserVersion: PARSER_VERSION, llmMappingUsed: true, detectedPersona: mapping.persona,
@@ -119,6 +121,8 @@ async function ingestTable(
   });
   if (!w.ok) throw new Error(w.error);
   await noteDetectedPersona(db, org, mapping.persona);
+  // Recurring unused headers become pending field suggestions. Headers only; a failure here never loses the submission.
+  await recordHeaderSightings(db, unmatchedHeaders).catch(() => console.error("field suggestions failed"));
   return { submission_id: w.submission_id, status: w.blocked ? "needs_info" : "awaiting_confirmation", cycles: rows.length };
 }
 

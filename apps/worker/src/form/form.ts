@@ -80,10 +80,10 @@ async function orgByToken(db: D1Database, token: string): Promise<OrgRow | null>
 
 export async function registryFields(db: D1Database): Promise<RegistryField[]> {
   const { results } = await db
-    .prepare("SELECT field_key, label, type, options, required FROM fields WHERE status = 'active' AND is_core = 0 ORDER BY sort_order, field_key")
-    .all<{ field_key: string; label: string; type: RegistryField["type"]; options: string | null; required: number }>();
+    .prepare("SELECT field_key, label, type, options, required, ask_template FROM fields WHERE status = 'active' AND is_core = 0 ORDER BY sort_order, field_key")
+    .all<{ field_key: string; label: string; type: RegistryField["type"]; options: string | null; required: number; ask_template: string }>();
   return results.map((r) => ({
-    field_key: r.field_key, label: r.label, type: r.type, required: r.required === 1,
+    field_key: r.field_key, label: r.label, type: r.type, required: r.required === 1, ask_template: r.ask_template,
     options: r.options ? (JSON.parse(r.options) as string[]) : null,
   }));
 }

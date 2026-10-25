@@ -1,3 +1,5 @@
+import { FACILITIES } from "./facilities";
+import { registryQuestion } from "./fieldRegistry";
 import { normalizeFacility } from "./normalizeFacility";
 
 /** Core fields the dashboard cannot count without. An issue on one of these blocks confirmation. */
@@ -38,6 +40,8 @@ export type RegistryField = {
   type: "text" | "integer" | "number" | "boolean" | "date" | "enum";
   options: string[] | null;
   required: boolean;
+  /** Staff-written question with {program} and {facility}. Missing on older rows; a default is built from the label. */
+  ask_template?: string;
 };
 
 export type CleanCycle = {
@@ -164,7 +168,10 @@ export function cleanCycleRow(r: CycleFormRow, registry: RegistryField[]): { cyc
   for (const f of registry) {
     const raw = t(r.extra[f.field_key]);
     if (!raw) {
-      if (f.required) flag(f.field_key, "missing_required", "", `${f.label} is needed for ${name}.`);
+      if (f.required) {
+        const facility = FACILITIES.find((x) => x.facility_code === facility_code)?.facility_name ?? null;
+        flag(f.field_key, "missing_required", "", f.ask_template ? registryQuestion(f, { program: name, facility }) : `${f.label} is needed for ${name}.`);
+      }
       continue;
     }
     const bad = () => flag(f.field_key, "invalid_value", raw, `"${raw}" is not a valid answer for ${f.label} in ${name}.`);

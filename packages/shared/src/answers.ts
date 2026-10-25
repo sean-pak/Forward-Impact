@@ -3,6 +3,7 @@ import {
   cleanCycleRow, cycleKey, isBlocking, needsCompletedCount,
   type CleanCycle, type CycleFormRow, type CycleIssue, type RegistryField,
 } from "./formCycle";
+import { registryQuestion } from "./fieldRegistry";
 import { individualIssues, type IndividualExtra } from "./individual";
 
 /** A cycle as stored, before cleaning. Counts and flags are exactly what the database holds. */
@@ -106,6 +107,15 @@ export function deriveCycles(orgId: string, stored: StoredCycle[], registry: Reg
   return stored.map((st) => {
     const { cycle, issues } = cleanCycleRow(overrides.get(st.cycle_id) ?? toFormRow(st), registry);
     if (st.source_grain === "aggregate" && needsCompletedCount(cycle, today)) issues.push(missingCompletedIssue(cycle));
+    // An active optional field left blank is asked about last (rank 5) and never blocks. Email path only: the form does not nag.
+    const given = (overrides.get(st.cycle_id) ?? toFormRow(st)).extra;
+    for (const f of registry) {
+      if (f.required || (given[f.field_key] ?? "").trim() || issues.some((i) => i.field_name === f.field_key)) continue;
+      issues.push({
+        field_name: f.field_key, issue_type: "missing_required", raw_value: null,
+        message: registryQuestion(f, { program: cycle.program_name, facility: facilityName(cycle.facility_code) }),
+      });
+    }
     if (st.extra._individual) {
       for (const i of individualIssues(st.extra as IndividualExtra, cycle)) {
         // The cleaner may already have asked for the rule (when completed is known); never ask twice.

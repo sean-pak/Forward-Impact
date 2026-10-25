@@ -125,10 +125,11 @@ function candidates(derived: DerivedCycle[], stored: StoredCycle[]): Candidate[]
   return out;
 }
 
-function openLabel(c: Candidate): string {
+function openLabel(c: Candidate, registry: RegistryField[]): string {
   // The rule belongs to the program, so it is listed once per program, not per cycle.
   if (c.field_name === "completion_rule") return `What counts as completing ${c.program_name}`;
-  const label = FIELD_LABEL[c.field_name] ?? c.field_name.replace(/_/g, " ");
+  const registryLabel = registry.find((f) => f.field_key === c.field_name)?.label.replace(/\?+$/, "").trim();
+  const label = FIELD_LABEL[c.field_name] ?? registryLabel ?? c.field_name.replace(/_/g, " ");
   return `${label} for ${c.program_name}${c.facility_name ? ` at ${c.facility_name}` : ""}${c.start_date ? `, started ${c.start_date}` : ""}`;
 }
 
@@ -191,7 +192,7 @@ async function turn(deps: Deps, st: State, inbound: Inbound, change: Change = {}
         n_enrolled: d.cycle.n_enrolled, n_enrolled_approx: d.cycle.n_enrolled_approx,
         n_completed: d.cycle.n_completed, n_completed_approx: d.cycle.n_completed_approx, completion_rule: d.cycle.completion_rule,
       })),
-      open: [...new Set(cands.filter((c) => c.kind === "issue").map(openLabel))],
+      open: [...new Set(cands.filter((c) => c.kind === "issue").map((c) => openLabel(c, st.registry)))],
       scrambled: { names: st.sub.scrambled_names, cdcr: st.sub.scrambled_cdcr },
       notes: individualNoteLines([...st.stored.map((c) => (c.extra._notes ?? {}) as Record<string, number>), dynamicNotes]),
       updated: change.updated,
@@ -377,6 +378,11 @@ export async function handleReply(deps: Deps, submissionId: string, inbound: Inb
     isPlainYes(text) && oq.kind === "confirm" ? { ...none, intent: "confirm" }
     : isPlainYes(text) && suggested ? { ...none, intent: "answer", field_key: "facility_code", value: suggested }
     : null;
+  // A yes/no field in the registry: a plain YES or NO is the answer, no model needed.
+  const yesNoField = oq.kind === "issue" ? st.registry.find((f) => f.field_key === oq.field_name && f.type === "boolean") : undefined;
+  if (!found && yesNoField && (isPlainYes(text) || isPlainNo(text))) {
+    found = { ...none, intent: "answer", field_key: yesNoField.field_key, value: isPlainYes(text) ? "yes" : "no" };
+  }
   if (!found && text) {
     try {
       found = await deps.llm.json({

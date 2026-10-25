@@ -1,5 +1,6 @@
-import type { CycleFormRow } from "./formCycle";
+import type { CycleFormRow, RegistryField } from "./formCycle";
 import { parseIsoDate } from "./formCycle";
+import { matchRegistryHeader, suggestableHeader } from "./fieldRegistry";
 import { CANONICAL_TARGETS, type ColumnMapping } from "./schemas";
 
 export type Grid = string[][];
@@ -95,12 +96,31 @@ export function readCount(raw: string): { value: string; approx: boolean } {
   return m ? { value: m[1]!, approx: true } : { value: t.replace(/^(\d),(\d{3})$/, "$1$2"), approx: false };
 }
 
-export type TableRows = { rows: CycleFormRow[]; rowNumbers: number[] };
+export type TableRows = {
+  rows: CycleFormRow[];
+  rowNumbers: number[];
+  /** Headers no mapping used and no active field names, as label and key. Headers only, never values; identifier-like ones are left out. */
+  unmatchedHeaders: { key: string; label: string }[];
+};
 
 /** Persona 1: one row per cycle. Rows that are entirely blank are skipped. */
-export function rowsFromMapping(grid: Grid, headerRow: number, mapping: ColumnMapping): TableRows {
+export function rowsFromMapping(grid: Grid, headerRow: number, mapping: ColumnMapping, registry: Pick<RegistryField, "field_key" | "label">[] = []): TableRows {
   const col = new Map<string, number>();
   for (const c of mapping.columns) if ((CANONICAL_TARGETS as readonly string[]).includes(c.target)) col.set(c.target, c.index);
+  // A column the model could not place (target "ignore", or not listed) that names an active field fills that field's answer.
+  const used = new Set(mapping.columns.filter((c) => c.target !== "ignore").map((c) => c.index));
+  const extraCols = new Map<string, number>();
+  const unmatchedHeaders: TableRows["unmatchedHeaders"] = [];
+  (grid[headerRow] ?? []).forEach((h, index) => {
+    if (used.has(index) || blank(h)) return;
+    const key = matchRegistryHeader(h, registry);
+    if (key) {
+      if (!extraCols.has(key)) extraCols.set(key, index);
+      return;
+    }
+    const s = suggestableHeader(h);
+    if (s && !unmatchedHeaders.some((u) => u.key === s.key)) unmatchedHeaders.push(s);
+  });
   const rows: CycleFormRow[] = [];
   const rowNumbers: number[] = [];
   grid.slice(headerRow + 1).forEach((r, i) => {
@@ -120,11 +140,12 @@ export function rowsFromMapping(grid: Grid, headerRow: number, mapping: ColumnMa
       course_hours_planned_per_participant: cell("course_hours_planned_per_participant"),
       n_enrolled: enrolled.value, n_completed: completed.value, total_course_hours_delivered: delivered.value,
       n_enrolled_approx: enrolled.approx, n_completed_approx: completed.approx, total_course_hours_delivered_approx: delivered.approx,
-      completion_rule: cell("completion_rule"), extra: {},
+      completion_rule: cell("completion_rule"),
+      extra: Object.fromEntries([...extraCols].map(([k, i]) => [k, (r[i] ?? "").trim()]).filter(([, v]) => v)),
     });
     rowNumbers.push(headerRow + 2 + i);
   });
-  return { rows, rowNumbers };
+  return { rows, rowNumbers, unmatchedHeaders };
 }
 
 /** True when the mapping reads identifiers or per-session columns: not an aggregate table (phase 10). */

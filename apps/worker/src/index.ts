@@ -5,6 +5,7 @@ import { makeHealth, searchMock } from "@tpw/shared";
 import { sendTest, syncGmail } from "./gmail";
 import { PIXEL_GIF, importContacts, listOrgs, listOutreach, recordOpen, sendAsks, setPrimary } from "./outreach";
 import { FormBodySchema, adminSubmission, confirmSubmission, getSubmission, listSubmissions, loadForm, submitForm, type OrgRow } from "./form";
+import { addField, approveField, dismissField, listFields, reactivateField, retireField } from "./fields";
 import { ingest, type IngestInput } from "./ingest";
 import { OpenRouterLlm } from "./llm";
 import { MAX_PER_CALL, listLookups, pickCohort, revealPerson, runChecks, verifyCheck, mockData, type Deps as LookupDeps } from "./locator";
@@ -242,6 +243,26 @@ app.post("/api/lookups/reveal", async (c) => {
   } catch (e) {
     return c.json({ error: e instanceof Error ? e.message : "vault unavailable" }, 500);
   }
+});
+
+// Field registry (phase 14). Active fields are asked by email and shown on the form; retiring stops both.
+app.get("/api/fields", async (c) => c.json({ fields: await listFields(c.env.DB) }));
+app.post("/api/fields", async (c) => {
+  const r = await addField(c.env.DB, await c.req.json().catch(() => null));
+  return r.ok ? c.json(r) : c.json({ error: r.error }, r.status);
+});
+app.post("/api/fields/:key/:action", async (c) => {
+  const db = c.env.DB;
+  const key = c.req.param("key");
+  const body = z.object({ type: z.string().optional(), options: z.array(z.string()).optional() }).safeParse(await c.req.json().catch(() => ({})));
+  const r =
+    c.req.param("action") === "retire" ? await retireField(db, key)
+    : c.req.param("action") === "reactivate" ? await reactivateField(db, key)
+    : c.req.param("action") === "approve" ? await approveField(db, key, body.success ? body.data : {})
+    : c.req.param("action") === "dismiss" ? await dismissField(db, key)
+    : null;
+  if (!r) return c.json({ error: "unknown action" }, 404);
+  return r.ok ? c.json(r) : c.json({ error: r.error }, r.status);
 });
 
 export default {
