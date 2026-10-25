@@ -3,6 +3,7 @@ import { hasNumber, stripQuoted } from "@tpw/shared";
 import { ingest, type IngestInput, type IngestMeta } from "../ingest";
 import { OpenRouterLlm, type Llm, type LlmEnv } from "../llm";
 import { markReplied } from "../outreach/track";
+import { activeSubmissionForThread, handleReply, startConversation, type Inbound } from "../reply";
 import type { OrgRow } from "../form";
 import { Gmail, LABEL_IGNORED, LABEL_PROCESSED, type GmailEnv } from "./client";
 
@@ -83,9 +84,27 @@ export async function syncGmail(
       .bind(id, msg.threadId, m.orgId, from, gmail.mailbox, occurredAt)
       .run();
     if (m.orgId) {
-      const done = await ingestMessage(env.DB, llm, { id, orgId: m.orgId, from, occurredAt, parts: dataParts(parsed) });
-      if (done === "retry") continue; // model unavailable: leave unlabeled, the next sync tries again
-      result.ingested += done;
+      const inbound: Inbound = {
+        gmailId: id, threadId: msg.threadId, from, occurredAt, subject: parsed.subject ?? "", text: parsed.text ?? "",
+        rfcMessageId: parsed.messageId ?? null, references: parsed.references ?? null,
+      };
+      try {
+        const waiting = await activeSubmissionForThread(env.DB, msg.threadId);
+        if (waiting) {
+          // A reply to Sam's question or receipt (PRD 7.5): classify, apply, then the next question or the receipt.
+          const already = await env.DB.prepare("SELECT submission_id FROM messages WHERE message_id = ?").bind(id).first<{ submission_id: string | null }>();
+          if (!already?.submission_id) await handleReply({ db: env.DB, gmail, llm }, waiting, inbound);
+        } else {
+          const done = await ingestMessage(env.DB, llm, { id, orgId: m.orgId, from, occurredAt, parts: dataParts(parsed) });
+          if (done === "retry") continue; // model unavailable: leave unlabeled, the next sync tries again
+          result.ingested += done.made;
+          await startConversations(env.DB, { db: env.DB, gmail, llm }, done.ids, inbound);
+        }
+      } catch (e) {
+        // Model or Gmail trouble: leave the message unlabeled so the next sync tries it again.
+        console.error("reply handling failed:", e instanceof Error ? e.message.slice(0, 120) : "unknown");
+        continue;
+      }
     }
     await gmail.label(id, [LABEL_PROCESSED], ["INBOX"]);
     if (inserted.meta.changes > 0) {
@@ -104,24 +123,22 @@ async function ingestMessage(
   db: D1Database,
   llm: Llm,
   m: { id: string; orgId: string; from: string; occurredAt: string; parts: Part[] },
-): Promise<number | "retry"> {
-  if (m.parts.length === 0) return 0;
+): Promise<{ ids: string[]; made: number } | "retry"> {
+  const none = { ids: [], made: 0 };
+  if (m.parts.length === 0) return none;
   const already = await db.prepare("SELECT submission_id FROM messages WHERE message_id = ?").bind(m.id).first<{ submission_id: string | null }>();
-  if (already?.submission_id) return 0;
+  // Already ingested on an earlier pass; the conversation may still need to start (its email can have failed).
+  if (already?.submission_id) return { ids: [already.submission_id], made: 0 };
   const org = await db
     .prepare("SELECT org_id, org_name, primary_contact_email, is_synthetic FROM orgs WHERE org_id = ?")
     .bind(m.orgId)
     .first<OrgRow>();
-  if (!org) return 0;
-  let first: string | null = null;
-  let made = 0;
+  if (!org) return none;
+  const ids: string[] = [];
   try {
     for (const p of m.parts) {
       const out = await ingest(db, llm, org, p.input, { channel: p.channel, senderEmail: m.from });
-      if (out.submission_id) {
-        first ??= out.submission_id;
-        made++;
-      }
+      if (out.submission_id) ids.push(out.submission_id);
     }
   } catch (e) {
     console.error("ingest failed:", e instanceof Error ? e.message.slice(0, 120) : "unknown");
@@ -133,10 +150,21 @@ async function ingestMessage(
       )
       .bind(`sub_${crypto.randomUUID()}`, org.org_id, m.parts[0]!.channel, new Date().toISOString(), m.from, org.is_synthetic)
       .run();
-    return 1;
+    return { ids: [], made: 1 };
   }
-  if (first) await db.prepare("UPDATE messages SET submission_id = ? WHERE message_id = ?").bind(first, m.id).run();
-  return made;
+  if (ids[0]) await db.prepare("UPDATE messages SET submission_id = ? WHERE message_id = ?").bind(ids[0], m.id).run();
+  return { ids, made: ids.length };
+}
+
+/**
+ * One email thread carries one conversation, so the first submission gets Sam's questions. Any others from the
+ * same message go to staff rather than interleaving questions in one thread.
+ */
+async function startConversations(db: D1Database, deps: Parameters<typeof startConversation>[0], ids: string[], inbound: Inbound) {
+  const [first, ...rest] = ids;
+  if (!first) return;
+  await startConversation(deps, first, inbound);
+  for (const id of rest) await db.prepare("UPDATE submissions SET status = 'needs_staff' WHERE submission_id = ? AND status <> 'confirmed'").bind(id).run();
 }
 
 /** Sends a test email and logs it as outbound so replies in its thread match. */

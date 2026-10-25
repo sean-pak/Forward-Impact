@@ -1,0 +1,352 @@
+import {
+  APPROX_FIELDS, FACILITIES, ReplyClassificationSchema, clarifyEmail, confirmReceiptEmail, cycleKey, deriveCycles, escalatedEmail,
+  facilityName, isAnswerable, isPlainYes, isSyntheticEmail, numberAppearsIn, overlayAnswer, pickQuestion, replySubject, scrubIdentifiers,
+  stripQuoted, thanksEmail, toFormRow, type Candidate, type CycleFormRow, type ReplyClassification, type DerivedCycle, type Question, type RegistryField, type StoredCycle,
+} from "@tpw/shared";
+import { confirmById, registryFields } from "../form";
+import type { Gmail } from "../gmail";
+import type { Llm } from "../llm";
+import { REPLY_SYSTEM } from "./prompts";
+
+/** Clarification emails per submission (PRD 7.7). After this, blocking problems go to staff. */
+export const MAX_ROUNDS = 2;
+const GIVE_UP_AFTER_MS = 60 * 60 * 1000;
+const COUNT_FIELDS = ["n_enrolled", "n_completed", "total_course_hours_delivered", "sessions_planned"];
+
+export type Inbound = {
+  gmailId: string;
+  threadId: string;
+  from: string;
+  /** Used only to build "Re: ..." for the reply; never stored. */
+  subject: string;
+  text: string;
+  rfcMessageId: string | null;
+  references: string | null;
+  occurredAt: string;
+};
+
+export type Deps = { db: D1Database; gmail: Gmail; llm: Llm };
+
+export type OpenQuestion = { kind: Question["kind"] | "confirm"; field_name: string; cycle_ids: string[]; text: string };
+
+type SubRow = { submission_id: string; org_id: string; org_name: string; status: string; followup_rounds: number; open_question: string | null; is_synthetic: number };
+type State = { sub: SubRow; oq: OpenQuestion | null; stored: StoredCycle[]; registry: RegistryField[] };
+
+export type Outcome = { action: "ask" | "receipt" | "escalate" | "confirmed" | "ignored"; question?: string };
+
+/** The emailed submission in this thread that is waiting on a reply, if any. */
+export async function activeSubmissionForThread(db: D1Database, threadId: string): Promise<string | null> {
+  const row = await db
+    .prepare(
+      `SELECT submission_id FROM submissions
+       WHERE open_question IS NOT NULL AND status IN ('needs_info','awaiting_confirmation')
+         AND submission_id IN (SELECT submission_id FROM messages WHERE gmail_thread_id = ? AND submission_id IS NOT NULL)
+       ORDER BY received_at DESC LIMIT 1`,
+    )
+    .bind(threadId)
+    .first<{ submission_id: string }>();
+  return row?.submission_id ?? null;
+}
+
+async function loadState(db: D1Database, submissionId: string): Promise<State | null> {
+  const sub = await db
+    .prepare(
+      `SELECT s.submission_id, s.org_id, o.org_name, s.status, s.followup_rounds, s.open_question, s.is_synthetic
+       FROM submissions s JOIN orgs o ON o.org_id = s.org_id WHERE s.submission_id = ?`,
+    )
+    .bind(submissionId)
+    .first<SubRow>();
+  if (!sub) return null;
+  const [cycles, raws, registry] = await Promise.all([
+    db.prepare(
+      `SELECT c.cycle_id, c.program_id, p.program_name, c.facility_code, c.yard, c.start_date, c.end_date, c.sessions_planned,
+              c.course_hours_planned_per_participant, c.n_enrolled, c.n_completed, c.total_course_hours_delivered,
+              c.n_enrolled_approx, c.n_completed_approx, c.total_course_hours_delivered_approx, c.extra
+       FROM program_cycles c JOIN programs p ON p.program_id = c.program_id
+       WHERE c.submission_id = ? ORDER BY c.rowid`,
+    ).bind(submissionId).all<Record<string, unknown> & { extra: string }>(),
+    db.prepare("SELECT row_ref, raw_value FROM field_issues WHERE submission_id = ? AND resolved = 0 AND field_name = 'facility_code'")
+      .bind(submissionId).all<{ row_ref: string; raw_value: string | null }>(),
+    registryFields(db),
+  ]);
+  const rawFacility = new Map(raws.results.map((r) => [r.row_ref, r.raw_value]));
+  const stored = cycles.results.map((r): StoredCycle => ({
+    cycle_id: r.cycle_id as string, program_id: r.program_id as string, program_name: r.program_name as string,
+    facility_code: (r.facility_code as string | null) ?? null, facility_raw: rawFacility.get(r.cycle_id as string) ?? null,
+    yard: (r.yard as string | null) ?? null, start_date: (r.start_date as string | null) ?? null, end_date: (r.end_date as string | null) ?? null,
+    sessions_planned: (r.sessions_planned as number | null) ?? null,
+    course_hours_planned_per_participant: (r.course_hours_planned_per_participant as number | null) ?? null,
+    n_enrolled: (r.n_enrolled as number | null) ?? null, n_completed: (r.n_completed as number | null) ?? null,
+    total_course_hours_delivered: (r.total_course_hours_delivered as number | null) ?? null,
+    n_enrolled_approx: r.n_enrolled_approx === 1, n_completed_approx: r.n_completed_approx === 1,
+    total_course_hours_delivered_approx: r.total_course_hours_delivered_approx === 1,
+    extra: JSON.parse(r.extra || "{}") as Record<string, unknown>,
+  }));
+  return { sub, oq: sub.open_question ? (JSON.parse(sub.open_question) as OpenQuestion) : null, stored, registry };
+}
+
+const askedApprox = (extra: Record<string, unknown>): string[] => (Array.isArray(extra._approx_asked) ? (extra._approx_asked as string[]) : []);
+
+const FIELD_LABEL: Record<string, string> = {
+  n_enrolled: "People enrolled", n_completed: "People completed", completion_rule: "What counts as completing",
+  start_date: "Start date", end_date: "End date", facility_code: "Prison",
+};
+
+function candidates(derived: DerivedCycle[], stored: StoredCycle[]): Candidate[] {
+  const byId = new Map(stored.map((c) => [c.cycle_id, c]));
+  const out: Candidate[] = [];
+  for (const d of derived) {
+    const base = { cycle_id: d.cycle_id, program_id: d.cycle.program_id, program_name: d.cycle.program_name, facility_name: facilityName(d.cycle.facility_code), start_date: d.cycle.start_date };
+    for (const i of d.issues) out.push({ ...base, kind: "issue", field_name: i.field_name, issue_type: i.issue_type, message: i.message });
+    const asked = askedApprox(byId.get(d.cycle_id)!.extra);
+    const flags: Record<string, boolean> = {
+      n_enrolled: d.cycle.n_enrolled_approx, n_completed: d.cycle.n_completed_approx, total_course_hours_delivered: d.cycle.total_course_hours_delivered_approx,
+    };
+    for (const f of APPROX_FIELDS) {
+      const n = d.cycle[f];
+      if (flags[f] && n !== null && !asked.includes(f)) out.push({ ...base, kind: "approx", field_name: f, issue_type: null, message: String(n) });
+    }
+  }
+  return out;
+}
+
+function openLabel(c: Candidate): string {
+  const label = FIELD_LABEL[c.field_name] ?? c.field_name.replace(/_/g, " ");
+  return `${label} for ${c.program_name}${c.facility_name ? ` at ${c.facility_name}` : ""}${c.start_date ? `, started ${c.start_date}` : ""}`;
+}
+
+type Change = { overrides?: Map<string, CycleFormRow>; retry?: boolean; updated?: boolean };
+
+/**
+ * One turn of the conversation. Re-derives every cycle from what is stored (plus this reply's answer), then picks the
+ * single next step: one question, the receipt, or staff. Sends the email first and writes after it, so a failed send
+ * leaves nothing half-applied and the next sync tries the same message again.
+ */
+async function turn(deps: Deps, st: State, inbound: Inbound, change: Change = {}): Promise<Outcome> {
+  const { db } = deps;
+  const today = new Date().toISOString().slice(0, 10);
+  const derived = deriveCycles(st.sub.org_id, st.stored, st.registry, today, change.overrides);
+  const cands = candidates(derived, st.stored);
+  const blocked = derived.some((d) => d.blocked);
+  const q = pickQuestion(cands);
+  const rounds = st.sub.followup_rounds;
+  const action: Outcome["action"] = q && rounds < MAX_ROUNDS ? "ask" : blocked ? "escalate" : "receipt";
+
+  const repeated = !!(q && st.oq && st.oq.kind === q.kind && st.oq.field_name === q.field_name && q.cycle_ids.some((id) => st.oq!.cycle_ids.includes(id)));
+  let kind: "clarify" | "confirm_receipt" | "escalated";
+  let body;
+  let openQuestion: OpenQuestion | null;
+  if (action === "ask") {
+    kind = "clarify";
+    body = clarifyEmail({ question: q!.text, retry: change.retry || repeated });
+    openQuestion = { kind: q!.kind, field_name: q!.field_name, cycle_ids: q!.cycle_ids, text: q!.text };
+  } else if (action === "escalate") {
+    kind = "escalated";
+    body = escalatedEmail();
+    openQuestion = null;
+  } else {
+    kind = "confirm_receipt";
+    body = confirmReceiptEmail({
+      orgName: st.sub.org_name,
+      cycles: derived.map((d) => ({
+        program_name: d.cycle.program_name, facility_name: facilityName(d.cycle.facility_code), start_date: d.cycle.start_date,
+        n_enrolled: d.cycle.n_enrolled, n_enrolled_approx: d.cycle.n_enrolled_approx,
+        n_completed: d.cycle.n_completed, n_completed_approx: d.cycle.n_completed_approx, completion_rule: d.cycle.completion_rule,
+      })),
+      open: cands.filter((c) => c.kind === "issue").map(openLabel),
+      scrambled: { names: 0, cdcr: 0 },
+      updated: change.updated,
+    });
+    openQuestion = { kind: "confirm", field_name: "", cycle_ids: derived.map((d) => d.cycle_id), text: "Reply YES to confirm" };
+  }
+
+  let sent: { id: string; threadId: string } | null = null;
+  if (!isSyntheticEmail(inbound.from)) {
+    sent = await deps.gmail.send({
+      to: inbound.from, subject: replySubject(inbound.subject), text: body.text, html: body.html, threadId: inbound.threadId,
+      inReplyTo: inbound.rfcMessageId ?? undefined,
+      references: [inbound.references, inbound.rfcMessageId].filter(Boolean).join(" ") || undefined,
+    });
+  }
+
+  const askedNow = action === "ask" && q!.kind === "approx" ? new Set(q!.cycle_ids) : new Set<string>();
+  const statements: D1PreparedStatement[] = [];
+  for (const d of derived) {
+    const old = st.stored.find((c) => c.cycle_id === d.cycle_id)!;
+    const kept = Object.fromEntries(Object.entries(old.extra).filter(([k]) => k.startsWith("_")));
+    const asked = [...new Set([...askedApprox(old.extra), ...(askedNow.has(d.cycle_id) ? [q!.field_name] : [])])];
+    const c = d.cycle;
+    statements.push(
+      db.prepare(
+        `UPDATE program_cycles SET cycle_key = ?, facility_code = ?, yard = ?, start_date = ?, end_date = ?, sessions_planned = ?,
+           course_hours_planned_per_participant = ?, n_enrolled = ?, n_completed = ?, total_course_hours_delivered = ?,
+           n_enrolled_approx = ?, n_completed_approx = ?, total_course_hours_delivered_approx = ?, status = ?, extra = ?
+         WHERE cycle_id = ?`,
+      ).bind(
+        cycleKey(st.sub.org_id, c.program_id, c.facility_code, c.start_date), c.facility_code, c.yard, c.start_date, c.end_date, c.sessions_planned,
+        c.course_hours_planned_per_participant, c.n_enrolled, c.n_completed, c.total_course_hours_delivered,
+        +c.n_enrolled_approx, +c.n_completed_approx, +c.total_course_hours_delivered_approx, d.blocked ? "draft" : "awaiting_confirmation",
+        JSON.stringify({ ...kept, ...c.extra, _completion_rule: c.completion_rule, _approx_asked: asked }), d.cycle_id,
+      ),
+    );
+  }
+  statements.push(db.prepare("UPDATE field_issues SET resolved = 1 WHERE submission_id = ? AND resolved = 0").bind(st.sub.submission_id));
+  for (const d of derived) {
+    for (const i of d.issues) {
+      const isAsked = action === "ask" && q!.kind === "issue" && q!.field_name === i.field_name && q!.cycle_ids.includes(d.cycle_id);
+      statements.push(
+        db.prepare(
+          `INSERT INTO field_issues (submission_id, table_name, field_name, row_ref, issue_type, raw_value, message, question_asked, is_synthetic)
+           VALUES (?, 'program_cycles', ?, ?, ?, ?, ?, ?, ?)`,
+        ).bind(st.sub.submission_id, i.field_name, d.cycle_id, i.issue_type, i.raw_value, i.message, isAsked ? q!.text : null, st.sub.is_synthetic),
+      );
+    }
+  }
+  statements.push(
+    db.prepare("UPDATE submissions SET status = ?, followup_rounds = ?, open_question = ? WHERE submission_id = ?").bind(
+      action === "escalate" ? "needs_staff" : blocked ? "needs_info" : "awaiting_confirmation",
+      rounds + (action === "ask" ? 1 : 0), openQuestion ? JSON.stringify(openQuestion) : null, st.sub.submission_id,
+    ),
+  );
+  statements.push(...messageBookkeeping(db, deps.gmail.mailbox, st, inbound, sent, kind));
+  await db.batch(statements);
+  return { action, question: action === "ask" ? q!.text : undefined };
+}
+
+/** The inbound message belongs to this submission now, and our reply (if sent) is logged as metadata only. */
+function messageBookkeeping(db: D1Database, mailbox: string, st: State, inbound: Inbound, sent: { id: string; threadId: string } | null, kind: string): D1PreparedStatement[] {
+  const out = [db.prepare("UPDATE messages SET submission_id = ? WHERE message_id = ?").bind(st.sub.submission_id, inbound.gmailId)];
+  if (sent) {
+    out.push(
+      db.prepare(
+        `INSERT OR IGNORE INTO messages (message_id, gmail_thread_id, direction, kind, org_id, submission_id, from_email, to_email, occurred_at, is_synthetic)
+         VALUES (?, ?, 'outbound', ?, ?, ?, ?, ?, ?, ?)`,
+      ).bind(sent.id, sent.threadId, kind, st.sub.org_id, st.sub.submission_id, mailbox, inbound.from, new Date().toISOString(), st.sub.is_synthetic),
+    );
+  }
+  return out;
+}
+
+/** First email after new data arrives: the first question, or straight to the receipt when nothing is missing. */
+export async function startConversation(deps: Deps, submissionId: string, inbound: Inbound): Promise<Outcome> {
+  const st = await loadState(deps.db, submissionId);
+  // A started conversation (open_question set) is never restarted: the retry of a failed pass must not ask twice.
+  if (!st || st.oq || st.sub.status === "needs_staff" || st.stored.length === 0) return { action: "ignored" };
+  return turn(deps, st, inbound);
+}
+
+/** Cycles the writer means by a hint like "the San Quentin one" or "Writing Class". Only a single best match counts. */
+function matchCycles(stored: StoredCycle[], hint: string | null): StoredCycle[] {
+  if (stored.length === 1) return stored;
+  const h = (hint ?? "").toLowerCase();
+  if (!h) return [];
+  const scored = stored.map((c) => {
+    const fac = FACILITIES.find((f) => f.facility_code === c.facility_code);
+    const names = fac ? [fac.facility_name, fac.facility_code, ...fac.aliases].map((n) => n.toLowerCase()) : [];
+    return {
+      c,
+      score:
+        (h.includes(c.program_name.toLowerCase()) ? 1 : 0) +
+        (names.some((n) => n.length > 2 && h.includes(n)) ? 1 : 0) +
+        (c.start_date && h.includes(c.start_date) ? 1 : 0),
+    };
+  });
+  const best = Math.max(...scored.map((x) => x.score));
+  const top = scored.filter((x) => x.score === best);
+  return best > 0 && top.length === 1 ? [top[0]!.c] : [];
+}
+
+/** A count the reply does not contain is dropped, as in text ingest. Other fields are checked by the cleaner. */
+function supported(field: string, value: string, text: string): boolean {
+  if (!COUNT_FIELDS.includes(field)) return true;
+  const n = Number(value.replace(/,/g, ""));
+  return Number.isFinite(n) ? numberAppearsIn(n, text) : true;
+}
+
+/**
+ * A reply to Sam's question (PRD 7.5). The model only classifies; code decides whether the value is allowed,
+ * validates it, applies it, then asks the next question or sends the receipt. A plain YES never reaches the model.
+ */
+export async function handleReply(deps: Deps, submissionId: string, inbound: Inbound): Promise<Outcome> {
+  const st = await loadState(deps.db, submissionId);
+  if (!st || !st.oq) return { action: "ignored" };
+  const oq = st.oq;
+  const text = scrubIdentifiers(stripQuoted(inbound.text)).slice(0, 2000);
+
+  const none: ReplyClassification = { intent: "unclear", field_key: null, value: null, approx: false, cycle_hint: null };
+  let found: ReplyClassification | null = isPlainYes(text) && oq.kind === "confirm" ? { ...none, intent: "confirm" } : null;
+  if (!found && text) {
+    try {
+      found = await deps.llm.json({
+        name: "classify_reply", system: REPLY_SYSTEM, schema: ReplyClassificationSchema,
+        user: JSON.stringify({
+          open_question: { kind: oq.kind, field_key: oq.field_name || null, text: oq.text },
+          programs: [...new Set(st.stored.map((c) => c.program_name))],
+          reply: text,
+        }),
+      });
+    } catch (e) {
+      // A model outage is retried by the next sync; after an hour the reply counts as unclear so the round limit can finish the job.
+      if (Date.now() - Date.parse(inbound.occurredAt) < GIVE_UP_AFTER_MS) throw e;
+    }
+  }
+  const cls = found ?? none;
+
+  // Confirm: only when nothing blocks. Anything else about a "yes" is not a confirmation.
+  if (cls.intent === "confirm" && oq.kind === "confirm") {
+    const derived = deriveCycles(st.sub.org_id, st.stored, st.registry, new Date().toISOString().slice(0, 10));
+    if (!derived.some((d) => d.blocked)) {
+      if (!isSyntheticEmail(inbound.from)) {
+        const body = thanksEmail({ orgName: st.sub.org_name });
+        const sent = await deps.gmail.send({
+          to: inbound.from, subject: replySubject(inbound.subject), text: body.text, html: body.html, threadId: inbound.threadId,
+          inReplyTo: inbound.rfcMessageId ?? undefined,
+          references: [inbound.references, inbound.rfcMessageId].filter(Boolean).join(" ") || undefined,
+        });
+        await deps.db.batch(messageBookkeeping(deps.db, deps.gmail.mailbox, st, inbound, sent, "thanks"));
+      } else {
+        await deps.db.batch(messageBookkeeping(deps.db, deps.gmail.mailbox, st, inbound, null, "thanks"));
+      }
+      const r = await confirmById(deps.db, submissionId);
+      if (!r.ok) throw new Error(r.error);
+      return { action: "confirmed" };
+    }
+  }
+
+  const overrides = new Map<string, CycleFormRow>();
+  const put = (ids: string[], field: string, value: string, approx: boolean): boolean => {
+    for (const id of ids) {
+      const c = st.stored.find((x) => x.cycle_id === id);
+      const next = c && overlayAnswer(toFormRow(c), field, value, approx, st.registry);
+      if (!next) return false;
+      overrides.set(id, next);
+    }
+    return ids.length > 0;
+  };
+
+  let applied = false;
+  if (cls.intent === "answer" && oq.kind !== "confirm") {
+    if (oq.field_name === "completion_rule") {
+      // The rule belongs to the program, so one answer covers every cycle of it in this submission.
+      const programs = new Set(oq.cycle_ids.map((id) => st.stored.find((c) => c.cycle_id === id)?.program_id));
+      const ids = st.stored.filter((c) => programs.has(c.program_id)).map((c) => c.cycle_id);
+      if (cls.value) applied = put(ids, "completion_rule", cls.value, false);
+    } else if (oq.kind === "approx") {
+      // "About 30 is fine" keeps the approximate count; an exact number replaces it.
+      if (cls.value && !cls.approx && supported(oq.field_name, cls.value, text)) applied = put(oq.cycle_ids, oq.field_name, cls.value, false);
+      else applied = true; // the question was answered; the flag stays and is not asked again
+    } else if (cls.value && supported(oq.field_name, cls.value, text)) {
+      applied = put(oq.cycle_ids, oq.field_name, cls.value, cls.approx);
+    }
+  } else if (cls.intent === "correction" && cls.field_key && cls.value && isAnswerable(cls.field_key, st.registry) && supported(cls.field_key, cls.value, text)) {
+    const hits = matchCycles(st.stored, cls.cycle_hint);
+    // A program's completion rule applies to every cycle of that program in this submission.
+    const ids = cls.field_key === "completion_rule" && hits.length === 1
+      ? st.stored.filter((c) => c.program_id === hits[0]!.program_id).map((c) => c.cycle_id)
+      : hits.map((c) => c.cycle_id);
+    if (hits.length === 1) applied = put(ids, cls.field_key, cls.value, cls.approx);
+  }
+  return turn(deps, st, inbound, { overrides, retry: !applied && oq.kind !== "confirm", updated: applied && oq.kind === "confirm" });
+}
+
+export type { DerivedCycle };

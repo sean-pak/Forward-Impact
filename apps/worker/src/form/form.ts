@@ -5,6 +5,7 @@ import {
   cycleKey,
   isBlankRow,
   isBlocking,
+  missingCompletedIssue,
   needsCompletedCount,
   type CleanCycle,
   type CycleFormRow,
@@ -73,7 +74,7 @@ async function orgByToken(db: D1Database, token: string): Promise<OrgRow | null>
     .first<OrgRow>();
 }
 
-async function registryFields(db: D1Database): Promise<RegistryField[]> {
+export async function registryFields(db: D1Database): Promise<RegistryField[]> {
   const { results } = await db
     .prepare("SELECT field_key, label, type, options, required FROM fields WHERE status = 'active' AND is_core = 0 ORDER BY sort_order, field_key")
     .all<{ field_key: string; label: string; type: RegistryField["type"]; options: string | null; required: number }>();
@@ -178,12 +179,7 @@ export async function writeSubmission(db: D1Database, org: OrgRow, rows: CycleFo
     }
     const { cycle, issues } = cleanCycleRow({ ...row, program_id: programId }, registry);
     issues.unshift(...(opts.preIssues?.[n] ?? []));
-    if (opts.askMissingCompleted && needsCompletedCount(cycle, now.slice(0, 10))) {
-      issues.push({
-        field_name: "n_completed", issue_type: "missing_required", raw_value: null,
-        message: `How many people completed ${cycle.program_name}${cycle.start_date ? ` (started ${cycle.start_date})` : ""}?`,
-      });
-    }
+    if (opts.askMissingCompleted && needsCompletedCount(cycle, now.slice(0, 10))) issues.push(missingCompletedIssue(cycle));
     const key = cycleKey(org.org_id, programId, cycle.facility_code, cycle.start_date);
     if (seenKeys.has(key)) {
       if (opts.duplicates === "reject") return { ok: false, status: 400, error: `${cycle.program_name} is listed twice for the same prison and start date.` };
@@ -298,7 +294,7 @@ async function submissionView(db: D1Database, org: OrgRow, sub: { submission_id:
        LEFT JOIN facilities f ON f.facility_code = c.facility_code
        WHERE c.submission_id = ? ORDER BY p.program_name, c.start_date`,
     ).bind(submissionId).all<Record<string, unknown> & { extra: string }>(),
-    db.prepare("SELECT issue_id, row_ref, field_name, issue_type, message FROM field_issues WHERE submission_id = ? ORDER BY issue_id")
+    db.prepare("SELECT issue_id, row_ref, field_name, issue_type, message FROM field_issues WHERE submission_id = ? AND resolved = 0 ORDER BY issue_id")
       .bind(submissionId).all<{ issue_id: number; row_ref: string | null; field_name: string; issue_type: string; message: string }>(),
     // Same cycle_key from an earlier submission that is confirmed or waiting. Drafts with problems never count.
     db.prepare(
@@ -345,6 +341,24 @@ export type ConfirmResult = { ok: true; already: boolean } | { ok: false; status
 export async function confirmSubmission(db: D1Database, token: string, submissionId: string): Promise<ConfirmResult> {
   const view = await getSubmission(db, token, submissionId);
   if (!view) return { ok: false, status: 404, error: "submission not found" };
+  return applyConfirm(db, view);
+}
+
+/** Confirm by submission id, for the email path (the form path checks its token first). */
+export async function confirmById(db: D1Database, submissionId: string): Promise<ConfirmResult> {
+  const sub = await db
+    .prepare(
+      `SELECT s.submission_id, s.status, o.org_id, o.org_name, o.primary_contact_email, o.is_synthetic
+       FROM submissions s JOIN orgs o ON o.org_id = s.org_id WHERE s.submission_id = ?`,
+    )
+    .bind(submissionId)
+    .first<{ submission_id: string; status: string } & OrgRow>();
+  if (!sub) return { ok: false, status: 404, error: "submission not found" };
+  return applyConfirm(db, await submissionView(db, sub, sub));
+}
+
+async function applyConfirm(db: D1Database, view: SubmissionView): Promise<ConfirmResult> {
+  const submissionId = view.submission_id;
   if (view.status === "confirmed") return { ok: true, already: true };
   if (view.status !== "awaiting_confirmation" || view.blocked) {
     return { ok: false, status: 409, error: "This submission has problems to fix first. Please edit the form and submit again." };
@@ -363,7 +377,7 @@ export async function confirmSubmission(db: D1Database, token: string, submissio
     const rule = (JSON.parse(c.extra || "{}") as { _completion_rule?: string })._completion_rule;
     if (rule && rule !== "unstated") statements.push(db.prepare("UPDATE programs SET completion_rule = ? WHERE program_id = ?").bind(rule, c.program_id));
   }
-  statements.push(db.prepare("UPDATE submissions SET status = 'confirmed', confirmed_by_cbo_at = ? WHERE submission_id = ?").bind(now, submissionId));
+  statements.push(db.prepare("UPDATE submissions SET status = 'confirmed', open_question = NULL, confirmed_by_cbo_at = ? WHERE submission_id = ?").bind(now, submissionId));
   await db.batch(statements);
   return { ok: true, already: false };
 }

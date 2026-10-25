@@ -54,3 +54,13 @@ export const ColumnMappingSchema = z
     }
   });
 export type ColumnMapping = z.infer<typeof ColumnMappingSchema>;
+
+/** What the LLM may return for a reply to Sam's question (PRD 7.5). Code validates and applies it. */
+export const ReplyClassificationSchema = z.object({
+  intent: z.enum(["confirm", "answer", "correction", "unclear"]),
+  field_key: z.string().nullable().describe("The field the reply sets, for example n_completed. Null for confirm and unclear."),
+  value: z.string().nullable().describe("The value exactly as the writer gave it, as text. Null when none was given."),
+  approx: z.boolean().describe("true when the writer said about / around / roughly"),
+  cycle_hint: z.string().nullable().describe("For a correction: the program name, prison or start date the writer is talking about, as written"),
+});
+export type ReplyClassification = z.infer<typeof ReplyClassificationSchema>;
