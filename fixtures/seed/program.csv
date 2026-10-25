@@ -1,0 +1,6 @@
+program_id,org_id,program_name,program_category,completion_rule,credit_types_offered
+prog_fx_a1,org_fx_a,Fixture Printmaking,arts,attendance >= 80%,rac
+prog_fx_a2,org_fx_a,Fixture Theater Workshop,arts,attendance >= 80%,rac|emc
+prog_fx_b1,org_fx_b,Fixture Writing Class,education,unstated,
+prog_fx_c1,org_fx_c,Fixture Healing Circle Group,cognitive_behavioral,attendance >= 80%,rac
+prog_fx_d1,org_fx_d,Fixture Job Readiness,job_training,completes all modules,rac|mcc

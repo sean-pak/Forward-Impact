@@ -29,24 +29,37 @@ Each phase: **Goal**, **Build**, **Not in this phase**, **Done when**.
 
 ---
 
-## [ ] Phase 1: Schema, seed contract, dashboard v0
+## [ ] Phase 1.a: Schema, seed contract, static seed, fixtures
 
-**Goal:** frozen schema, a contract Muse can generate against, and a deployed dashboard with real numbers.
+**Goal:** frozen schema and a contract Muse can generate against, with a reset command that works locally and on the deployed D1.
 
 **Build**
 - Migrations for both DBs per PRD section 8 and `docs/schema-v2.md` (field names and enums).
-- `docs/SEED_CONTRACT.md`: one entry per seedable CSV (filename, columns, types, enums, required). Identities in plaintext (`person_identity.csv`: cdcr_number, first_name, last_name, date_of_birth, org_id, org_internal_id). Plus `mock_locator.json` shape.
-- Static seed: 31 CDCR facilities with aliases (source: CDCR public institutions list, cite in the file), `assumptions` (cost marked TODO), `benchmark_reference` rows from schema v2 8.3, core `fields`.
-- Tiny hand fixture in `/fixtures/seed` (4 fictional orgs, contacts `@example.org`, ~10 confirmed aggregate cycles) so nothing waits on Muse.
-- `packages/shared/facility.ts` `normalizeFacility()` with tests ("Men's Colony" -> CMC, "S.Q." -> SQ).
-- `pnpm db:reset` (drop, migrate, seed static + fixtures), local and remote.
-- Web: admin password gate. `/admin`: participants, completion rate (n/N), hours, prisons covered (x of 31), cycles table.
+- `docs/SEED_CONTRACT.md`: one entry per seedable CSV (filename, columns, types, enums, required). Identities in plaintext (`person_identity.csv`: cdcr_number, first_name, last_name, date_of_birth, org_id, org_internal_id). Plus `mock_locator.json` shape. People are referenced by `person_ref`, not `person_key` (the loader computes keys).
+- Static seed: 31 CDCR facilities with aliases (source: CDCR Facility Locator, cited in `facilities.ts`), `assumptions` (cost marked TODO), `benchmark_reference` rows from schema v2 8.3, core `fields`.
+- Tiny hand fixture in `/fixtures/seed` (4 fictional orgs, contacts `@example.org`, 10 confirmed aggregate cycles) so nothing waits on Muse.
+- `packages/shared` `normalizeFacility()` with tests ("Men's Colony" -> CMC, "S.Q." -> SQ).
+- `pnpm db:reset --local` and `pnpm db:reset --remote --yes` (drop, migrate, seed static + fixtures).
 
-**Not in this phase:** vault crypto (identities in the fixture are skipped until phase 2).
+**Not in this phase:** vault crypto (fixture identities are validated and skipped until phase 2); the admin UI (1.b).
+
+**Done when**
+- [ ] `pnpm typecheck && pnpm test` pass.
+- [ ] `db:reset --remote --yes` leaves the deployed D1 migrated and seeded (31 facilities, 4 orgs, 10 confirmed cycles).
+- [ ] `SEED_CONTRACT.md` exists and matches the migrations (test). **Hand it to Muse now.**
+
+---
+
+## [ ] Phase 1.b: Dashboard v0
+
+**Goal:** a deployed admin dashboard with real numbers.
+
+**Build**
+- Worker `/api/admin/summary` (bearer-protected) computing participants, completion rate (n/N), hours, prisons covered (x of 31), and the cycles list from confirmed cycles only.
+- Web: admin password gate (middleware + httpOnly cookie). `/admin`: participants, completion rate (n/N), hours, prisons covered, cycles table.
 
 **Done when**
 - [ ] `/admin` shows non-zero numbers from deployed D1.
-- [ ] `SEED_CONTRACT.md` exists and matches the migrations. **Hand it to Muse now.**
 
 ---
 

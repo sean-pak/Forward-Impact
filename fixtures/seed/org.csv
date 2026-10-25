@@ -1,0 +1,5 @@
+org_id,org_name,org_type,data_persona,primary_contact_email,has_data_agreement
+org_fx_a,Fixture Arts Collective,arts,1,dana.reyes@example.org,false
+org_fx_b,Fixture Education Project,education,2,sam.okafor@example.org,false
+org_fx_c,Fixture Healing Circle,healing,3,lee.nguyen@example.org,false
+org_fx_d,Fixture Reentry Network,reentry,4,pat.morgan@example.org,true

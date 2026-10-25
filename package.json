@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "pnpm --parallel --filter worker --filter web dev",
     "typecheck": "pnpm -r typecheck",
-    "test": "pnpm -r test"
+    "test": "pnpm -r test",
+    "db:reset": "pnpm --filter @tpw/scripts run db:reset --"
   },
   "devDependencies": {
     "typescript": "^7.0.2",

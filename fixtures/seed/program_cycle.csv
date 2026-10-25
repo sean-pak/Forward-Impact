@@ -1,0 +1,11 @@
+cycle_id,program_id,facility_code,yard,start_date,end_date,sessions_planned,course_hours_planned_per_participant,n_enrolled,n_completed,total_course_hours_delivered,source_grain,status
+cy_fx_a1_2024a,prog_fx_a1,SQ,,2024-01-15,2024-04-15,12,24,24,20,,aggregate,confirmed
+cy_fx_a1_2024b,prog_fx_a1,SQ,,2024-09-09,2024-12-09,12,24,26,21,,aggregate,confirmed
+cy_fx_a2_2025a,prog_fx_a2,SOL,B,2025-02-03,2025-05-05,14,28,30,25,,aggregate,confirmed
+cy_fx_a2_2025b,prog_fx_a2,SQ,,2025-09-08,2025-12-08,14,28,22,19,,aggregate,confirmed
+cy_fx_b1_2025a,prog_fx_b1,CMC,,2025-03-03,,10,20,30,22,,aggregate,confirmed
+cy_fx_b1_2025b,prog_fx_b1,CMC,,2025-09-15,,10,20,28,,,aggregate,confirmed
+cy_fx_c1_2025a,prog_fx_c1,SQ,,2025-04-07,2025-07-07,12,24,18,15,,aggregate,confirmed
+cy_fx_c1_2026a,prog_fx_c1,SQ,,2026-01-12,2026-04-13,12,24,20,16,,aggregate,confirmed
+cy_fx_d1_2025a,prog_fx_d1,SOL,,2025-05-05,2025-08-04,16,32,40,28,,aggregate,confirmed
+cy_fx_d1_2026a,prog_fx_d1,CMC,,2026-02-02,2026-05-04,16,32,36,27,,aggregate,confirmed

@@ -1,0 +1,4 @@
+cdcr_number,first_name,last_name,date_of_birth,org_id,org_internal_id
+SYN90001,Fixture,Personone,1985-03-14,org_fx_d,D-0001
+SYN90002,Fixture,Persontwo,1990-07-02,org_fx_d,D-0002
+,Fixture,Personthree,1978-11-30,org_fx_d,D-0003
