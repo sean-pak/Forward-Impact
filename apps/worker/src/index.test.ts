@@ -22,6 +22,8 @@ const env = (db: boolean, vault: boolean): Env => ({
   GOOGLE_CLIENT_SECRET: "",
   GOOGLE_REFRESH_TOKEN: "",
   MAILBOX_ADDRESS: "hello@example.org",
+  WORKER_PUBLIC_URL: "https://w.example.org",
+  WEB_URL: "https://web.example.org",
 });
 
 describe("worker", () => {

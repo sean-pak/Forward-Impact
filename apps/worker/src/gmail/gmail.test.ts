@@ -48,7 +48,7 @@ function fakeDb(contacts: string[], threads: string[]) {
           return threads.includes(args[0] as string) ? { org_id: null } : null;
         },
         run: async () => {
-          inserted.push(args);
+          if (sql.includes("INSERT")) inserted.push(args);
           return { meta: { changes: 1 } };
         },
       }),

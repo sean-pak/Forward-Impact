@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { z } from "zod";
 import { makeHealth } from "@tpw/shared";
 import { sendTest, syncGmail } from "./gmail";
+import { PIXEL_GIF, importContacts, listOrgs, listOutreach, recordOpen, sendAsks, setPrimary } from "./outreach";
 import { loadDashboard } from "./summary";
 import { createVault, pingVault } from "./vault";
 
@@ -16,6 +17,8 @@ export type Env = {
   GOOGLE_REFRESH_TOKEN: string;
   MAILBOX_ADDRESS: string;
   ADMIN_EMAILS?: string;
+  WORKER_PUBLIC_URL: string;
+  WEB_URL: string;
 };
 
 export const app = new Hono<{ Bindings: Env }>();
@@ -32,6 +35,13 @@ async function ping(d1: D1Database): Promise<boolean> {
 app.get("/health", async (c) => {
   const [db, vault] = await Promise.all([ping(c.env.DB), pingVault(c.env)]);
   return c.json(makeHealth(db, vault));
+});
+
+// Open pixel for the ask email. Public by design (mail clients fetch it); the id is an unguessable outreach id.
+app.get("/p/:file", async (c) => {
+  const id = c.req.param("file").replace(/\.gif$/, "");
+  await recordOpen(c.env.DB, id).catch(() => undefined);
+  return new Response(PIXEL_GIF, { headers: { "Content-Type": "image/gif", "Cache-Control": "no-store, max-age=0" } });
 });
 
 app.use("/api/*", async (c, next) => {
@@ -80,6 +90,31 @@ app.get("/api/gmail/messages", async (c) => {
     .all();
   return c.json({ messages: results });
 });
+
+app.get("/api/contacts", async (c) => c.json({ orgs: await listOrgs(c.env.DB) }));
+app.post("/api/contacts/import", async (c) => {
+  const body = z.object({ csv: z.string().min(1) }).safeParse(await c.req.json().catch(() => null));
+  if (!body.success) return c.json({ error: "csv text is required" }, 400);
+  return c.json(await importContacts(c.env.DB, body.data.csv));
+});
+app.post("/api/contacts/primary", async (c) => {
+  const body = z.object({ org_id: z.string().min(1), contact_id: z.string().min(1) }).safeParse(await c.req.json().catch(() => null));
+  if (!body.success) return c.json({ error: "org_id and contact_id are required" }, 400);
+  return (await setPrimary(c.env.DB, body.data.org_id, body.data.contact_id))
+    ? c.json({ ok: true })
+    : c.json({ error: "contact is not in that org" }, 404);
+});
+// Omit org_ids to ask every org that has not been asked yet.
+app.post("/api/outreach/send", async (c) => {
+  const body = z.object({ org_ids: z.array(z.string()).optional() }).safeParse(await c.req.json().catch(() => ({})));
+  if (!body.success) return c.json({ error: "org_ids must be a list of org ids" }, 400);
+  try {
+    return c.json(await sendAsks(c.env, body.data.org_ids ?? null));
+  } catch (e) {
+    return c.json({ error: e instanceof Error ? e.message : "send failed" }, 500);
+  }
+});
+app.get("/api/outreach", async (c) => c.json(await listOutreach(c.env.DB)));
 
 export default {
   fetch: app.fetch,

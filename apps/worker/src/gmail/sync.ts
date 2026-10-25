@@ -1,4 +1,5 @@
 import PostalMime from "postal-mime";
+import { markReplied } from "../outreach/track";
 import { Gmail, LABEL_IGNORED, LABEL_PROCESSED, type GmailEnv } from "./client";
 
 export type SyncResult = { logged: number; ignored: number; skipped: number };
@@ -45,16 +46,20 @@ export async function syncGmail(env: GmailEnv & { DB: D1Database }, gmail = new 
       result.ignored++;
       continue;
     }
+    const occurredAt = (parsed.date ? new Date(parsed.date) : new Date()).toISOString();
     const inserted = await env.DB
       .prepare(
         `INSERT OR IGNORE INTO messages
            (message_id, gmail_thread_id, direction, kind, org_id, from_email, to_email, occurred_at, is_synthetic)
          VALUES (?, ?, 'inbound', 'inbound', ?, ?, ?, ?, 0)`,
       )
-      .bind(id, msg.threadId, m.orgId, from, gmail.mailbox, (parsed.date ? new Date(parsed.date) : new Date()).toISOString())
+      .bind(id, msg.threadId, m.orgId, from, gmail.mailbox, occurredAt)
       .run();
     await gmail.label(id, [LABEL_PROCESSED], ["INBOX"]);
-    if (inserted.meta.changes > 0) result.logged++;
+    if (inserted.meta.changes > 0) {
+      result.logged++;
+      if (m.orgId) await markReplied(env.DB, { threadId: msg.threadId, from, at: occurredAt });
+    }
   }
   return result;
 }

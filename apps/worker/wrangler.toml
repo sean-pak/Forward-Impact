@@ -23,3 +23,5 @@ crons = ["* * * * *"]
 [vars]
 MAILBOX_ADDRESS = "hello@seanpak.com"
 ADMIN_EMAILS = "sean.mk.pak@gmail.com"
+WORKER_PUBLIC_URL = "https://tpw-worker.sean-mk-pak.workers.dev"
+WEB_URL = "https://forward-impact-seanpaks-projects.vercel.app"

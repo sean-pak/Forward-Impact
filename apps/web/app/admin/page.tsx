@@ -33,7 +33,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       <h1>Dashboard</h1>
       <p style={{ color: "#555" }}>
         Confirmed cycles only. {view === "public" ? "Public view: small cells are suppressed." : "Staff view, not suppressed."}{" "}
-        <a href="/admin">Staff view</a> | <a href="/admin?view=public">Public view</a> | <a href="/api/report">Download one-pager (PDF)</a> | <a href="/admin/email">Email</a>
+        <a href="/admin">Staff view</a> | <a href="/admin?view=public">Public view</a> | <a href="/api/report">Download one-pager (PDF)</a> | <a href="/admin/contacts">Contacts and asks</a> | <a href="/admin/outreach">Outreach</a> | <a href="/admin/email">Email</a>
       </p>
       <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
         <Stat label="Participants" value={show(summary.participants, "count")} />
