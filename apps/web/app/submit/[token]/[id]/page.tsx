@@ -1,4 +1,5 @@
 import { notFound, redirect } from "next/navigation";
+import { timeAgo } from "@tpw/shared";
 import { workerFetch } from "../../../../lib/worker";
 
 export const dynamic = "force-dynamic";
@@ -10,6 +11,7 @@ type Cycle = {
 };
 type View = {
   submission_id: string; status: string; org_name: string; cycles: Cycle[];
+  duplicates: { cycle_id: string; program_name: string; facility_name: string | null; start_date: string | null; n_enrolled: number | null; n_completed: number | null; submitted_at: string }[];
   issues: { issue_id: number; row_ref: string | null; message: string; blocking: boolean }[]; blocked: boolean;
 };
 
@@ -48,6 +50,16 @@ export default async function ConfirmPage({ params, searchParams }: { params: Pr
       <h1>Please check this for {v.org_name}</h1>
       <p>Nothing is counted until you confirm.</p>
       {error ? <p role="alert" style={{ color: "#b00020" }}>{error}</p> : null}
+      {v.duplicates.map((d) => (
+        <p key={d.cycle_id} role="note" style={{ border: "1px solid #c90", background: "#fff8e6", padding: "0.75rem", borderRadius: 6 }}>
+          <strong>It looks like you submitted the same program twice!</strong>{" "}
+          {timeAgo(d.submitted_at, new Date())} ({d.submitted_at.replace("T", " ").replace("Z", " UTC")}) you submitted the exact same details for{" "}
+          {d.program_name} at {d.facility_name ?? "the same prison"}, starting {d.start_date ?? "an unknown date"}
+          {d.n_enrolled !== null ? `, with ${d.n_enrolled} enrolled` : ""}. Is this another, separate program at the same prison?
+          If so, <a href={`/submit/${token}`}>go back</a> and change the program name or start date so they stay separate.
+          If it&apos;s the same program, confirming will replace your earlier entry, not add to it.
+        </p>
+      ))}
       {v.issues.length ? (
         <>
           <h2>{v.blocked ? "Needs fixing" : "Worth a look"}</h2>

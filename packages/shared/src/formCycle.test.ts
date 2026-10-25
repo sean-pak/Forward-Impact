@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { cleanCycleRow, cycleKey, isBlankRow, isBlocking, parseIsoDate, type CycleFormRow } from "./formCycle";
+import { cleanCycleRow, cycleKey, timeAgo, isBlankRow, isBlocking, parseIsoDate, type CycleFormRow } from "./formCycle";
 
 const row = (o: Partial<CycleFormRow> = {}): CycleFormRow => ({
   program_id: "p1", program_name: "Writing Circle", facility_raw: "San Quentin", yard: "", start_date: "2025-02-01",
@@ -81,5 +81,16 @@ describe("helpers", () => {
   });
   it("cycleKey uses 'unknown' for gaps", () => {
     expect(cycleKey("o1", "p1", null, "2025-01-01")).toBe("o1|p1|unknown|2025-01-01");
+  });
+});
+
+describe("timeAgo", () => {
+  const now = new Date("2025-03-01T12:00:00Z");
+  it("reads naturally", () => {
+    expect(timeAgo("2025-03-01T11:59:40Z", now)).toBe("just now");
+    expect(timeAgo("2025-03-01T11:59:00Z", now)).toBe("1 minute ago");
+    expect(timeAgo("2025-03-01T11:45:00Z", now)).toBe("15 minutes ago");
+    expect(timeAgo("2025-03-01T10:00:00Z", now)).toBe("2 hours ago");
+    expect(timeAgo("2025-02-26T12:00:00Z", now)).toBe("3 days ago");
   });
 });

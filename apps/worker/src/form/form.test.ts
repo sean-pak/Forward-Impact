@@ -113,6 +113,17 @@ describe("confirmSubmission", () => {
     expect(done.calls).toEqual([]);
   });
 
+  it("lists an earlier entry with the same cycle key as a duplicate, and not once confirmed", async () => {
+    const dup = { cycle_id: "c0", program_name: "Writing", facility_name: "San Quentin Rehabilitation Center", start_date: "2025-02-01", n_enrolled: 30, n_completed: null, submitted_at: "2025-03-01T11:45:00Z" };
+    const answerWith = (status: string) => (sql: string, p: unknown[]) => {
+      if (sql.includes("JOIN program_cycles o")) return p[1] === "confirmed" ? [] : [dup];
+      return sub(status)(sql);
+    };
+    const pending = await getSubmission(fakeD1(answerWith("awaiting_confirmation")).db, "tok", "s1");
+    expect(pending!.duplicates).toEqual([dup]);
+    expect((await getSubmission(fakeD1(answerWith("confirmed")).db, "tok", "s1"))!.duplicates).toEqual([]);
+  });
+
   it("does not show a submission to another org's token", async () => {
     const { db } = fakeD1((sql) => (sql.includes("FROM orgs WHERE form_token") ? org : null));
     expect(await getSubmission(db, "tok", "s_other")).toBeNull();

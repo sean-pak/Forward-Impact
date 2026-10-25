@@ -196,3 +196,13 @@ export function cleanCycleRow(r: CycleFormRow, registry: RegistryField[]): { cyc
     issues,
   };
 }
+
+/** "just now", "5 minutes ago", "1 hour ago", "3 days ago". */
+export function timeAgo(fromIso: string, now: Date): string {
+  const mins = Math.max(0, Math.floor((now.getTime() - Date.parse(fromIso)) / 60_000));
+  if (mins < 1) return "just now";
+  const unit = (n: number, w: string) => `${n} ${w}${n === 1 ? "" : "s"} ago`;
+  if (mins < 60) return unit(mins, "minute");
+  if (mins < 60 * 24) return unit(Math.floor(mins / 60), "hour");
+  return unit(Math.floor(mins / (60 * 24)), "day");
+}

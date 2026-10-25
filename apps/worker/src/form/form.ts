@@ -58,6 +58,8 @@ export type SubmissionView = {
     completion_rule: string; status: string;
   }[];
   issues: { issue_id: number; row_ref: string | null; field_name: string; issue_type: string; message: string; blocking: boolean }[];
+  /** Earlier entries with the same program, prison and start date. Confirming would replace them. */
+  duplicates: { cycle_id: string; program_name: string; facility_name: string | null; start_date: string | null; n_enrolled: number | null; n_completed: number | null; submitted_at: string }[];
   /** True when something must be fixed (by resubmitting the form) before the data can count. */
   blocked: boolean;
 };
@@ -215,7 +217,7 @@ export async function getSubmission(db: D1Database, token: string, submissionId:
     .bind(submissionId, org.org_id)
     .first<{ submission_id: string; status: string }>();
   if (!sub) return null;
-  const [cycles, issues] = await Promise.all([
+  const [cycles, issues, dupes] = await Promise.all([
     db.prepare(
       `SELECT c.cycle_id, p.program_name, f.facility_name, c.start_date, c.end_date, c.n_enrolled, c.n_completed,
               c.total_course_hours_delivered, c.n_enrolled_approx, c.n_completed_approx, c.total_course_hours_delivered_approx,
@@ -226,6 +228,17 @@ export async function getSubmission(db: D1Database, token: string, submissionId:
     ).bind(submissionId).all<Record<string, unknown> & { extra: string }>(),
     db.prepare("SELECT issue_id, row_ref, field_name, issue_type, message FROM field_issues WHERE submission_id = ? ORDER BY issue_id")
       .bind(submissionId).all<{ issue_id: number; row_ref: string | null; field_name: string; issue_type: string; message: string }>(),
+    // Same cycle_key from an earlier submission that is confirmed or waiting. Drafts with problems never count.
+    db.prepare(
+      `SELECT o.cycle_id, p.program_name, f.facility_name, o.start_date, o.n_enrolled, o.n_completed, o.created_at AS submitted_at
+       FROM program_cycles d
+       JOIN program_cycles o ON o.cycle_key = d.cycle_key AND o.cycle_id <> d.cycle_id
+         AND o.submission_id IS NOT d.submission_id AND o.status IN ('confirmed','awaiting_confirmation') AND o.created_at <= d.created_at
+       JOIN programs p ON p.program_id = o.program_id
+       LEFT JOIN facilities f ON f.facility_code = o.facility_code
+       WHERE d.submission_id = ? AND ? <> 'confirmed'
+       ORDER BY o.created_at DESC`,
+    ).bind(submissionId, sub.status).all<SubmissionView["duplicates"][number]>(),
   ]);
   const issueViews = issues.results.map((i) => ({ ...i, blocking: isBlocking(i as Pick<CycleIssue, "field_name" | "issue_type">) }));
   return {
@@ -246,6 +259,7 @@ export async function getSubmission(db: D1Database, token: string, submissionId:
       };
     }),
     issues: issueViews,
+    duplicates: dupes.results,
     blocked: sub.status === "needs_info" || issueViews.some((i) => i.blocking),
   };
 }
