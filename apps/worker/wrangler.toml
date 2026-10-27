@@ -18,7 +18,7 @@ migrations_dir = "migrations/vault"
 database_id = "d15226b5-d5ed-4afc-86e1-14c5c74168c8"
 
 [triggers]
-crons = ["* * * * *"]
+crons = []
 
 [vars]
 MAILBOX_ADDRESS = "hello@seanpak.com"
