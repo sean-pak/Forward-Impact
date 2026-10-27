@@ -22,7 +22,7 @@ export function RevealName({ personKey }: { personKey: string }) {
   }
 
   return (
-    <code title={label} tabIndex={0} onMouseEnter={load} onFocus={load}>
+    <code title={label} tabIndex={0} onMouseEnter={load} onFocus={load} style={{ cursor: "help", borderBottom: "1px dotted var(--muted)" }}>
       {personKey.slice(0, 10)}
     </code>
   );

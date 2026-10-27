@@ -1,4 +1,5 @@
 import { workerFetch } from "../../../lib/worker";
+import { Badge, ErrorNote, PageHead, Unknown, When, statusTone } from "../../components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -6,8 +7,6 @@ type Row = {
   submission_id: string; channel: string; status: string; received_at: string; detected_persona: number | null;
   org_name: string; n_cycles: number; n_issues: number;
 };
-
-const utc = (t: string) => t.replace("T", " ").slice(0, 19);
 
 export default async function SubmissionsPage() {
   let rows: Row[] = [];
@@ -19,32 +18,42 @@ export default async function SubmissionsPage() {
   } catch (e) {
     error = e instanceof Error ? e.message : "unknown error";
   }
-  const cell = { border: "1px solid #ddd", padding: "0.35rem 0.6rem", textAlign: "left" as const };
   return (
     <main>
-      <h1>Submissions</h1>
-      <p><a href="/admin">Dashboard</a> | <a href="/admin/upload">Upload</a> | <a href="/admin/email">Email</a></p>
-      {error ? <p role="alert">Could not load submissions: {error}</p> : null}
-      <table style={{ borderCollapse: "collapse" }}>
-        <thead>
-          <tr>{["Received (UTC)", "Org", "Channel", "Persona", "Status", "Cycles", "Open issues", ""].map((h) => <th key={h} style={cell}>{h}</th>)}</tr>
-        </thead>
-        <tbody>
-          {rows.map((r) => (
-            <tr key={r.submission_id}>
-              <td style={cell}>{utc(r.received_at)}</td>
-              <td style={cell}>{r.org_name}</td>
-              <td style={cell}>{r.channel}</td>
-              <td style={cell}>{r.detected_persona ?? "unknown"}</td>
-              <td style={cell}>{r.status}</td>
-              <td style={cell}>{r.n_cycles}</td>
-              <td style={cell}>{r.n_issues}</td>
-              <td style={cell}><a href={`/admin/submissions/${r.submission_id}`}>Open</a></td>
+      <PageHead
+        eyebrow="Data"
+        title="Submissions"
+        lede="Everything Sam has read, from email replies, the form and uploads. Nothing counts until the organization confirms."
+        actions={<a className="btn btn-primary" href="/admin/upload">Upload</a>}
+      />
+      {error ? <ErrorNote>Could not load submissions: {error}</ErrorNote> : null}
+      <div className="table-wrap">
+        <table className="data">
+          <thead>
+            <tr>
+              <th>Received (UTC)</th><th>Org</th><th>Channel</th><th>Persona</th><th>Status</th>
+              <th className="num">Cycles</th><th className="num">Open issues</th><th aria-label="Open" />
             </tr>
-          ))}
-          {rows.length === 0 && !error ? <tr><td style={cell} colSpan={8}>No submissions yet.</td></tr> : null}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.submission_id}>
+                <td><When t={r.received_at} /></td>
+                <td>{r.org_name}</td>
+                <td className="dim">{r.channel}</td>
+                <td className="dim">{r.detected_persona ?? <Unknown />}</td>
+                <td><Badge tone={statusTone(r.status)}>{r.status}</Badge></td>
+                <td className="num">{r.n_cycles}</td>
+                <td className="num">{r.n_issues > 0 ? <Badge tone="warn">{r.n_issues}</Badge> : <span className="dim">0</span>}</td>
+                <td className="num"><a className="btn btn-sm" href={`/admin/submissions/${r.submission_id}`}>Open</a></td>
+              </tr>
+            ))}
+            {rows.length === 0 && !error ? (
+              <tr><td className="empty" colSpan={8}>No submissions yet. <a href="/admin/upload">Upload a file</a> or wait for a reply to an ask.</td></tr>
+            ) : null}
+          </tbody>
+        </table>
+      </div>
     </main>
   );
 }

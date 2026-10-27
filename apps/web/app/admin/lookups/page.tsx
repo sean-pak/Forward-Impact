@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { workerFetch } from "../../../lib/worker";
+import { Badge, ErrorNote, Note, PageHead, SimTag, When } from "../../components/ui";
 import { RevealName } from "./RevealName";
 
 export const dynamic = "force-dynamic";
@@ -70,6 +71,13 @@ const RESULT_LABEL: Record<string, string> = {
   error: "Error",
   blocked: "Blocked by a guard",
 };
+const RESULT_TONE: Record<string, "good" | "warn" | "bad" | "plain"> = {
+  found_in_custody: "warn",
+  not_found: "plain",
+  multiple_matches: "warn",
+  error: "bad",
+  blocked: "bad",
+};
 
 export default async function LookupsPage({ searchParams }: { searchParams: Promise<{ note?: string }> }) {
   const { note } = await searchParams;
@@ -87,66 +95,83 @@ export default async function LookupsPage({ searchParams }: { searchParams: Prom
   } catch (e) {
     error = e instanceof Error ? e.message : "unknown error";
   }
-  const cell = { border: "1px solid #ddd", padding: "0.35rem 0.6rem", textAlign: "left" as const };
-  const utc = (t: string) => t.replace("T", " ").slice(0, 16);
   return (
     <main>
-      <h1>Custody lookups</h1>
-      <p><a href="/admin">Dashboard</a> | <a href="/admin/contacts">Contacts and asks</a> | <a href="/admin/submissions">Submissions</a></p>
-      <p role="note" style={{ border: "1px solid #b45309", padding: "0.5rem 0.75rem", maxWidth: 760 }}>
-        <strong>SIMULATED.</strong> Lookups run against the mock locator (synthetic data). The real EIT locator holds real CDCR
+      <PageHead
+        eyebrow="Data"
+        title="Custody lookups"
+        lede={
+          <>
+            {rows.length} {rows.length === 1 ? "person is" : "people are"} eligible: released after a program, with follow-up consent on file and nothing revoked.
+            Names show only on hover, and each one is logged.
+          </>
+        }
+        actions={
+          <form action={checkCohort} className="inline-form">
+            <span className="hint">Checks up to {max} people not yet checked today. Click again for more.</span>
+            <button type="submit" className="btn-primary" disabled={rows.length === 0}>Check cohort</button>
+          </form>
+        }
+      />
+      <p role="note" className="simulated">
+        SIMULATED. Lookups run against the mock locator (synthetic data). The real EIT locator holds real CDCR
         data: it is {realEnabled ? "switched on but not built" : "switched off"}, and it refuses synthetic people, SYN numbers and anyone without active consent.
       </p>
-      {note ? <p role="status">{note}</p> : null}
-      {error ? <p role="alert">Could not load the list: {error}</p> : null}
-      <p>
-        {rows.length} {rows.length === 1 ? "person is" : "people are"} eligible: released after a program, with follow-up consent on file and nothing revoked.
-        Names show only on hover, and each one is logged.
-      </p>
-      <form action={checkCohort}>
-        <button type="submit" disabled={rows.length === 0}>Check cohort</button>{" "}
-        <span style={{ color: "#555" }}>Checks up to {max} people not yet checked today. Click again for more.</span>
-      </form>
-      <table style={{ borderCollapse: "collapse", marginTop: "1rem" }}>
-        <thead>
-          <tr>{["Person", "Org", "Released", "Last check (UTC)", "Result", "Return", ""].map((h) => <th key={h} style={cell}>{h}</th>)}</tr>
-        </thead>
-        <tbody>
-          {rows.map((r) => {
-            const c = r.last_check;
-            return (
-              <tr key={r.person_key}>
-                <td style={cell}><RevealName personKey={r.person_key} />{r.is_synthetic ? "" : " (real)"}</td>
-                <td style={cell}>{r.orgs ?? ""}</td>
-                <td style={cell}>{r.release_date}{r.release_fiscal_year ? ` (${r.release_fiscal_year})` : ""}</td>
-                <td style={cell}>{c ? `${utc(c.checked_at)} (${c.source_system === "mock_locator" ? "mock" : "real"})` : "never"}</td>
-                <td style={cell}>
-                  {c ? (RESULT_LABEL[c.result] ?? c.result) : ""}
-                  {c?.returned_facility ? `, ${c.returned_facility}` : ""}
-                  {r.needs_verification ? <strong> Needs verification</strong> : null}
-                  {c?.verified_by_human ? " (verified)" : ""}
-                </td>
-                <td style={cell}>
-                  {r.outcome ? `${r.outcome.outcome_date}${r.outcome.precision === "interval" ? " (between checks)" : ""}${r.outcome.source === "mock_locator" ? " SIMULATED" : ""}` : c ? "none on record" : ""}
-                </td>
-                <td style={cell}>
-                  <form action={checkOne} style={{ display: "inline" }}>
-                    <input type="hidden" name="person_key" value={r.person_key} />
-                    <button type="submit">Check</button>
-                  </form>
-                  {c && r.needs_verification && c.result === "found_in_custody" ? (
-                    <form action={verify} style={{ display: "inline", marginLeft: 6 }}>
-                      <input type="hidden" name="check_id" value={c.check_id} />
-                      <button type="submit" title="Confirm this name-only hit is the right person">Verify match</button>
-                    </form>
-                  ) : null}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <p style={{ color: "#555" }}>
+      <Note note={note} />
+      {error ? <ErrorNote>Could not load the list: {error}</ErrorNote> : null}
+      <div className="table-wrap">
+        <table className="data">
+          <thead>
+            <tr><th>Person</th><th>Org</th><th>Released</th><th>Last check (UTC)</th><th>Result</th><th>Return</th><th aria-label="Actions" /></tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => {
+              const c = r.last_check;
+              return (
+                <tr key={r.person_key}>
+                  <td className="nowrap"><RevealName personKey={r.person_key} />{r.is_synthetic ? "" : <> <Badge tone="bad">real</Badge></>}</td>
+                  <td className="dim">{r.orgs ?? ""}</td>
+                  <td className="nowrap"><span className="when">{r.release_date}</span>{r.release_fiscal_year ? <span className="dim"> ({r.release_fiscal_year})</span> : ""}</td>
+                  <td className="nowrap">{c ? <><When t={c.checked_at} short /> <span className="dim">({c.source_system === "mock_locator" ? "mock" : "real"})</span></> : <span className="dim">never</span>}</td>
+                  <td>
+                    <div className="inline-form" style={{ gap: "0.35rem" }}>
+                      {c ? <Badge tone={RESULT_TONE[c.result] ?? "plain"}>{RESULT_LABEL[c.result] ?? c.result}</Badge> : null}
+                      {c?.returned_facility ? <span className="dim">{c.returned_facility}</span> : null}
+                      {r.needs_verification ? <Badge tone="warn">Needs verification</Badge> : null}
+                      {c?.verified_by_human ? <Badge tone="good">verified</Badge> : null}
+                    </div>
+                  </td>
+                  <td className="nowrap">
+                    {r.outcome ? (
+                      <>
+                        <span className="when">{r.outcome.outcome_date}</span>
+                        {r.outcome.precision === "interval" ? <span className="dim"> (between checks)</span> : ""}
+                        {r.outcome.source === "mock_locator" ? <> <SimTag /></> : ""}
+                      </>
+                    ) : c ? <span className="dim">none on record</span> : ""}
+                  </td>
+                  <td className="num">
+                    <div className="inline-form" style={{ justifyContent: "flex-end", gap: "0.35rem" }}>
+                      <form action={checkOne}>
+                        <input type="hidden" name="person_key" value={r.person_key} />
+                        <button type="submit" className="btn-sm">Check</button>
+                      </form>
+                      {c && r.needs_verification && c.result === "found_in_custody" ? (
+                        <form action={verify}>
+                          <input type="hidden" name="check_id" value={c.check_id} />
+                          <button type="submit" className="btn-sm btn-primary" title="Confirm this name-only hit is the right person">Verify match</button>
+                        </form>
+                      ) : null}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+            {rows.length === 0 && !error ? <tr><td className="empty" colSpan={7}>Nobody is eligible yet.</td></tr> : null}
+          </tbody>
+        </table>
+      </div>
+      <p className="hint" style={{ marginTop: "0.75rem", maxWidth: "80ch" }}>
         A name-only hit is never counted as a return until someone verifies it. Several matches cannot be verified: look the person up by CDCR number.
         &ldquo;Not in custody&rdquo; means not in custody right now according to the tool; it does not prove no return.
       </p>
