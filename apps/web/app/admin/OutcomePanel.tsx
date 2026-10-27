@@ -1,51 +1,49 @@
 import type { OutcomePanel as Panel } from "@tpw/shared";
 import { benchmarkText, outcomeNotes, outcomeTable, simulatedBanner } from "../../lib/outcomes";
-
-const cell = { border: "1px solid #ddd", padding: "0.35rem 0.6rem", textAlign: "left" as const };
+import { SimTag } from "../components/ui";
 
 /** Return-to-prison rates per release fiscal year. Every row names its source; simulated data carries a big label. */
 export function OutcomePanel({ panel }: { panel: Panel }) {
   const banner = simulatedBanner(panel);
   const rows = outcomeTable(panel);
   return (
-    <section>
-      <h2>Return to prison, by release fiscal year</h2>
-      {banner ? (
-        <p role="note" style={{ background: "#b00020", color: "#fff", fontWeight: 700, padding: "0.5rem 0.75rem", borderRadius: 4 }}>
-          {banner}
-        </p>
-      ) : null}
+    <section className="section">
+      <div className="section-head">
+        <h2>Return to prison, by release fiscal year</h2>
+      </div>
+      {banner ? <p role="note" className="simulated">{banner}</p> : null}
       {rows.length === 0 ? (
-        <p style={{ color: "#555" }}>No post-program releases yet.</p>
+        <p className="hint">No post-program releases yet.</p>
       ) : (
-        <table style={{ borderCollapse: "collapse" }}>
-          <thead>
-            <tr>
-              {["Released", "People", "1 year", "2 years", "3 years", "Projected 3 years", "Follow-up", "Source"].map((h) => (
-                <th key={h} style={cell}>{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.fiscalYear}>
-                <td style={cell}>{r.fiscalYear}</td>
-                <td style={cell}>{r.released}</td>
-                <td style={cell}>{r.y1}</td>
-                <td style={cell}>{r.y2}</td>
-                <td style={cell}>{r.y3}</td>
-                <td style={cell}>{r.projected}</td>
-                <td style={cell}>{r.followUp}</td>
-                <td style={{ ...cell, fontWeight: r.simulated ? 700 : 400, color: r.simulated ? "#b00020" : undefined }}>{r.source}</td>
+        <div className="table-wrap">
+          <table className="data">
+            <thead>
+              <tr>
+                <th>Released</th><th className="num">People</th><th>1 year</th><th>2 years</th><th>3 years</th>
+                <th>Projected 3 years</th><th>Follow-up</th><th>Source</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.fiscalYear}>
+                  <td className="when">{r.fiscalYear}</td>
+                  <td className="num">{r.released}</td>
+                  <td className="nowrap">{r.y1}</td>
+                  <td className="nowrap">{r.y2}</td>
+                  <td className="nowrap">{r.y3}</td>
+                  <td>{r.projected}</td>
+                  <td className="dim">{r.followUp}</td>
+                  <td>{r.simulated ? <SimTag>{r.source}</SimTag> : r.source}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
-      <p style={{ color: "#555" }}>{benchmarkText(panel)}</p>
-      {outcomeNotes(panel).map((n) => (
-        <p key={n} style={{ color: "#555", fontSize: "0.85rem", margin: "0.25rem 0" }}>{n}</p>
-      ))}
+      <div className="hint" style={{ marginTop: "0.75rem" }}>
+        <p>{benchmarkText(panel)}</p>
+        {outcomeNotes(panel).map((n) => <p key={n}>{n}</p>)}
+      </div>
     </section>
   );
 }

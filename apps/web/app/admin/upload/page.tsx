@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { workerFetch } from "../../../lib/worker";
+import { ErrorNote, Note, PageHead } from "../../components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -37,25 +38,35 @@ export default async function UploadPage({ searchParams }: { searchParams: Promi
   }
   return (
     <main>
-      <h1>Upload program data</h1>
-      <p><a href="/admin">Dashboard</a> | <a href="/admin/submissions">Submissions</a> | <a href="/admin/email">Email</a></p>
-      {note ? <p role="status">{note}</p> : null}
-      {error ? <p role="alert">Could not load organizations: {error}</p> : null}
-      <p style={{ color: "#555" }}>
-        Runs the same steps as an emailed reply. Program-level files (.csv, .xlsx), documents (.docx, .txt) or pasted text.
-        Nothing counts on the dashboard until the organization confirms.
-      </p>
-      <form action={upload} style={{ display: "grid", gap: "0.75rem", maxWidth: 560 }}>
-        <label>Organization{" "}
-          <select name="org_id" required defaultValue="">
-            <option value="" disabled>Choose...</option>
-            {orgs.map((o) => <option key={o.org_id} value={o.org_id}>{o.org_name}</option>)}
-          </select>
-        </label>
-        <label>File <input type="file" name="file" accept=".csv,.xlsx,.docx,.txt" /></label>
-        <label>Or paste text <textarea name="text" rows={8} style={{ width: "100%" }} /></label>
-        <div><button type="submit">Read it</button></div>
-      </form>
+      <PageHead
+        eyebrow="Data"
+        title="Upload program data"
+        lede="Runs the same steps as an emailed reply. Nothing counts on the dashboard until the organization confirms."
+      />
+      <Note note={note} />
+      {error ? <ErrorNote>Could not load organizations: {error}</ErrorNote> : null}
+      <div className="panel" style={{ maxWidth: 680 }}>
+        <form action={upload} className="form">
+          <label className="field">
+            <span>Organization</span>
+            <select name="org_id" required defaultValue="">
+              <option value="" disabled>Choose...</option>
+              {orgs.map((o) => <option key={o.org_id} value={o.org_id}>{o.org_name}</option>)}
+            </select>
+          </label>
+          <label className="field">
+            <span>File</span>
+            <input type="file" name="file" accept=".csv,.xlsx,.docx,.txt" />
+            <span className="field-help">Program-level files (.csv, .xlsx) or documents (.docx, .txt).</span>
+          </label>
+          <div className="divider">or</div>
+          <label className="field">
+            <span>Or paste text</span>
+            <textarea name="text" rows={8} />
+          </label>
+          <div><button type="submit" className="btn-primary">Read it</button></div>
+        </form>
+      </div>
     </main>
   );
 }

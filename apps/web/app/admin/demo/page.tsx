@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { workerFetch } from "../../../lib/worker";
+import { Note, PageHead } from "../../components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -20,20 +21,22 @@ export default async function DemoPage({ searchParams }: { searchParams: Promise
   const { note } = await searchParams;
   return (
     <main>
-      <h1>Demo</h1>
-      <p><a href="/admin">Dashboard</a></p>
-      {note ? <p role="status">{note}</p> : null}
-      <p>
-        Puts the data back to the demo&apos;s starting state: the seed organizations and programs, no emails or submissions, and the CBO test
-        organization with its inbox as the contact. It also clears the vault, so its access log restarts. The script is in <code>docs/DEMO.md</code>.
-      </p>
-      <p style={{ color: "#555" }}>Works only while the Worker has <code>DEMO_MODE = &quot;true&quot;</code>. Turn it off after the demo.</p>
-      <form action={resetDemo}>
-        <label>
-          <input type="checkbox" name="sure" /> Delete everything and reset
-        </label>{" "}
-        <button type="submit">Reset demo</button>
-      </form>
+      <PageHead eyebrow="Setup" title="Demo" />
+      <Note note={note} />
+      <div className="panel" style={{ maxWidth: 680, borderTop: "4px solid var(--alarm)" }}>
+        <h2 style={{ marginBottom: "0.5rem" }}>Reset to the starting state</h2>
+        <p>
+          Puts the data back to the demo&apos;s starting state: the seed organizations and programs, no emails or submissions, and the CBO test
+          organization with its inbox as the contact. It also clears the vault, so its access log restarts. The script is in <code>docs/DEMO.md</code>.
+        </p>
+        <p className="hint">Works only while the Worker has <code>DEMO_MODE = &quot;true&quot;</code>. Turn it off after the demo.</p>
+        <form action={resetDemo} className="inline-form" style={{ marginTop: "1rem" }}>
+          <label className="check">
+            <input type="checkbox" name="sure" /> Delete everything and reset
+          </label>
+          <button type="submit" className="btn-danger">Reset demo</button>
+        </form>
+      </div>
     </main>
   );
 }
