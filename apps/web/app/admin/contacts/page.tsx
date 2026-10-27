@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { workerFetch } from "../../../lib/worker";
+import { Badge, ErrorNote, Note, PageHead, Section } from "../../components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -65,65 +66,76 @@ export default async function ContactsPage({ searchParams }: { searchParams: Pro
   } catch (e) {
     error = e instanceof Error ? e.message : "unknown error";
   }
-  const cell = { border: "1px solid #ddd", padding: "0.35rem 0.6rem", textAlign: "left" as const };
+  const asked = orgs.filter((o) => o.asks_sent > 0).length;
   return (
     <main>
-      <h1>Contacts and asks</h1>
-      <p><a href="/admin">Dashboard</a> | <a href="/admin/outreach">Outreach</a> | <a href="/admin/email">Email</a></p>
-      {note ? <p role="status">{note}</p> : null}
+      <PageHead
+        eyebrow="Outreach"
+        title="Contacts and asks"
+        lede={orgs.length ? `${orgs.length} orgs, ${asked} asked so far.` : undefined}
+      />
+      <Note note={note} />
 
-      <h2>Import mailing list</h2>
-      <form action={importCsv}>
-        <label>CSV with columns org, name, email, title <input type="file" name="csv" accept=".csv,text/csv" required /></label>{" "}
-        <button type="submit">Import</button>
-      </form>
-      <p style={{ color: "#555" }}>
-        New orgs are created. The first contact listed for an org becomes its primary (highest rank) unless it already has one.
-        Re-importing is safe.
-      </p>
+      <div className="panel">
+        <h2 style={{ marginBottom: "0.75rem" }}>Import mailing list</h2>
+        <form action={importCsv} className="inline-form">
+          <label className="field" style={{ flex: 1, minWidth: 260 }}>
+            <span>CSV with columns org, name, email, title</span>
+            <input type="file" name="csv" accept=".csv,text/csv" required />
+          </label>
+          <button type="submit" style={{ alignSelf: "end" }}>Import</button>
+        </form>
+        <p className="hint" style={{ margin: "0.75rem 0 0" }}>
+          New orgs are created. The first contact listed for an org becomes its primary (highest rank) unless it already has one.
+          Re-importing is safe.
+        </p>
+      </div>
 
-      <h2>Orgs</h2>
-      {error ? <p role="alert">Could not load contacts: {error}</p> : null}
-      <form id="send" action={sendAsks}>
-        <button type="submit" name="intent" value="selected">Send asks to selected</button>{" "}
-        <button type="submit" name="intent" value="all">Send to all not yet asked</button>{" "}
-        <span style={{ color: "#555" }}>One email per org, to its primary contact, sent individually. Orgs already asked are skipped. @example.org addresses are never emailed.</span>
-      </form>
-      <table style={{ borderCollapse: "collapse", marginTop: "0.75rem" }}>
-        <thead>
-          <tr>{["Send", "Org", "Contact", "Email", "Title", "Primary", "Asked"].map((h) => <th key={h} style={cell}>{h}</th>)}</tr>
-        </thead>
-        <tbody>
-          {orgs.flatMap((o) =>
-            (o.contacts.length ? o.contacts : [null]).map((c, i) => (
-              <tr key={`${o.org_id}-${c?.contact_id ?? "none"}`}>
-                <td style={cell}>
-                  {i === 0 ? <input type="checkbox" name="org_ids" value={o.org_id} form="send" aria-label={`Select ${o.org_name}`} disabled={o.asks_sent > 0} /> : null}
-                </td>
-                <td style={cell}>
-                  {i === 0 ? o.org_name : ""}
-                  {i === 0 && o.private_token ? <> (<a href={`/o/${o.private_token}`}>report</a>)</> : null}
-                </td>
-                <td style={cell}>{c?.name ?? ""}</td>
-                <td style={cell}>{c?.email ?? "no contacts"}</td>
-                <td style={cell}>{c?.title ?? ""}</td>
-                <td style={cell}>
-                  {c?.is_primary ? (
-                    "Primary"
-                  ) : c ? (
-                    <form action={makePrimary}>
-                      <input type="hidden" name="org_id" value={o.org_id} />
-                      <input type="hidden" name="contact_id" value={c.contact_id} />
-                      <button type="submit">Make primary</button>
-                    </form>
-                  ) : null}
-                </td>
-                <td style={cell}>{i === 0 ? (o.asks_sent > 0 ? "Yes" : "No") : ""}</td>
-              </tr>
-            )),
-          )}
-        </tbody>
-      </table>
+      <Section title="Orgs" aside="One email per org, to its primary contact, sent individually. Orgs already asked are skipped. @example.org addresses are never emailed.">
+        {error ? <ErrorNote>Could not load contacts: {error}</ErrorNote> : null}
+        <form id="send" action={sendAsks} className="inline-form" style={{ marginBottom: "0.75rem" }}>
+          <button type="submit" name="intent" value="selected" className="btn-primary">Send asks to selected</button>
+          <button type="submit" name="intent" value="all">Send to all not yet asked</button>
+        </form>
+        <div className="table-wrap">
+          <table className="data">
+            <thead>
+              <tr><th>Send</th><th>Org</th><th>Contact</th><th>Email</th><th>Title</th><th>Primary</th><th>Asked</th></tr>
+            </thead>
+            <tbody>
+              {orgs.flatMap((o) =>
+                (o.contacts.length ? o.contacts : [null]).map((c, i) => (
+                  <tr key={`${o.org_id}-${c?.contact_id ?? "none"}`} className={i === 0 ? "group-start" : undefined}>
+                    <td>
+                      {i === 0 ? <input type="checkbox" name="org_ids" value={o.org_id} form="send" aria-label={`Select ${o.org_name}`} disabled={o.asks_sent > 0} /> : null}
+                    </td>
+                    <td>
+                      {i === 0 ? <strong style={{ fontWeight: 600 }}>{o.org_name}</strong> : ""}
+                      {i === 0 && o.private_token ? <> <a href={`/o/${o.private_token}`} className="hint">(report)</a></> : null}
+                    </td>
+                    <td>{c?.name ?? ""}</td>
+                    <td className={c ? undefined : "dim"}>{c?.email ?? "no contacts"}</td>
+                    <td className="dim">{c?.title ?? ""}</td>
+                    <td>
+                      {c?.is_primary ? (
+                        <Badge tone="good">Primary</Badge>
+                      ) : c ? (
+                        <form action={makePrimary}>
+                          <input type="hidden" name="org_id" value={o.org_id} />
+                          <input type="hidden" name="contact_id" value={c.contact_id} />
+                          <button type="submit" className="btn-sm">Make primary</button>
+                        </form>
+                      ) : null}
+                    </td>
+                    <td>{i === 0 ? (o.asks_sent > 0 ? <Badge tone="good">Yes</Badge> : <Badge>No</Badge>) : ""}</td>
+                  </tr>
+                )),
+              )}
+              {orgs.length === 0 && !error ? <tr><td className="empty" colSpan={7}>No orgs yet. Import a mailing list above.</td></tr> : null}
+            </tbody>
+          </table>
+        </div>
+      </Section>
     </main>
   );
 }

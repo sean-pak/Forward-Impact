@@ -1,4 +1,5 @@
 import { workerFetch } from "../../../lib/worker";
+import { Badge, ErrorNote, PageHead, Stat, When } from "../../components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -12,22 +13,10 @@ type Stats = {
   medianHoursToReply: number | null;
 };
 
-const utc = (t: string | null) => (t ? t.replace("T", " ").slice(0, 19) : "");
-
 function hours(row: Row): string {
   if (!row.replied_at) return "";
   const h = Math.max(0, (Date.parse(row.replied_at) - Date.parse(row.sent_at)) / 3_600_000);
   return `${h.toFixed(1)} h`;
-}
-
-function Stat({ label, value, note }: { label: string; value: string; note?: string }) {
-  return (
-    <div style={{ border: "1px solid #ccc", borderRadius: 6, padding: "0.75rem 1rem", minWidth: 160 }}>
-      <div style={{ fontSize: "0.85rem", color: "#555" }}>{label}</div>
-      <div style={{ fontSize: "1.75rem", fontWeight: 600 }}>{value}</div>
-      {note ? <div style={{ fontSize: "0.8rem", color: "#555" }}>{note}</div> : null}
-    </div>
-  );
 }
 
 export default async function OutreachPage() {
@@ -40,43 +29,53 @@ export default async function OutreachPage() {
   } catch (e) {
     error = e instanceof Error ? e.message : "unknown error";
   }
-  const cell = { border: "1px solid #ddd", padding: "0.35rem 0.6rem", textAlign: "left" as const };
   const s = data?.stats;
+  const rr = s?.responseRate ?? null;
   return (
     <main>
-      <h1>Outreach</h1>
-      <p><a href="/admin">Dashboard</a> | <a href="/admin/contacts">Contacts and asks</a> | <a href="/admin/email">Email</a></p>
-      {error ? <p role="alert">Could not load outreach: {error}</p> : null}
+      <PageHead
+        eyebrow="Outreach"
+        title="Outreach"
+        lede="Who was asked for data, who opened it and who replied."
+        actions={<a className="btn" href="/admin/contacts">Contacts and asks</a>}
+      />
+      {error ? <ErrorNote>Could not load outreach: {error}</ErrorNote> : null}
       {s ? (
-        <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+        <div className="stats">
           <Stat label="Asks sent" value={String(s.sent)} />
           <Stat label="Opened (approx)" value={`${s.opened} of ${s.sent}`} note="Image-pixel based; blocked or prefetched images skew it." />
           <Stat label="Replied" value={`${s.replied} of ${s.sent}`} />
           <Stat
             label="Response rate"
-            value={s.responseRate ? `${Math.round((100 * s.responseRate.numerator) / s.responseRate.denominator)}%` : "n/a"}
-            note={s.responseRate ? `${s.responseRate.numerator} of ${s.responseRate.denominator}` : "no asks sent"}
+            value={rr ? `${Math.round((100 * rr.numerator) / rr.denominator)}%` : "n/a"}
+            metric={rr ? { value: rr.numerator / rr.denominator, numerator: rr.numerator, denominator: rr.denominator, suppressed: false, isEstimate: false } : undefined}
+            note={rr ? `${rr.numerator} of ${rr.denominator}` : "no asks sent"}
           />
           <Stat label="Median time to reply" value={s.medianHoursToReply === null ? "n/a" : `${s.medianHoursToReply.toFixed(1)} h`} />
         </div>
       ) : null}
-      <table style={{ borderCollapse: "collapse", marginTop: "1rem" }}>
-        <thead>
-          <tr>{["Org", "To", "Sent (UTC)", "Opened (approx)", "Replied (UTC)", "Time to reply"].map((h) => <th key={h} style={cell}>{h}</th>)}</tr>
-        </thead>
-        <tbody>
-          {(data?.rows ?? []).map((r) => (
-            <tr key={r.outreach_id}>
-              <td style={cell}>{r.org_name}</td>
-              <td style={cell}>{r.to_email ?? ""}</td>
-              <td style={cell}>{utc(r.sent_at)}</td>
-              <td style={cell}>{r.opened_at ? `${utc(r.opened_at)} (${r.open_count}x)` : "not seen"}</td>
-              <td style={cell}>{utc(r.replied_at) || "no reply"}</td>
-              <td style={cell}>{hours(r)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="table-wrap" style={{ marginTop: "1.5rem" }}>
+        <table className="data">
+          <thead>
+            <tr><th>Org</th><th>To</th><th>Sent (UTC)</th><th>Opened (approx)</th><th>Replied (UTC)</th><th className="num">Time to reply</th></tr>
+          </thead>
+          <tbody>
+            {(data?.rows ?? []).map((r) => (
+              <tr key={r.outreach_id}>
+                <td>{r.org_name}</td>
+                <td className="dim">{r.to_email ?? ""}</td>
+                <td><When t={r.sent_at} /></td>
+                <td>{r.opened_at ? <><When t={r.opened_at} /> <span className="dim">({r.open_count}x)</span></> : <span className="dim">not seen</span>}</td>
+                <td>{r.replied_at ? <When t={r.replied_at} /> : <Badge>no reply</Badge>}</td>
+                <td className="num">{hours(r)}</td>
+              </tr>
+            ))}
+            {data && data.rows.length === 0 ? (
+              <tr><td className="empty" colSpan={6}>No asks sent yet. Send them from <a href="/admin/contacts">Contacts and asks</a>.</td></tr>
+            ) : null}
+          </tbody>
+        </table>
+      </div>
     </main>
   );
 }

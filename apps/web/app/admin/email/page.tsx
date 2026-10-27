@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { workerFetch } from "../../../lib/worker";
+import { Badge, ErrorNote, Note, PageHead, Section, When } from "../../components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -49,48 +50,54 @@ export default async function EmailPage({ searchParams }: { searchParams: Promis
   } catch (e) {
     error = e instanceof Error ? e.message : "unknown error";
   }
-  const cell = { border: "1px solid #ddd", padding: "0.35rem 0.6rem", textAlign: "left" as const };
   return (
     <main>
-      <h1>Email</h1>
-      <p><a href="/admin">Dashboard</a></p>
-      {note ? <p role="status">{note}</p> : null}
-      <form action={sendTest}>
-        <label>
-          Send test email to <input type="email" name="to" required />
-        </label>{" "}
-        <button type="submit">Send test email</button>
-      </form>
-      <form action={syncNow} style={{ marginTop: "1rem" }}>
-        <button type="submit">Sync now</button>{" "}
-        <span style={{ color: "#555" }}>The Worker also syncs every minute.</span>
-      </form>
-      <h2>Messages</h2>
-      <p style={{ color: "#555" }}>
-        Only mail from known contacts or known threads is logged, as metadata. Everything else is labeled sam/ignored in Gmail and not stored.
-      </p>
-      {error ? <p role="alert">Could not load messages: {error}</p> : null}
-      <table style={{ borderCollapse: "collapse" }}>
-        <thead>
-          <tr>
-            {["When (UTC)", "Direction", "Kind", "From", "To", "Subject"].map((h) => (
-              <th key={h} style={cell}>{h}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {messages.map((m) => (
-            <tr key={m.message_id}>
-              <td style={cell}>{m.occurred_at.replace("T", " ").slice(0, 19)}</td>
-              <td style={cell}>{m.direction}</td>
-              <td style={cell}>{m.kind}</td>
-              <td style={cell}>{m.from_email ?? ""}</td>
-              <td style={cell}>{m.to_email ?? ""}</td>
-              <td style={cell}>{m.subject ?? ""}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <PageHead
+        eyebrow="Outreach"
+        title="Email"
+        actions={
+          <form action={syncNow}>
+            <button type="submit" className="btn-primary">Sync now</button>
+          </form>
+        }
+      />
+      <Note note={note} />
+      <div className="panel">
+        <div className="split" style={{ alignItems: "end" }}>
+          <form action={sendTest} className="inline-form">
+            <label className="field" style={{ flex: 1, minWidth: 220 }}>
+              <span>Send test email to</span>
+              <input type="email" name="to" required />
+            </label>
+            <button type="submit" style={{ alignSelf: "end" }}>Send test email</button>
+          </form>
+          <p className="hint" style={{ margin: 0 }}>The Worker also syncs every minute.</p>
+        </div>
+      </div>
+
+      <Section title="Messages" aside="Only mail from known contacts or known threads is logged, as metadata. Everything else is labeled sam/ignored in Gmail and not stored.">
+        {error ? <ErrorNote>Could not load messages: {error}</ErrorNote> : null}
+        <div className="table-wrap">
+          <table className="data">
+            <thead>
+              <tr><th>When (UTC)</th><th>Direction</th><th>Kind</th><th>From</th><th>To</th><th>Subject</th></tr>
+            </thead>
+            <tbody>
+              {messages.map((m) => (
+                <tr key={m.message_id}>
+                  <td><When t={m.occurred_at} /></td>
+                  <td><Badge tone={m.direction === "inbound" ? "good" : "plain"}>{m.direction}</Badge></td>
+                  <td className="dim">{m.kind}</td>
+                  <td>{m.from_email ?? ""}</td>
+                  <td>{m.to_email ?? ""}</td>
+                  <td>{m.subject ?? ""}</td>
+                </tr>
+              ))}
+              {messages.length === 0 && !error ? <tr><td className="empty" colSpan={6}>No mail logged yet.</td></tr> : null}
+            </tbody>
+          </table>
+        </div>
+      </Section>
     </main>
   );
 }
