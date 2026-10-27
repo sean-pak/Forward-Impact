@@ -1,6 +1,8 @@
 import { notFound, redirect } from "next/navigation";
 import { rowsFromFormData } from "../../../lib/formData";
 import { workerFetch } from "../../../lib/worker";
+import { PublicFrame } from "../../components/PublicFrame";
+import { ErrorNote, PageHead } from "../../components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -31,8 +33,18 @@ async function submit(formData: FormData) {
   redirect(`/submit/${encodeURIComponent(token)}/${body.submission_id}`);
 }
 
-const box = { border: "1px solid #ccc", borderRadius: 6, padding: "1rem", marginBottom: "1rem" } as const;
-const label = { display: "block", marginBottom: "0.5rem" } as const;
+/** A number box with an "about" tick next to it, for counts the CBO only knows roughly. */
+function Approx({ label, name }: { label: string; name: string }) {
+  return (
+    <label className="field">
+      <span>{label}</span>
+      <span className="with-approx">
+        <input name={name} inputMode={name.endsWith("hours_delivered") ? "decimal" : "numeric"} />
+        <span className="check"><input type="checkbox" name={`${name}_approx`} /> about</span>
+      </span>
+    </label>
+  );
+}
 
 export default async function SubmitPage({ params, searchParams }: { params: Promise<{ token: string }>; searchParams: Promise<{ error?: string }> }) {
   const { token } = await params;
@@ -51,14 +63,19 @@ export default async function SubmitPage({ params, searchParams }: { params: Pro
   ];
 
   return (
-    <main style={{ maxWidth: 760 }}>
-      <h1>Program data for {form.org_name}</h1>
-      <p>
-        I&apos;m Sam, TPW&apos;s data assistant (an automated assistant). Fill in one box for each program run you want to report.
-        Leave a box empty to skip it. Nothing is counted until you confirm it on the next screen.
-      </p>
-      <p>Don&apos;t know an exact number? Type your best number and tick &quot;about&quot;. Please don&apos;t put names or CDCR numbers here.</p>
-      {error ? <p role="alert" style={{ color: "#b00020" }}>{error}</p> : null}
+    <PublicFrame>
+      <PageHead
+        eyebrow="Program data"
+        title={<>Program data for {form.org_name}</>}
+        lede={
+          <>
+            I&apos;m Sam, TPW&apos;s data assistant (an automated assistant). Fill in one box for each program run you want to report.
+            Leave a box empty to skip it. Nothing is counted until you confirm it on the next screen.
+          </>
+        }
+      />
+      <p className="notice">Don&apos;t know an exact number? Type your best number and tick &quot;about&quot;. Please don&apos;t put names or CDCR numbers here.</p>
+      {error ? <ErrorNote>{error}</ErrorNote> : null}
 
       <datalist id="facilities">
         {form.facilities.flatMap((f) => [
@@ -73,63 +90,60 @@ export default async function SubmitPage({ params, searchParams }: { params: Pro
         {form.fields.map((f) => <input key={f.field_key} type="hidden" name="field_key" value={f.field_key} />)}
 
         {rows.map((r, i) => (
-          <fieldset key={r.key} style={box}>
+          <fieldset key={r.key} className={`program-card${r.program_id ? "" : " is-new"}`}>
             <legend>{r.program_id ? r.name : `Another program ${i - form.programs.length + 1}`}</legend>
             <input type="hidden" name={`r${i}.program_id`} value={r.program_id} />
-            {r.program_id ? (
-              <input type="hidden" name={`r${i}.program_name`} value={r.name} />
-            ) : (
-              <label style={label}>Program name <input name={`r${i}.program_name`} /></label>
-            )}
-            <label style={label}>Prison (type to search, e.g. &quot;Men&apos;s Colony&quot;) <input name={`r${i}.facility_raw`} list="facilities" defaultValue={r.facility_name} /></label>
-            <label style={label}>Yard (optional) <input name={`r${i}.yard`} defaultValue={r.yard} /></label>
-            <label style={label}>Start date <input type="date" name={`r${i}.start_date`} /></label>
-            <label style={label}>End date <input type="date" name={`r${i}.end_date`} /></label>
-            <label style={label}>Sessions planned <input name={`r${i}.sessions_planned`} inputMode="numeric" defaultValue={r.sessions_planned} /></label>
-            <label style={label}>Course hours per participant <input name={`r${i}.course_hours_planned_per_participant`} inputMode="decimal" defaultValue={r.course_hours_planned_per_participant} /></label>
-            <label style={label}>
-              People enrolled <input name={`r${i}.n_enrolled`} inputMode="numeric" />{" "}
-              <input type="checkbox" name={`r${i}.n_enrolled_approx`} /> about
-            </label>
-            <label style={label}>
-              People who completed <input name={`r${i}.n_completed`} inputMode="numeric" />{" "}
-              <input type="checkbox" name={`r${i}.n_completed_approx`} /> about
-            </label>
-            <label style={label}>
-              Total course hours delivered, across everyone <input name={`r${i}.total_course_hours_delivered`} inputMode="decimal" />{" "}
-              <input type="checkbox" name={`r${i}.total_course_hours_delivered_approx`} /> about
-            </label>
-            <label style={label}>
-              What counts as completing? (for example, attended 80% of sessions) <input name={`r${i}.completion_rule`} defaultValue={r.rule} style={{ width: "100%" }} />
-            </label>
-            {form.fields.map((f) => (
-              <label key={f.field_key} style={label}>
-                {f.label}{f.required ? " *" : ""}{" "}
-                {f.type === "enum" ? (
-                  <select name={`r${i}.extra.${f.field_key}`} defaultValue={r.extra[f.field_key] ?? ""}>
-                    <option value="">(not answered)</option>
-                    {(f.options ?? []).map((o) => <option key={o} value={o}>{o}</option>)}
-                  </select>
-                ) : f.type === "boolean" ? (
-                  <select name={`r${i}.extra.${f.field_key}`} defaultValue={r.extra[f.field_key] ?? ""}>
-                    <option value="">(not answered)</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                  </select>
-                ) : (
-                  <input
-                    name={`r${i}.extra.${f.field_key}`}
-                    type={f.type === "date" ? "date" : "text"}
-                    inputMode={f.type === "integer" ? "numeric" : f.type === "number" ? "decimal" : undefined}
-                    defaultValue={r.extra[f.field_key] ?? ""}
-                  />
-                )}
+            <div className="grid-2">
+              {r.program_id ? (
+                <input type="hidden" name={`r${i}.program_name`} value={r.name} />
+              ) : (
+                <label className="field full"><span>Program name</span><input name={`r${i}.program_name`} /></label>
+              )}
+              <label className="field"><span>Prison <span className="field-help">(type to search, e.g. &quot;Men&apos;s Colony&quot;)</span></span><input name={`r${i}.facility_raw`} list="facilities" defaultValue={r.facility_name} /></label>
+              <label className="field"><span>Yard <span className="field-help">(optional)</span></span><input name={`r${i}.yard`} defaultValue={r.yard} /></label>
+              <label className="field"><span>Start date</span><input type="date" name={`r${i}.start_date`} /></label>
+              <label className="field"><span>End date</span><input type="date" name={`r${i}.end_date`} /></label>
+              <label className="field"><span>Sessions planned</span><input name={`r${i}.sessions_planned`} inputMode="numeric" defaultValue={r.sessions_planned} /></label>
+              <label className="field"><span>Course hours per participant</span><input name={`r${i}.course_hours_planned_per_participant`} inputMode="decimal" defaultValue={r.course_hours_planned_per_participant} /></label>
+              <Approx label="People enrolled" name={`r${i}.n_enrolled`} />
+              <Approx label="People who completed" name={`r${i}.n_completed`} />
+              <div className="full"><Approx label="Total course hours delivered, across everyone" name={`r${i}.total_course_hours_delivered`} /></div>
+              <label className="field full">
+                <span>What counts as completing? <span className="field-help">(for example, attended 80% of sessions)</span></span>
+                <input name={`r${i}.completion_rule`} defaultValue={r.rule} />
               </label>
-            ))}
+              {form.fields.map((f) => (
+                <label key={f.field_key} className="field">
+                  <span>{f.label}{f.required ? " *" : ""}</span>
+                  {f.type === "enum" ? (
+                    <select name={`r${i}.extra.${f.field_key}`} defaultValue={r.extra[f.field_key] ?? ""}>
+                      <option value="">(not answered)</option>
+                      {(f.options ?? []).map((o) => <option key={o} value={o}>{o}</option>)}
+                    </select>
+                  ) : f.type === "boolean" ? (
+                    <select name={`r${i}.extra.${f.field_key}`} defaultValue={r.extra[f.field_key] ?? ""}>
+                      <option value="">(not answered)</option>
+                      <option value="yes">Yes</option>
+                      <option value="no">No</option>
+                    </select>
+                  ) : (
+                    <input
+                      name={`r${i}.extra.${f.field_key}`}
+                      type={f.type === "date" ? "date" : "text"}
+                      inputMode={f.type === "integer" ? "numeric" : f.type === "number" ? "decimal" : undefined}
+                      defaultValue={r.extra[f.field_key] ?? ""}
+                    />
+                  )}
+                </label>
+              ))}
+            </div>
           </fieldset>
         ))}
-        <button type="submit">Review</button>
+        <div className="sticky-submit">
+          <button type="submit" className="btn-primary">Review</button>
+          <span className="hint">You&apos;ll check everything before it counts.</span>
+        </div>
       </form>
-    </main>
+    </PublicFrame>
   );
 }

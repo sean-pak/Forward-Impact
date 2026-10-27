@@ -1,6 +1,8 @@
 import { notFound, redirect } from "next/navigation";
 import { timeAgo } from "@tpw/shared";
 import { workerFetch } from "../../../../lib/worker";
+import { PublicFrame } from "../../../components/PublicFrame";
+import { ErrorNote, PageHead, Section } from "../../../components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +26,8 @@ async function confirm(formData: FormData) {
   redirect(`/submit/${encodeURIComponent(token)}/${encodeURIComponent(id)}${res.ok ? "" : `?error=${encodeURIComponent(body.error ?? "Could not confirm.")}`}`);
 }
 
-const val = (n: number | null, approx: boolean) => (n === null ? "not given" : `${n}${approx ? " (about)" : ""}`);
+const val = (n: number | null, approx: boolean) =>
+  n === null ? <span className="unknown">not given</span> : <>{n}{approx ? <span className="approx"> (about)</span> : ""}</>;
 
 export default async function ConfirmPage({ params, searchParams }: { params: Promise<{ token: string; id: string }>; searchParams: Promise<{ error?: string }> }) {
   const { token, id } = await params;
@@ -33,25 +36,25 @@ export default async function ConfirmPage({ params, searchParams }: { params: Pr
   if (res.status === 404) notFound();
   if (!res.ok) throw new Error(`Worker returned ${res.status}`);
   const v = (await res.json()) as View;
-  const cell = { border: "1px solid #ddd", padding: "0.35rem 0.6rem", textAlign: "left" as const };
 
   if (v.status === "confirmed") {
     return (
-      <main style={{ maxWidth: 760 }}>
-        <h1>Thank you, {v.org_name}</h1>
-        <p role="status">This data is confirmed and now counts. You can close this page, or <a href={`/submit/${token}`}>report another program</a>.</p>
-        <p>Sam, TPW&apos;s data assistant</p>
-      </main>
+      <PublicFrame>
+        <div className="panel" style={{ borderTop: "4px solid var(--yard)", padding: "1.75rem" }}>
+          <h1 style={{ marginBottom: "0.75rem" }}>Thank you, {v.org_name}</h1>
+          <p role="status">This data is confirmed and now counts. You can close this page, or <a href={`/submit/${token}`}>report another program</a>.</p>
+          <p className="hint" style={{ margin: 0 }}>Sam, TPW&apos;s data assistant</p>
+        </div>
+      </PublicFrame>
     );
   }
 
   return (
-    <main style={{ maxWidth: 760 }}>
-      <h1>Please check this for {v.org_name}</h1>
-      <p>Nothing is counted until you confirm.</p>
-      {error ? <p role="alert" style={{ color: "#b00020" }}>{error}</p> : null}
+    <PublicFrame wide>
+      <PageHead eyebrow="Review" title={<>Please check this for {v.org_name}</>} lede="Nothing is counted until you confirm." />
+      {error ? <ErrorNote>{error}</ErrorNote> : null}
       {v.duplicates.map((d) => (
-        <p key={d.cycle_id} role="note" style={{ border: "1px solid #c90", background: "#fff8e6", padding: "0.75rem", borderRadius: 6 }}>
+        <p key={d.cycle_id} role="note" className="notice notice-warn">
           <strong>It looks like you submitted the same program twice!</strong>{" "}
           {timeAgo(d.submitted_at, new Date())} ({d.submitted_at.replace("T", " ").replace("Z", " UTC")}) you submitted the exact same details for{" "}
           {d.program_name} at {d.facility_name ?? "the same prison"}, starting {d.start_date ?? "an unknown date"}
@@ -61,40 +64,52 @@ export default async function ConfirmPage({ params, searchParams }: { params: Pr
         </p>
       ))}
       {v.issues.length ? (
-        <>
-          <h2>{v.blocked ? "Needs fixing" : "Worth a look"}</h2>
-          <ul>{v.issues.map((i) => <li key={i.issue_id}>{i.message}{i.blocking ? " (needed)" : ""}</li>)}</ul>
-        </>
+        <Section title={v.blocked ? "Needs fixing" : "Worth a look"}>
+          <ul className="issues">
+            {v.issues.map((i) => (
+              <li key={i.issue_id}>
+                <span className={`badge ${i.blocking ? "badge-bad" : "badge-warn"}`}>{i.blocking ? "needed" : "check"}</span>
+                <div>{i.message}</div>
+              </li>
+            ))}
+          </ul>
+        </Section>
       ) : null}
-      <table style={{ borderCollapse: "collapse" }}>
-        <thead>
-          <tr>{["Program", "Prison", "Start", "End", "Enrolled", "Completed", "Hours delivered", "Completion rule"].map((h) => <th key={h} style={cell}>{h}</th>)}</tr>
-        </thead>
-        <tbody>
-          {v.cycles.map((c) => (
-            <tr key={c.cycle_id}>
-              <td style={cell}>{c.program_name}</td>
-              <td style={cell}>{c.facility_name ?? "not given"}</td>
-              <td style={cell}>{c.start_date ?? "not given"}</td>
-              <td style={cell}>{c.end_date ?? "not given"}</td>
-              <td style={cell}>{val(c.n_enrolled, c.n_enrolled_approx)}</td>
-              <td style={cell}>{val(c.n_completed, c.n_completed_approx)}</td>
-              <td style={cell}>{val(c.total_course_hours_delivered, c.total_course_hours_delivered_approx)}</td>
-              <td style={cell}>{c.completion_rule === "unstated" ? "not stated" : c.completion_rule}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Section title="What you sent">
+        <div className="table-wrap">
+          <table className="data">
+            <thead>
+              <tr><th>Program</th><th>Prison</th><th>Start</th><th>End</th><th className="num">Enrolled</th><th className="num">Completed</th><th className="num">Hours delivered</th><th>Completion rule</th></tr>
+            </thead>
+            <tbody>
+              {v.cycles.map((c) => (
+                <tr key={c.cycle_id}>
+                  <td>{c.program_name}</td>
+                  <td>{c.facility_name ?? <span className="unknown">not given</span>}</td>
+                  <td className="when">{c.start_date ?? <span className="unknown">not given</span>}</td>
+                  <td className="when">{c.end_date ?? <span className="unknown">not given</span>}</td>
+                  <td className="num">{val(c.n_enrolled, c.n_enrolled_approx)}</td>
+                  <td className="num">{val(c.n_completed, c.n_completed_approx)}</td>
+                  <td className="num">{val(c.total_course_hours_delivered, c.total_course_hours_delivered_approx)}</td>
+                  <td className="dim">{c.completion_rule === "unstated" ? "not stated" : c.completion_rule}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Section>
       {v.blocked ? (
-        <p>Some required information is missing or unclear, so this can&apos;t be confirmed yet. <a href={`/submit/${token}`}>Go back to the form</a> and submit again.</p>
+        <p className="notice notice-error" style={{ marginTop: "1.5rem" }}>
+          Some required information is missing or unclear, so this can&apos;t be confirmed yet. <a href={`/submit/${token}`}>Go back to the form</a> and submit again.
+        </p>
       ) : (
-        <form action={confirm} style={{ marginTop: "1rem" }}>
+        <form action={confirm} className="inline-form" style={{ marginTop: "1.5rem" }}>
           <input type="hidden" name="token" value={token} />
           <input type="hidden" name="id" value={id} />
-          <button type="submit">Yes, this is right. Confirm</button>{" "}
-          <a href={`/submit/${token}`}>No, change something</a>
+          <button type="submit" className="btn-primary">Yes, this is right. Confirm</button>
+          <a className="btn btn-ghost" href={`/submit/${token}`}>No, change something</a>
         </form>
       )}
-    </main>
+    </PublicFrame>
   );
 }
