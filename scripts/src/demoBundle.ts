@@ -6,7 +6,7 @@ import { join, resolve } from "node:path";
 import { loadDataset, readSeedFiles } from "./dataset";
 import { loadScriptKeys, root } from "./keys";
 
-const dir = resolve(process.argv.slice(2).filter((a) => a !== "--")[0] ?? join(root, "fixtures/seed"));
+const dir = resolve(process.env.INIT_CWD ?? process.cwd(), process.argv.slice(2).filter((a) => a !== "--")[0] ?? join(root, "fixtures/seed"));
 const files = readSeedFiles(dir);
 const data = await loadDataset(dir, await loadScriptKeys());
 const bytes = Object.values(files).reduce((n, t) => n + t.length, 0);
